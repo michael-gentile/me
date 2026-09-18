@@ -1,0 +1,41 @@
+---
+import { siteMeta } from '../config'
+import { withBase } from '../lib/url'
+
+const year = new Date().getFullYear()
+---
+
+<footer class="border-t border-line dark:border-line-dark">
+  <div class="mx-auto flex max-w-3xl flex-col gap-2 px-6 py-8 text-sm text-muted dark:text-muted-dark sm:flex-row sm:items-center sm:justify-between">
+    <p>
+      © {year} {siteMeta.name}
+    </p>
+    <p class="flex flex-wrap gap-4">
+      <a
+        class="hover:text-accent dark:hover:text-accent-dark"
+        href={siteMeta.linkedinUrl}
+        rel="noreferrer"
+        target="_blank"
+      >
+        LinkedIn
+      </a>
+      <a
+        class="hover:text-accent dark:hover:text-accent-dark"
+        href={siteMeta.githubUrl}
+        rel="noreferrer"
+        target="_blank"
+      >
+        GitHub
+      </a>
+      <a
+        class="hover:text-accent dark:hover:text-accent-dark"
+        href={withBase('/rss.xml')}
+      >
+        RSS
+      </a>
+      <a class="hover:text-accent dark:hover:text-accent-dark" href={withBase('/contact')}>
+        Contact
+      </a>
+    </p>
+  </div>
+</footer>

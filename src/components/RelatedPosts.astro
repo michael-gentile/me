@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { withBase } from '../lib/url'
+
+type Props = {
+  posts: CollectionEntry<'blog'>[]
+}
+
+const { posts } = Astro.props
+---
+
+{
+  posts.length > 0 && (
+    <section class="mt-16 max-w-[65ch]" aria-labelledby="related-posts">
+      <h2
+        id="related-posts"
+        class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark"
+      >
+        Related posts
+      </h2>
+      <div class="mt-4 border-t border-line dark:border-line-dark">
+        {posts.map((post) => (
+          <article class="border-b border-line py-6 dark:border-line-dark">
+            <h3 class="font-serif text-2xl tracking-tight">
+              <a
+                class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+                href={withBase(`/blog/${post.id}`)}
+              >
+                {post.data.title}
+              </a>
+            </h3>
+            <p class="mt-2 text-base leading-relaxed text-muted dark:text-muted-dark">
+              {post.data.summary}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}

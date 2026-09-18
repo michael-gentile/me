@@ -1,0 +1,43 @@
+---
+import type { MarkdownHeading } from 'astro'
+
+type Props = {
+  headings: MarkdownHeading[]
+}
+
+const { headings } = Astro.props
+const entries = headings.filter((heading) => heading.depth === 2 || heading.depth === 3)
+---
+
+{
+  entries.length > 0 && (
+    <nav
+      class="mt-8 border-t border-b border-line dark:border-line-dark"
+      aria-label="Table of contents"
+    >
+      <details class="group">
+        <summary class="toc-summary cursor-pointer py-4 text-sm font-semibold uppercase tracking-[0.18em] text-muted hover:text-ink dark:text-muted-dark dark:hover:text-ink-dark">
+          <span aria-hidden="true" class="mr-2 group-open:hidden">
+            +
+          </span>
+          <span aria-hidden="true" class="mr-2 hidden group-open:inline">
+            −
+          </span>
+          Contents
+        </summary>
+        <ul class="space-y-2 pb-5 text-base">
+          {entries.map((heading) => (
+            <li class:list={[heading.depth === 3 && 'pl-4']}>
+              <a
+                class="text-accent underline decoration-accent/40 underline-offset-3 hover:text-accent-hover hover:decoration-accent dark:text-accent-dark dark:decoration-accent-dark/40 dark:hover:text-accent-hover-dark dark:hover:decoration-accent-dark"
+                href={`#${heading.slug}`}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </nav>
+  )
+}

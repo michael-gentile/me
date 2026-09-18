@@ -1,0 +1,178 @@
+---
+/**
+ * Client-side filter for the blog list: title/tag search plus tag chips.
+ * Tag links still work without JS via ?tag= on the URL.
+ */
+import { blogFilterHref } from '../lib/tags'
+
+type Props = {
+  tags: string[]
+}
+
+const { tags } = Astro.props
+---
+
+{
+  tags.length > 0 && (
+    <div class="mt-8" data-post-filter>
+      <label class="sr-only" for="post-search">
+        Search posts by title or tag
+      </label>
+      <input
+        id="post-search"
+        name="q"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Search titles and tags"
+        class="w-full border-b border-line bg-transparent py-2 text-base text-ink placeholder:text-muted focus:border-accent dark:border-line-dark dark:text-ink-dark dark:placeholder:text-muted-dark dark:focus:border-accent-dark"
+        data-post-search
+      />
+      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Filter by tag">
+        <li>
+          <a
+            href={blogFilterHref()}
+            class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark"
+            data-tag-filter
+            data-tag=""
+          >
+            All
+          </a>
+        </li>
+        {
+          tags.map((tag) => (
+            <li>
+              <a
+                href={`?tag=${encodeURIComponent(tag)}`}
+                class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark"
+                data-tag-filter
+                data-tag={tag}
+              >
+                {tag}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+    </div>
+  )
+}
+
+<script>
+  const root = document.querySelector('[data-post-filter]')
+  const searchInput = document.querySelector<HTMLInputElement>('[data-post-search]')
+  const status = document.querySelector('[data-filter-status]')
+  const empty = document.querySelector('[data-filter-empty]')
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-post-card]')]
+  const tagLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-tag-filter]')]
+
+  if (root && searchInput && cards.length > 0) {
+    const selectedClass = [
+      'border-accent',
+      'text-accent',
+      'dark:border-accent-dark',
+      'dark:text-accent-dark',
+    ]
+    const idleClass = [
+      'border-line',
+      'text-muted',
+      'dark:border-line-dark',
+      'dark:text-muted-dark',
+    ]
+
+    const readFilters = () => {
+      const params = new URLSearchParams(window.location.search)
+      return {
+        query: (params.get('q') ?? '').trim().toLowerCase(),
+        tag: (params.get('tag') ?? '').trim().toLowerCase(),
+      }
+    }
+
+    const writeFilters = (query: string, tag: string) => {
+      const params = new URLSearchParams()
+
+      if (query) {
+        params.set('q', query)
+      }
+
+      if (tag) {
+        params.set('tag', tag)
+      }
+
+      const search = params.toString()
+      const next = `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`
+      window.history.replaceState({}, '', next)
+    }
+
+    const selectedTag = () =>
+      tagLinks.find((link) => link.getAttribute('aria-current') === 'true')?.dataset.tag ?? ''
+
+    const applyFilters = () => {
+      const query = searchInput.value.trim().toLowerCase()
+      const activeTagLower = selectedTag().toLowerCase()
+      let visibleCount = 0
+
+      for (const card of cards) {
+        const title = card.dataset.title ?? ''
+        const tags = (card.dataset.tags ?? '')
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+        const matchesQuery = !query || title.includes(query) || tags.some((tag) => tag.includes(query))
+        const matchesTag = !activeTagLower || tags.includes(activeTagLower)
+        const isVisible = matchesQuery && matchesTag
+        card.hidden = !isVisible
+        card.classList.toggle('hidden', !isVisible)
+
+        if (isVisible) {
+          visibleCount += 1
+        }
+      }
+
+      if (empty instanceof HTMLElement) {
+        empty.hidden = visibleCount > 0
+      }
+
+      if (status) {
+        status.textContent =
+          visibleCount === cards.length
+            ? ''
+            : `${visibleCount} post${visibleCount === 1 ? '' : 's'} shown`
+      }
+    }
+
+    const setActiveTag = (tag: string) => {
+      for (const link of tagLinks) {
+        const isActive = (link.dataset.tag ?? '').toLowerCase() === tag.toLowerCase()
+        if (isActive) {
+          link.setAttribute('aria-current', 'true')
+        } else {
+          link.removeAttribute('aria-current')
+        }
+        link.classList.remove(...selectedClass, ...idleClass)
+        link.classList.add(...(isActive ? selectedClass : idleClass))
+      }
+    }
+
+    const { query, tag } = readFilters()
+    searchInput.value = query
+    setActiveTag(tag)
+    applyFilters()
+
+    searchInput.addEventListener('input', () => {
+      writeFilters(searchInput.value.trim(), selectedTag())
+      applyFilters()
+    })
+
+    for (const link of tagLinks) {
+      link.addEventListener('click', (event) => {
+        event.preventDefault()
+        const nextTag = link.dataset.tag ?? ''
+        setActiveTag(nextTag)
+        writeFilters(searchInput.value.trim(), nextTag)
+        applyFilters()
+      })
+    }
+  }
+</script>
