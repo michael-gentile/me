@@ -36,7 +36,14 @@ They say the speed evals were mostly run from laptops on the West Coast, where t
 
 They score models inside a fixed compute graph. Every model gets the same workflow. The reference answer is the average of GPT-6 Astra and Fable 5.1. Jev sits on the cheap end of a Pareto line they draw across four workflows.
 
-![Scatter plot of accuracy versus cost per workflow on a log scale. Jev is on the far left near 68 percent accuracy, with a grey Pareto line running through Luna, Terra, and Sol.](/me/images/blog/typesafe-jev-workflow-evals.png)
+<img
+  src="/me/images/blog/typesafe-jev-workflow-evals.webp"
+  alt="Scatter plot of accuracy versus cost per workflow on a log scale. Jev is on the far left near 68 percent accuracy, with a grey Pareto line running through Luna, Terra, and Sol."
+  width="1280"
+  height="703"
+  decoding="async"
+  fetchpriority="high"
+/>
 
 *Accuracy vs cost on four workflows. Figure from Diogo Almeida, [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev), TypeSafe, 15 September 2026.*
 
@@ -44,7 +51,14 @@ The homepage multipliers (193.6x faster, 444.6x cheaper) come from this setup. T
 
 The simplest workflow they published is an incident path: triage, disposition, containment, playbook. Independent questions in the middle. Discrete branching at the end.
 
-![Four-stage incident workflow: triage readings of an alert, disposition into close queue or act, containment as eleven readings of incident state, and a playbook that takes the first matching action group.](/me/images/blog/typesafe-jev-workflow-diagram.png)
+<img
+  src="/me/images/blog/typesafe-jev-workflow-diagram.webp"
+  alt="Four-stage incident workflow: triage readings of an alert, disposition into close queue or act, containment as eleven readings of incident state, and a playbook that takes the first matching action group."
+  width="1280"
+  height="440"
+  decoding="async"
+  loading="lazy"
+/>
 
 *The simplest of the four published workflows. Same source.*
 
@@ -54,7 +68,14 @@ That is the shape I would sketch for a policy assistant: decompose the question,
 
 They plot structured-output error rates and tool-call error rates from OpenRouter for the chat models. Jev is drawn at 0% on both. That zero is not a measured hallucination rate. Schema matching is guaranteed, so they put a zero on the chart.
 
-![Two bar charts. Left: structured output error rate, Jev at 0 percent, other models from under 1 percent up to Haiku 4.5 at 45.5 percent. Right: tool call error rate, Jev at 0 percent, other models up to Sol at 17 percent.](/me/images/blog/typesafe-jev-type-errors.png)
+<img
+  src="/me/images/blog/typesafe-jev-type-errors.webp"
+  alt="Two bar charts. Left: structured output error rate, Jev at 0 percent, other models from under 1 percent up to Haiku 4.5 at 45.5 percent. Right: tool call error rate, Jev at 0 percent, other models up to Sol at 17 percent."
+  width="1280"
+  height="396"
+  decoding="async"
+  loading="lazy"
+/>
 
 *Structured-output and tool-call error rates. Same source. The LLM bars are OpenRouter traffic; TypeSafe says the Jev zeros are not empirical.*
 

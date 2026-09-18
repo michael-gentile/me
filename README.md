@@ -26,6 +26,8 @@ npm run preview
 
 Posts are markdown files in `src/content/blog/`. The blog index can filter by title or tag (search box and tag chips). No CMS, no form backend. Frontmatter `date` is the published date on the page; it can be backdated. Reading time is computed at build from the markdown word count (200 words per minute). Each post page has a collapsible table of contents from the markdown headings, and up to three related posts that share tags. The homepage lists the three latest posts.
 
+Newsreader and Source Sans 3 are downloaded at build and served from this site, so the pages do not wait on fonts.googleapis.com.
+
 Name, tagline, LinkedIn, and GitHub live in `src/config.ts`. The contact page GitHub link is this repository, so point that at yours if you fork.
 
 The same writing also ships as files that crawlers and agents can fetch:
@@ -54,7 +56,7 @@ summary: "One or two sentences for the list."
 Body of the post.
 ```
 
-The filename becomes the URL slug. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.jpg` so they also work in the markdown alternate.
+The filename becomes the URL slug. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.webp` so they also work in the markdown alternate.
 
 ## GitHub Pages
 

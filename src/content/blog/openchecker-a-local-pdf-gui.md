@@ -17,7 +17,14 @@ A PDF is a pile of drawing instructions. Copy-paste out of a viewer and you get 
 
 openChecker is a local FastAPI app. One HTML page, near-black paper, teal, a drop zone. **Try sample PDF** loads a one-page digital file, or you drop your own. There's a checkbox for a tagged PDF. Hit Check. The server writes the upload to a temp directory and calls `opendataloader_pdf.convert` **once**. Each call starts a JVM. Looping `convert()` per format is how you learn that the hard way: Markdown, JSON, and the overlay come from that one process, not from three JVMs.
 
-![openChecker in dark mode: a dashed drop zone, an Also emit a tagged PDF checkbox, and Try sample PDF and Check PDF buttons, with Java ready shown as OpenJDK 26.](/me/images/blog/open-checker-page.png)
+<img
+  src="/me/images/blog/open-checker-page.webp"
+  alt="openChecker in dark mode: a dashed drop zone, an Also emit a tagged PDF checkbox, and Try sample PDF and Check PDF buttons, with Java ready shown as OpenJDK 26."
+  width="1280"
+  height="1103"
+  decoding="async"
+  fetchpriority="high"
+/>
 
 What comes back:
 

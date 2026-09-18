@@ -63,9 +63,23 @@ I like a tight editorial column. A portfolio grid would have been the wrong site
 - **Paper.** Cream in light mode (`#f6f1e8`), near-black green-gray in dark (`#141716`). The toggle is there because I read both ways. The default follows the OS.
 - **Still type.** I tried a darker, more theatrical version with pointer-tilt and scroll-in 3D. Fun for a day. Wrong voice for a site that is mostly words. The quieter one shipped.
 
-![Home in light mode: cream paper, a teal Ontario, Canada label, serif name, and Latest Post showing openChecker.](/me/images/blog/this-site-light.png)
+<img
+  src="/me/images/blog/this-site-light.webp"
+  alt="Home in light mode: cream paper, a teal Ontario, Canada label, serif name, and Latest Post showing openChecker."
+  width="1280"
+  height="1169"
+  decoding="async"
+  fetchpriority="high"
+/>
 
-![The same home page in dark mode: near-black paper, cream type, and a sun icon on the theme toggle.](/me/images/blog/this-site-dark.png)
+<img
+  src="/me/images/blog/this-site-dark.webp"
+  alt="The same home page in dark mode: near-black paper, cream type, and a sun icon on the theme toggle."
+  width="1280"
+  height="1169"
+  decoding="async"
+  loading="lazy"
+/>
 
 I skipped an About page, a projects index, analytics, and a CMS. Easy to add later. None of them are required to publish a note. RSS, a sitemap, and an llms.txt catalog did ship. They're generated from the same post files.
 
