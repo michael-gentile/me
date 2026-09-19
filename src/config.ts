@@ -6,7 +6,7 @@ export const siteMeta = {
     'I write here from time to time about things I\'m tinkering with.',
   description:
     'Personal site and notes from Michael Gentile.',
-  linkedinUrl: 'https://www.linkedin.com/in/michael-gentile-09596b121/',
+  linkedinUrl: 'https://www.linkedin.com/in/michaelmgentile/',
   githubUrl: 'https://github.com/michael-gentile',
   githubRepoUrl: 'https://github.com/michael-gentile/me',
 } as const
