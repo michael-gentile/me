@@ -7,7 +7,7 @@ tags:
 summary: "A tiny retrieve-then-generate pipeline over two notes. Similarity will fetch HR for a recreation question. Authorization is a second filter."
 ---
 
-Retrieve-then-generate is a search problem glued to a completion problem. Embed the question, embed the notes, take the nearest note, ask the model to answer from that note. The first version of that pipeline has an authorization bug even when the embedding is "right."
+Retrieve-then-generate is a search problem glued to a completion problem. Embed the question, embed the notes, take the nearest note, ask the model to answer from that note. The first version of that pipeline has an authorization bug even when the embedding is "right," which is the part I wanted to see on a page.
 
 I built the smallest version that still shows it.
 
@@ -17,7 +17,7 @@ I built the smallest version that still shows it.
 
 **HR.** Staff pay dates are the 15th and the last business day of the month. Only HR may quote pay dates. The file says, in so many words, that it isn't a recreation policy.
 
-Four questions, two modes:
+Four questions, two modes. This is what I typed, and what leaked.
 
 | Question | Filter | What should happen |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ Four questions, two modes:
 | When is staff payday? | recreation only | HR is not in the corpus. The model should say it is not in the notes. |
 | Is Cedar Pool open Mondays? | recreation only | Same recreation answer as before. |
 
-The cosine step doesn't know about users. It knows vectors. "Staff payday" is closer to the payroll paragraph than to pool hours. A recreation chatbot that answers from `hr.md` leaked a document, not a clever prompt.
+The cosine step doesn't know about users. It knows vectors. "Staff payday" is closer to the payroll paragraph than to pool hours. A recreation chatbot that answers from `hr.md` leaked a document, not a clever prompt, and the completion will cite `hr` like a good student if you told it to cite the document id.
 
 ```python
 corpus = [doc for doc in docs if allowed is None or doc["acl"] == allowed]
@@ -42,7 +42,7 @@ The ACL line is the whole fix in this toy: drop disallowed notes *before* simila
 - **Nearest:** which chunk is about this question?
 - **Allowed:** which chunks is this caller allowed to see?
 
-Those aren't the same score. A better embedding makes the first filter sharper. It doesn't implement the second.
+Those aren't the same score. A better embedding makes the first filter sharper. It doesn't implement the second, which is why payday still has to die in the filter before cosine ever runs.
 
 Other failure modes sit next to this one and are worth an eval row each:
 
@@ -54,9 +54,7 @@ The generation prompt I used is strict on purpose: answer only from the retrieve
 
 ## What to build first
 
-Metadata on every chunk (system, audience, document id). Filter by audience, then rank. Log which id was retrieved, the score, and the ACL that was applied. If you cannot point at those three fields for a bad answer, you cannot tell retrieval failure from generation failure.
-
-Similarity is a search index. Authorization is still authorization.
+Metadata on every chunk (system, audience, document id). Filter by audience, then rank. Log which id was retrieved, the score, and the ACL that was applied. If you can't point at those three fields for a bad answer, you can't tell retrieval failure from generation failure.
 
 ## Sources
 

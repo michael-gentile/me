@@ -7,7 +7,7 @@ tags:
 summary: "Notes against the OWASP list: one sentence of meaning, where it shows up in an enterprise assistant, the control I would require."
 ---
 
-The acronyms used to freeze me in a vendor review. The source is the [OWASP Top 10 for Large Language Model Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/). Numbers move between editions. If a row has been renamed, keep the idea.
+The acronyms used to freeze me in a vendor review. I'd sit there mapping LLM01 to a slide while the actual question was "who can bind send-email." The source is the [OWASP Top 10 for Large Language Model Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/). Numbers move between editions. If a row has been renamed, keep the idea and ask for the control anyway.
 
 ## The table I would bring
 
@@ -28,9 +28,9 @@ Invented enterprise assistant, not a particular employer. One sentence each.
 
 ## How I would use it
 
-Not as a score. As procurement language. "Show me where retrieval ACL is enforced." "Show me the render path." "Show me who can bind send-email." If the vendor answers with a longer system prompt, that row is still open.
+I wouldn't score a vendor against this table. I'd use it as procurement language: "Show me where retrieval ACL is enforced." "Show me the render path." "Show me who can bind send-email." If they answer with a longer system prompt, that row is still open.
 
-I care most about injection-as-architecture, output handling, excessive agency, and unbounded spend. Misinformation is a product problem with evals, not a filter you buy once.
+I care most about injection-as-architecture, output handling, excessive agency, and unbounded spend. Misinformation is a product problem with evals. You don't buy a filter once and call that row closed.
 
 ## Three questions I would actually ask
 
@@ -38,9 +38,7 @@ I care most about injection-as-architecture, output handling, excessive agency, 
 
 **Improper output handling.** Show me the render path. `textContent`, sanitized markdown, or `innerHTML`? Streamed HTML is still HTML. A CSP header is extra, not the control.
 
-**Unbounded consumption.** What is the max prompt size, max retrieval chunks, max retries, and the dollar cap per user per day? A paste of a 200-page PDF plus a retry loop is a bill. Timeouts without a quota still let the next request in.
-
-If the vendor answers any of those with a longer system prompt, that row is still open.
+**Unbounded consumption.** What's the max prompt size, max retrieval chunks, max retries, and the dollar cap per user per day? A paste of a 200-page PDF plus a retry loop is a bill. Timeouts without a quota still let the next request in.
 
 ## Sources
 

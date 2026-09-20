@@ -9,7 +9,7 @@ summary: "A weekend CLI: fake logins, two made-up policy notes, retrieval that r
 
 I got tired of five separate notes, so I glued them into one weekend CLI. Fake logins, two made-up policy files, and a send_email button that never sends. Who is asking, which notes they may see, whether the answer is grounded, and whether "send this by email" is allowed to become a send.
 
-There's no ChatGPT or Claude key in this sketch. The traces below are from an **offline** assistant: keyword overlap instead of embeddings, extractive sentences instead of a chat model, gates in Python. A live model can sit in the same slots later. It doesn't replace the slots.
+There's no ChatGPT or Claude key in this sketch. The traces below are from an **offline** assistant: keyword overlap instead of embeddings, extractive sentences instead of a chat model, gates in Python. A live model can sit in the same slots later. It doesn't replace the slots, which is the whole reason Alex's payday dies in Python and not in a paragraph.
 
 ## The toy
 
@@ -26,11 +26,11 @@ user → app → notes (filtered by audience)
                     → email (never bound to the model)
 ```
 
-Whoever typed the question vs the app. The app vs the notes. The app vs a hosted model if you add one. The app vs send-email. Auth is fake. `alex` and `sam` are strings in a dictionary. That shows *where* the mapping lives. It isn't SSO.
+Whoever typed the question vs the app. The app vs the notes. The app vs a hosted model if you add one. The app vs send-email. Auth is fake. `alex` and `sam` are strings in a dictionary. That shows *where* the mapping lives. It isn't SSO, and I'd be embarrassed if someone thought the dictionary was the production version.
 
 ## The runs
 
-The CLI takes a user and a question. ACL is looked up from the user. The client cannot pass `acl=hr`.
+The CLI takes a user and a question. ACL is looked up from the user. The client can't pass `acl=hr`.
 
 ```text
 # offline assistant
@@ -54,7 +54,7 @@ gate: send_email requires approval; not executed
 
 Alex's Monday question retrieves only recreation, cites `[recreation]`, and the hours are in the note. The same user's payday question never sees the HR file, so the score against recreation is junk and the app **does not** call a model. It prints `Not in the notes.` Sam's payday question is allowed to retrieve HR, cites `[hr]`, and quotes the 15th. France is ungrounded on purpose. Email never leaves the process.
 
-Fluency isn't what made Alex miss payday. The audience filter did.
+Fluency isn't what made Alex miss payday. The audience filter did, which is the part I'd keep even if a live model sat in the extractive slot later.
 
 ## Code I would keep
 
@@ -72,7 +72,7 @@ corpus = [doc for doc in docs if doc["acl"] == allowed_acl]
 
 If the retrieve function also accepted `allowed_acl=None`, or if the CLI took `--acl hr`, you'd have a toy that demonstrates the failure mode. Authorization belongs in the app that already decided who signed in.
 
-**Ungrounded means skip generation.** Offline, that's a keyword-overlap threshold I wrote down (`0.4`). It will be wrong on some phrasing. The rule is still: low score, no completion, no citation theatre. Live mode would use cosine the same way. The number changes. The skip doesn't.
+**Ungrounded means skip generation.** Offline, that's a keyword-overlap threshold I wrote down (`0.4`). It'll be wrong on some phrasing. The rule is still: low score, no completion, no citation theatre. Live mode would use cosine the same way. The number changes. The skip doesn't.
 
 **Dangerous tools are a Python `if`.**
 
@@ -101,7 +101,7 @@ Same catalogue as the OWASP LLM list, used as a review table, not a score.
 | Misinformation | Fluent false hours | Refuse if ungrounded; citation required or refuse |
 | Unbounded consumption | Huge pastes | Not built. A `max` on question length would go here |
 
-The citation rule is an eval in miniature: if the extractive (or live) string doesn't contain the document id, treat it as ungrounded and refuse. A fluent paragraph with no id is an answer you cannot audit.
+The citation rule is an eval in miniature: if the extractive (or live) string doesn't contain the document id, treat it as ungrounded and refuse. A fluent paragraph with no id is an answer you can't audit.
 
 ## What I wouldn't put in production
 
@@ -113,6 +113,6 @@ The citation rule is an eval in miniature: if the extractive (or live) string do
 
 **Logs.** Questions about pay and hours, with usernames, on disk. The control that made the demo auditable is also a record you now have to protect.
 
-**No human UI for the email gate.** A print statement isn't an approval workflow. Preview the payload. Name the recipients.
+**No human UI for the email gate.** A print statement isn't an approval workflow. Preview the payload. Name the recipients. I'd be embarrassed to ship print-as-approval.
 
 I'd still ship this *shape*: identity in the app, retrieval in-scope, refuse when empty, cite or stop, tools behind the process, text out, a log you can read on a bad day. I wouldn't ship the dictionary, the overlap scorer, or the print-as-approval as if they were the production versions of those ideas.

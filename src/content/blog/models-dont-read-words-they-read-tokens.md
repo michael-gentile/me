@@ -7,7 +7,7 @@ tags:
 summary: "The same sentences through two tokenizers, and why word-count limits are the wrong unit for cost, context, and input size."
 ---
 
-Chat products talk about prompts as if the model were reading English. The real interface is a list of integer IDs. Same text, two encodings, visible splits.
+Chat products talk about prompts as if the model were reading English. The interface is a list of integer IDs. Same text, two encodings, visible splits.
 
 ## Two encodings
 
@@ -26,11 +26,11 @@ Invented sentences, plus a line of JavaScript, a public Ontario URL, French, and
 | `https://www.ontario.ca/page/conservation-authorities` | 1 | 13 | 16 |
 | "La municipalité doit protéger les renseignements personnels." | 7 | 15 | 16 |
 
-A concatenated prompt of the English sentence + the code + the URL was **20 whitespace-split words** and **38 cl100k tokens**. Using a published GPT-4o-mini-style list price ($0.15 / 1M input, $0.60 / 1M output) and a 400-token completion, that one call is about **$0.00025**. The dollar amount is deliberately boring. The multiply is the lesson: **tokens × price**, not words × price.
+A concatenated prompt of the English sentence + the code + the URL was **20 whitespace-split words** and **38 cl100k tokens**. Using a published GPT-4o-mini-style list price ($0.15 / 1M input, $0.60 / 1M output) and a 400-token completion, that one call is about **$0.00025**. The dollar amount is deliberately boring. The multiply is the lesson: **tokens × price**, not words × price, which is the scare on a bilingual parks transcript that looks short in Word and isn't short on the invoice.
 
 ## What the splits look like
 
-`bylaw` isn't one token. Both vocabularies emit `by` + `law`. GPT-2 also split `shoreline` into `shore` + `line`; `cl100k_base` kept it whole. Domain jargon that is rare on the open web costs extra pieces.
+`bylaw` isn't one token. Both vocabularies emit `by` + `law`, which is the municipal-jargon version of the same joke. GPT-2 also split `shoreline` into `shore` + `line`; `cl100k_base` kept it whole. Domain jargon that is rare on the open web costs extra pieces.
 
 The word `tokenization` is already two tokens (`token` + `ization`) even without the `token+ization` trick. The model never sees the word I typed. It sees pieces that happen to reconstruct it.
 
@@ -49,7 +49,7 @@ Limits written in **words** or **characters** ("prompts shall not exceed 2,000 w
 - Context windows are token windows. A "small" chunk full of URLs and tables can crowd out the prose you meant to keep.
 - Cost and rate limits are token-shaped. A bilingual, URL-heavy transcript is more expensive than a word count suggests.
 - Length filters that count characters miss token bombs: minified code, encoded blobs, non-English text. If you need a limit, enforce it with the **same tokenizer the model uses**.
-- Logs and evals should record tokens in and out. Otherwise you cannot explain an invoice or a truncated answer.
+- Logs and evals should record tokens in and out. Otherwise you can't explain an invoice or a truncated answer.
 
 ```python
 import tiktoken

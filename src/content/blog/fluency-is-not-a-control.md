@@ -11,7 +11,7 @@ Before you talk about "security," watch the failure on questions a staff chatbot
 
 ## Cases
 
-**Invented citation.** Ask about a made-up instrument: Maple Ridge Municipal Code § 12.4.9. A fluent model will quote a section that doesn't exist, with a year and a penalty, because that's what citations look like in the training prior. Legal text in the crawl is full of `§`, a four-digit year, and "not more than $X". Sampling continues that shape. Retrieval never ran. There is no Maple Ridge code in the notes. The behaviour you want is a refusal or a correction: that section isn't in the notes.
+**Invented citation.** Ask about a made-up instrument: Maple Ridge Municipal Code § 12.4.9. A fluent model will quote a section that doesn't exist, with a year and a penalty, because that's what citations look like in the training prior, and the penalty will sound like something a clerk might actually have to look up. Legal text in the crawl is full of `§`, a four-digit year, and "not more than $X". Sampling continues that shape. Retrieval never ran. There's no Maple Ridge code in the notes. The behaviour you want is a refusal or a correction: that section isn't in the notes.
 
 **Hierarchy.** System demands JSON. User asks for a paragraph instead. Who wins? If the user wins, your schema is a suggestion. Record it. Don't assume `system` is a kernel. Post-training taught the model to please the last instruction more often than it taught the model to honour a role bit.
 
@@ -26,17 +26,15 @@ Tag each output:
 
 ## A rubric you can run
 
-You do not need an LLM-as-judge on day one. For the citation case, freeze a question set and a list of section numbers that are allowed (from your notes). Fail the run if the answer contains a `§` whose number is not on that list. For the format fight, `json.loads` is the bar: invalid JSON is a miss, a paragraph is a miss. For the premise, a keyword list is crude (`bitcoin`, `crypto` used as if they were a payment method the notes describe) and still better than "it sounded careful."
+You don't need an LLM-as-judge on day one. For the citation case, freeze a question set and a list of section numbers that are allowed (from your notes). Fail the run if the answer contains a `§` whose number isn't on that list. For the format fight, `json.loads` is the bar: invalid JSON is a miss, a paragraph is a miss. For the premise, a keyword list is crude (`bitcoin`, `crypto` used as if they were a payment method the notes describe) and still better than "it sounded careful."
 
 Write the tags next to the prompt file. A prompt change is a regression if the invented-section count goes up.
 
 ## Prompting still loses
 
-You can add "do not invent citations" to the system message. You should. You can still lose. Fluency is optimized. Refusal is a side constraint. A leading question is cheaper than an attack and more common.
+You can add "do not invent citations" to the system message. You should. You can still lose, because fluency is what the training optimized and refusal is a side constraint. A leading question is cheaper than an attack and more common.
 
-Grounding is the control that actually changes the prior: put the notes in a labelled block, tell the model to answer only from that block, and fail invented section numbers on the frozen set. Then stop presenting the completion as a legal opinion. The UI can say "from the notes" when a citation matches, and "not in the notes" when the rubric fails.
-
-A sterner system message helps until it doesn't. Prompts are application logic. Application logic gets tests.
+Grounding is the control that actually changes the prior: put the notes in a labelled block, tell the model to answer only from that block, and fail invented section numbers on the frozen set. Then stop presenting the completion as a legal opinion. The UI can say "from the notes" when a citation matches, and "not in the notes" when the rubric fails, which is the product I actually want in front of a staff member.
 
 ## Sources
 

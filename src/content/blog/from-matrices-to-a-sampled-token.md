@@ -7,9 +7,9 @@ tags:
 summary: "Tokens and matrices, pretraining, SFT and preference, adapters versus prompts, then inference with a KV cache and speculative decoding. Same job the whole way: next-token prediction."
 ---
 
-Product talk jumps layers. This is the object underneath, in order: what a GPT-style model *is*, how the weights get there, what "tuning" actually changes, and what happens at inference (including the trick that makes coding assistants feel instant).
+Product talk jumps layers. This is the object underneath, in order: what a GPT-style model *is*, how the weights get there, what "tuning" actually changes, and what happens at inference, including the trick that makes coding assistants feel instant. If I'm sitting in a review, I want to know which of those layers a vendor is actually selling.
 
-One job. Predict the next token. Everything else is how you get that prediction, and what you wrap around it.
+The whole stack is one job, predict the next token, and everything else is how you get that prediction and what you wrap around it.
 
 ```text
 text → tokens → vectors → transformer blocks
@@ -19,24 +19,24 @@ text → tokens → vectors → transformer blocks
 
 ## Tokens, then matrices
 
-Text isn't what the network sees. A tokenizer chops a string into integer IDs from a fixed vocabulary. Those IDs index **rows of an embedding matrix**: vocab size by hidden size. Token `42` isn't the word "the." It's row 42.
+Text isn't what the network sees. A tokenizer chops a string into integer IDs from a fixed vocabulary, and those IDs index **rows of an embedding matrix**: vocab size by hidden size. Token `42` isn't the word "the." It's row 42, which is already enough to stop talking as if the model were reading English.
 
 From there, almost every learned piece is a matrix multiply plus a nonlinearity:
 
-- **Attention.** Each token's vector is projected into queries, keys, and values (`Q`, `K`, `V`). Scores are `Q Kᵀ` (scaled, masked so you cannot look into the future during training), then softmax, then a weighted sum of `V`. Several heads do this in parallel and concatenate. "Attention" means tokens in the window mixing information with other tokens in the window. It doesn't mean the model is paying attention to you.
+- **Attention.** Each token's vector is projected into queries, keys, and values (`Q`, `K`, `V`). Scores are `Q Kᵀ` (scaled, masked so you can't look into the future during training), then softmax, then a weighted sum of `V`. Several heads do this in parallel and concatenate. "Attention" means tokens in the window mixing information with other tokens in the window. It doesn't mean the model's paying attention to you, or to the bylaw you meant, or to the ticket a staff member typed.
 - **MLP / feed-forward.** A bigger matrix (expand), a nonlinearity, a matrix back down to the residual width. This is most of the parameter count in a typical block.
 - **Residual stream.** Each sub-layer adds its output back onto the incoming vector. That highway is why you can stack 12 or 96 of the same block without the signal dying.
 - **Unembedding.** A last matrix maps the final vector to one score per vocabulary item. Softmax turns those scores into a probability distribution over the next token.
 
-GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It doesn't change the job.
+GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It doesn't change the job, and it doesn't give you a clerk who knows this year's amendment.
 
-You don't need the derivation to use this in a review. Stop treating "the model" as a person and start treating it as stacked linear maps over a token window.
+In a review I'd stop treating "the model" as a person and start treating it as stacked linear maps over a token window. You don't need the derivation for that. You need it so "tune the model" and "fetch the PDF" don't get written into the same line of a statement of work.
 
 ## Pretraining
 
-Pretraining is next-token prediction on a huge text crawl. Show the model tokens 1…t, ask it for token t+1, measure how wrong the distribution was (cross-entropy), push the matrices a little with backpropagation. Repeat.
+Pretraining is next-token prediction on a huge text crawl. Show the model tokens 1…t, ask it for token t+1, measure how wrong the distribution was (cross-entropy), push the matrices a little with backpropagation, and repeat.
 
-That's where most of the "knowledge" texture comes from: statistics of how tokens followed other tokens in the crawl. There's no live database in there. A bylaw passed last Tuesday isn't in the weights unless it was in the data, or someone put it in later.
+That's where most of the "knowledge" texture comes from: statistics of how tokens followed other tokens in the crawl. There's no live database in there. A bylaw passed last Tuesday isn't in the weights unless it was in the data, or someone put it in later, which is why pasting last Tuesday's PDF is a retrieval job, not a training job.
 
 Compute is the scarce resource. Data mix, sequence length, and batch size are the product decisions. The loss going down isn't the same as the model becoming a reliable clerk.
 
@@ -44,7 +44,7 @@ Compute is the scarce resource. Data mix, sequence length, and batch size are th
 
 A base model completes internet-shaped text. A chat product needs to follow instructions, refuse some classes of request, and sound like an assistant. That's a second training stage, still next-token prediction, on a different distribution.
 
-**Supervised fine-tuning (SFT).** Human-written (or distilled) prompt–response pairs. The model is trained to emit the response tokens given the prompt tokens. This is ordinary supervised learning. It teaches format and the *habit* of answering.
+**Supervised fine-tuning (SFT).** Human-written (or distilled) prompt-response pairs. The model is trained to emit the response tokens given the prompt tokens. This is ordinary supervised learning. It teaches format and the *habit* of answering, which is why a parks assistant sounds like an assistant even when it invents a citation.
 
 **Preference / RL.** Raters (or another model) compare two answers. Those comparisons train a **reward model**, or they are used directly.
 
@@ -52,7 +52,7 @@ A base model completes internet-shaped text. A chat product needs to follow inst
 - **DPO** and cousins skip the explicit RL loop. They train on preferred vs rejected pairs as a classification-shaped objective over the same policy. Same intent: move probability mass toward answers people (or a judge) liked.
 - **RLAIF** swaps human raters for a model judge. Cheaper. The judge's biases become the policy's biases.
 
-This stage changes style, refusal texture, and how often the model emits tool-call JSON. It doesn't install a boundary between instructions and data. The network is still sampling tokens.
+This stage changes style, refusal texture, and how often the model emits tool-call JSON. It doesn't install a boundary between instructions and data. The network is still sampling tokens, so a fluent refusal in the SFT data is a style, not a gate in front of `send_email`.
 
 ## "Tuning" is several different jobs
 
@@ -65,22 +65,22 @@ People say "we will tune the model" when they mean four different interventions.
 | System prompt / few-shot | No weights. Tokens prepended at inference | Instructions, tone, output schema. Weak if it is the only control |
 | Retrieval / tools | No weights. Extra tokens and an application loop | Facts that change, documents with ACLs, actions that need a gate |
 
-LoRA is the one worth naming. Freeze the pretrained matrices. Learn a pair of thin matrices whose product is added into selected layers. You ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights.
+LoRA is the one worth naming. Freeze the pretrained matrices, learn a pair of thin matrices whose product is added into selected layers, and you ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights. I'd reach for that when the need is domain style or a format the base model keeps missing, and I'd still want the recreation/HR split in the application, because an adapter doesn't know who the caller is.
 
-A prompt isn't tuning. Retrieval isn't tuning. Both are the application layer. Mixing them up is how a statement of work says "fine-tune" when the need was "fetch the current PDF and do not let recreation users retrieve HR."
+A prompt isn't tuning. Retrieval isn't tuning. Both are the application layer. Mixing them up is how a statement of work says "fine-tune" when the need was "fetch the current PDF and don't let recreation users retrieve HR."
 
 ## Inference: prefill, decode, sample
 
 Training is batched and parallel over the sequence (with a causal mask). Serving a chat turn is mostly sequential.
 
 1. **Tokenize** the message array (system, retrieved blocks, user, prior assistant turns) into one ID list.
-2. **Prefill.** Run the prompt through the stack once. Build a **KV cache**: the keys and values for every layer, every token so far. This is the expensive step for a long prompt.
+2. **Prefill.** Run the prompt through the stack once. Build a **KV cache**: the keys and values for every layer, every token so far. This is the expensive step for a long prompt, which is the bill you run up when someone pastes the whole facilities handbook.
 3. **Decode.** For each new token: one forward pass that only needs the new query against the cached keys/values, then sample, then append. Repeat until an end token, a stop string, or `max_tokens`.
 4. **Detokenize** into text (or into tool-call JSON your process may refuse to execute).
 
-Sampling is a draw from the softmax distribution. Temperature stretches it. Top-p cuts the tail. Temperature 0 is "take the argmax," and vendors still aren't always bit-identical. Pin the knobs in production. Don't call the knob creativity.
+Sampling is a draw from the softmax distribution. Temperature stretches it. Top-p cuts the tail. Temperature 0 is "take the argmax," and vendors still aren't always bit-identical. Pin the knobs in production. Don't call the knob creativity, especially not on a yes/no permit question.
 
-The KV cache is why "just paste the whole PDF" is a cost and latency problem, not only a quality problem. You pay prefill on every new prompt that isn't a prefix of the last one. Prefix caching helps when the system prompt is stable. It doesn't make an unbounded dump a retrieval strategy.
+The KV cache is why "just paste the whole PDF" is a cost and latency problem, not only a quality problem. You pay prefill on every new prompt that isn't a prefix of the last one. Prefix caching helps when the system prompt is stable. It doesn't make an unbounded dump a retrieval strategy, and it doesn't make the middle of a 200-page handbook more likely to show up in the answer.
 
 ## Speculative decoding
 
@@ -92,15 +92,13 @@ Autoregressive decode is slow because each token waits on a full forward pass of
 
 The user-visible stream is still from the large model's distribution if the accept/reject rule is right. You're buying latency, not a different personality. When the draft is good (boilerplate, obvious syntax, the next line of a function the model has already started), accept rates are high and the assistant feels instant. When the next token is genuinely uncertain, the draft is waste and you fall back to ordinary decode.
 
-Coding products love this because code is locally predictable: brackets, identifiers, the rest of a `for` loop. Some stacks also speculate on the next *edit* or tool call and throw it away if the user types something else. Same shape. Cheap proposal, expensive check.
-
-It's an inference optimization. It doesn't make the answer more true.
+That's why Copilot can feel instant on the rest of a `for` loop: code is locally predictable, brackets and identifiers and the next line, so the cheap draft survives the check. Some stacks also speculate on the next *edit* or tool call and throw it away if the user types something else. Same shape. Cheap proposal, expensive check. It still doesn't make the answer more true, and it doesn't make a parks citation real.
 
 ## Layers
 
-If you can point at which layer a vendor is selling (matrices, a pretrained checkpoint, an SFT/preference recipe, an adapter, a prompt, a retriever, a decode-time trick), you can stop arguing with the word "AI."
+If you can point at which layer a vendor is selling (matrices, a pretrained checkpoint, an SFT/preference recipe, an adapter, a prompt, a retriever, a decode-time trick), you can stop arguing with the word "AI" and start arguing about the statement of work.
 
-The model is the matrices and the loop that samples from them. The product is everything around that loop. The application is still where policy lives.
+The model is the matrices and the loop that samples from them. The product is everything around that loop. The application is still where policy lives, which is the layer that decides whether recreation users ever see HR chunks.
 
 ## Sources
 

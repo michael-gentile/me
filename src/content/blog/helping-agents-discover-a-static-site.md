@@ -9,9 +9,9 @@ summary: "Dries Buytaert exposed blog search over MCP because he has a live API.
 
 [Dries Buytaert's write-up](https://dri.es/helping-agents-discover-my-site-search-with-mcp) on exposing site search to agents is the right *shape* of the problem: finding a service and calling it are different layers. I didn't copy his implementation. The architectures aren't the same.
 
-His site has a real search API. Mine is a static Astro build on GitHub Pages. There's no POST. There's no process that ranks a query. The in-browser filter only hides cards that are already in the HTML. Standing up MCP here would be theatre: a protocol that expects a server, pointed at a CDN that cannot answer `tools/call`.
+His site has a real search API. Mine is a static Astro build on GitHub Pages. There's no POST and no process that ranks a query. The in-browser filter only hides cards that are already in the HTML. Standing up MCP here would be theatre: a protocol that expects a server, pointed at a CDN that can't answer `tools/call`.
 
-So I shipped the pieces that actually fit.
+I shipped the pieces that actually fit.
 
 ## Finding vs calling
 
@@ -19,7 +19,7 @@ Dries's useful sentence: ARD (and friends) handle *finding* a service. OpenAPI a
 
 He prefers OpenAPI for an anonymous, read-only API, and MCP when you have multi-step work, auth, or session state. I agree. This site is the first case.
 
-I skipped IETF API Catalog and well-known URIs at the origin root. This is a GitHub Pages *project* site. Files live under `/me/`. I cannot put `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo. The [llms.txt v2 spec](https://llmstxt.org/) calls that situation out: a file at a path describes that path. `/me/llms.txt` is the discovery document this host can actually publish.
+I skipped IETF API Catalog and well-known URIs at the origin root. This is a GitHub Pages *project* site. Files live under `/me/`. I can't put `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo. The [llms.txt v2 spec](https://llmstxt.org/) calls that situation out: a file at a path describes that path. `/me/llms.txt` is the discovery document this host can actually publish.
 
 ## What shipped
 
@@ -45,9 +45,9 @@ Locally the same paths hang off `http://127.0.0.1:4321/me/`.
 
 ## Why not MCP
 
-MCP got simpler in the 2026-07-28 revision: no required session, no init handshake, a POST of JSON. Still a POST. GitHub Pages doesn't run one. A Cloudflare Worker in front of `posts.json` could pretend to be `tools/call`, and it would still be a proxy over a static file. If a registry or a desktop client someday demands MCP and nothing else, that Worker is a day's work. It isn't what makes the writing findable.
+MCP got simpler in the 2026-07-28 revision: no required session, no init handshake, a POST of JSON. Still a POST. GitHub Pages doesn't run one. A Cloudflare Worker in front of `posts.json` could pretend to be `tools/call`, and it would still be a proxy over a static file. If a registry or a desktop client someday demands MCP and nothing else, that Worker is a day's work and I'd do it, but it isn't what makes the writing findable.
 
-OpenAPI on a single GET is honest. Anything that can make an HTTP request can use it. That's Dries's preference for read-only search, minus the search.
+OpenAPI on a single GET is honest. Anything that can make an HTTP request can use it, which is Dries's preference for read-only search, minus the search.
 
 ## GEO is mostly the writing
 

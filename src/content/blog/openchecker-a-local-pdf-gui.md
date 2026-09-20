@@ -26,12 +26,12 @@ openChecker is a local FastAPI app. One HTML page, near-black paper, teal, a dro
   fetchpriority="high"
 />
 
-What comes back:
+What comes back is four tabs from that one convert:
 
-- **Markdown:** headings, lists, tables, reading order. The thing you would chunk later.
-- **JSON:** the same elements with bounding boxes. Each box is page coordinates (left, top, right, bottom). Scroll until you see those four numbers next to a heading. That rectangle is what you would highlight if someone asked where a sentence came from.
+- **Markdown:** headings, lists, tables, reading order. The thing you'd chunk later.
+- **JSON:** the same elements with bounding boxes. Each box is page coordinates (left, top, right, bottom). Scroll until you see those four numbers next to a heading. That rectangle is what you'd highlight if someone asked where a sentence came from.
 - **Annotated PDF:** the overlay the extractor already knows how to draw. The tab shows page images of that overlay; the download is the PDF itself. Native iframe PDF viewers on this stack often stayed blank if the file loaded while the tab was hidden, so the GUI rasterizes pages with pypdfium2 and shows PNGs.
-- **Tagged PDF:** only if you tick the box. Auto-tagging is free upstream. Full PDF/UA export isn't, and this GUI doesn't pretend otherwise. Tagged and PDF/UA are not the same checkbox.
+- **Tagged PDF:** only if you tick the box. Auto-tagging is free upstream. Full PDF/UA export isn't, and this GUI doesn't pretend otherwise. Tagged and PDF/UA aren't the same checkbox.
 
 The file never leaves the machine: no account, and no hosted OCR. If `java -version` fails, the page says so instead of hanging on a spinner.
 
@@ -39,10 +39,10 @@ The file never leaves the machine: no account, and no hosted OCR. If `java -vers
 
 The GitHub repo is the product. Cloning it into a folder and slapping a form on the CLI would still be their code, plus a worse install. The Python package already bundles the CLI. The GUI is the missing piece: a browser, a drop target, tabs, download links.
 
-Hybrid mode is the tempting add-on. Scans, borderless tables, LaTeX, chart captions. It wants `opendataloader-pdf-hybrid` on another port and a pile of extra models. That is useful on a bench and wrong for v1. Deterministic local mode: digital PDFs in, structure out, JVM on the PATH.
+Hybrid mode is the tempting add-on. Scans, borderless tables, LaTeX, chart captions. It wants `opendataloader-pdf-hybrid` on another port and a pile of extra models. That's useful on a bench and wrong for v1. Deterministic local mode: digital PDFs in, structure out, JVM on the PATH.
 
 Homebrew on a Mac often has a JDK and still reports `Unable to locate a Java Runtime`. The app looks under `/opt/homebrew/opt/openjdk*` when `PATH` is shy. That's the bug I hit first.
 
-The benchmark numbers on the upstream README are theirs. What I needed was a page I would click, on a laptop, without sending a PDF to a cloud parser I don't run.
+The benchmark numbers on the upstream README are theirs. What I needed was a page I'd click, on a laptop, without sending a PDF to a cloud parser I don't run.
 
 Run it locally. Drop a born-digital file. Read the Markdown. Scroll the JSON until you see a bounding box. I got tired of remembering the CLI flags.

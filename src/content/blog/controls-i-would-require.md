@@ -7,7 +7,7 @@ tags:
 summary: "A design-review matrix: max length, labelled channels, dual-step summarizers, output policy, humans before send, least-privilege tools, logs. Three I would put in a statement of work."
 ---
 
-A review wants a table, not a vibe. This is the matrix I would actually walk. "N/A" is allowed if you say why.
+A review wants a table you can argue with. This is the matrix I'd actually walk. "N/A" is allowed if you say why.
 
 | Control | What it actually does | Residual risk |
 | --- | --- | --- |
@@ -28,15 +28,15 @@ A review wants a table, not a vibe. This is the matrix I would actually walk. "N
 
 ## ACL, as a sequence
 
-The browser never sends `acl=hr`. The session cookie (or SSO assertion) is the identity. The app looks up that identity in a table it owns: Alex → recreation, Sam → HR. Retrieve is called with the audience the app just computed. Similarity runs only on chunks whose metadata matches that audience. The model never sees HR text in Alex's turn.
+The browser never sends `acl=hr`. The session cookie (or SSO assertion) is the identity. The app looks up that identity in a table it owns: Alex → recreation, Sam → HR. Retrieve is called with the audience the app just computed. Similarity runs only on chunks whose metadata matches that audience. The model never sees HR text in Alex's turn, which is the whole point of walking payday as Alex and then as Sam.
 
-If retrieve is a Python function that takes `acl` as an argument, and the HTTP handler copies `acl` from the query string, you have not done this. You have a filter that the caller can skip. The residual-risk row in the table ("If the app trusts a client-supplied ACL") is that skip.
+If retrieve is a Python function that takes `acl` as an argument, and the HTTP handler copies `acl` from the query string, you haven't done this. You've got a filter the caller can skip. The residual-risk row in the table ("If the app trusts a client-supplied ACL") is that skip, and it's the one that still bites you after you buy an injection filter.
 
 ## What I wouldn't pay extra for, first
 
 A vendor "injection filter" as the only control, and a longer system prompt. Both can be additive. Neither replaces the three above. A classifier that scores "this looks like an injection" still leaves retrieval without an ACL, `innerHTML` on the pane, and `send_email` bound to the model. The filter is another model. It has false negatives. Put it after the architecture, not instead of it.
 
-Residual risk is the honest row. Dual-step plus labelled channels plus a stern prompt still leaves a fluent model in the loop. You're reducing how often untrusted text becomes a rule or a tool call. You're not deleting the model. A reviewer should be able to argue with this table without opening a notebook.
+Residual risk is the honest row. Dual-step plus labelled channels plus a stern prompt still leaves a fluent model in the loop. You're reducing how often untrusted text becomes a rule or a tool call. A reviewer should be able to argue with this table without opening a notebook.
 
 ## Sources
 

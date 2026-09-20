@@ -7,7 +7,7 @@ tags:
 summary: "Embeddings are geometry. Paraphrases cluster. The word bank also clusters. A retriever will fetch the wrong paragraph without anyone hacking anything."
 ---
 
-Later retrieve-then-generate systems decide "this chunk is about the question" with vectors. That's geometry, not magic meaning. Ten sentences, a cosine matrix, a false friend.
+Later retrieve-then-generate systems decide "this chunk is about the question" with vectors. That's geometry. Ten sentences, a cosine matrix, a false friend, and the comedy version is a staff member asking "Can I work from home?" and getting a shoreline closure because both sentences sound outdoorsy.
 
 ## Ten sentences
 
@@ -42,7 +42,7 @@ The model name matters. `text-embedding-3-small` and `nomic-embed-text` won't pr
 
 Cosine is `dot(a, b) / (||a|| ||b||)`. Two vectors pointing the same way score 1. Opposite ways, -1. Orthogonal, 0. Retrievers usually store L2-normalized embeddings so cosine collapses to a dot product, which is why "nearest" is a cheap sort. The geometry still has no idea that river-bank and lender-bank are different words in English. They co-occur with overlapping contexts in the crawl, so their vectors sit closer than a human would put them.
 
-A 4×4 slice, invented, so the shape is visible. Not a real model.
+A 4×4 slice, invented, so the shape is visible. Not a real model. I made these numbers up so you can see the 0.62 without waiting on an API.
 
 |  | wfh | river bank | lender | dusk |
 | --- | ---: | ---: | ---: | ---: |
@@ -55,9 +55,9 @@ The 0.62 between river bank and lender is the false friend. A question about "th
 
 ## What a retriever actually does
 
-It's asking which stored vector is closest to this question vector. Closest isn't allowed, current, or the chunk a human would pick. Lexical overlap is a feature of the geometry, not a bug you prompt away.
+It's asking which stored vector is closest to this question vector. Closest isn't allowed, current, or the chunk a human would pick. Lexical overlap is a feature of the geometry.
 
-That's why a later retrieve-then-generate pipeline needs a second filter (audience, system, document id) *before* similarity. A better embedding makes nearest sharper. It doesn't make nearest honest.
+That's why a later retrieve-then-generate pipeline needs a second filter (audience, system, document id) *before* similarity. A better embedding makes nearest sharper. It still doesn't know that Alex is recreation-only.
 
 ## Sources
 

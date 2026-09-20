@@ -22,11 +22,11 @@ Example excerpt: parks close at 22:00.
 Example answer: {"risks": ["after-hours use"]}
 ```
 
-The model now has "22:00" in its recent tokens. A real excerpt that only says "hours to dusk" can still grow a 22:00 curfew because the example was not empty of facts. The example should use invented names and no overlapping rules, or you skip few-shot.
+The model now has "22:00" in its recent tokens. A real excerpt that only says "hours to dusk" can still grow a 22:00 curfew because the example wasn't empty of facts, which is the embarrassing run: you asked for a shape and you got a closing time you invented. The example should use invented names and no overlapping rules, or you skip few-shot.
 
 **JSON.** Schema in the system message. Valid JSON is a pass. Invalid JSON is a failed pattern, not a near miss. If you need a machine to consume the answer, this is the only one of the four that even pretends to be an interface.
 
-Sketch of the schema I would actually send for this excerpt:
+Sketch of the schema I'd actually send for this excerpt:
 
 ```json
 {
@@ -58,7 +58,7 @@ The one I'd actually use for "summarize this policy into risks" is JSON with a c
 
 ## Shipping test
 
-Would I put this in front of a staff member without a rewrite? If the answer is no, the pattern lost, even if the prose is nicer. Invented curfews fail that test.
+Would I put this in front of a staff member without a rewrite? Invented curfews fail that test, even if the prose is nicer.
 
 ## Sources
 
