@@ -3,7 +3,7 @@ title: "A typed decision instead of a paragraph"
 date: 2026-09-16
 tags:
   - llm
-summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilities instead of tokens, and they published the caveats next to the speed claims."
+summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilities instead of tokens."
 ---
 
 Diogo Almeida's first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is the same itch these notes keep hitting: models have been superhuman at chat for years, so where is all the automation?
@@ -13,8 +13,6 @@ Chat is a string a person can rewrite. A program needs a value it can branch on,
 Jev is TypeSafe's first public System One model. Early access started 15 September 2026. The interface they describe is unstructured state in, typed probabilistic decisions out. They gave up string generation, sampling is parallel (every answer in one query), and training is Reinforcement Learning for Calibrated Decisions (RLCD). The probabilities are supposed to track accuracy, not a rater's preferred writeup.
 
 The names are in the FAQ. System One from Kahneman's fast half of *Thinking, Fast and Slow*. Jev from William Stanley Jevons: cheaper intelligence, more demand.
-
-I haven't called the API. What follows is their post, plus what I'd actually try on a frozen parks question set if I did.
 
 ## Numbers they published
 
@@ -81,13 +79,16 @@ They plot structured-output error rates and tool-call error rates from OpenRoute
 
 A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. I've been writing that fluency isn't a control and that the application owns the message array. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part I'd actually try to measure.
 
-## What I would try it for
+## Some interesting use cases
 
-Routing, scoring, "is this in the notes," checks on another model's output. Almeida lists those under verify everything. Real-time UI if 100ms holds on my traffic. Map-reduce over a pile of records, if the question set is stable.
+Since Jev's release I've been bumping into little tools and experiments people wired up around a typed decision, and they're all the same itch: pick a label, threshold the confidence, let code do the rest.
 
-I wouldn't ask it to write the email, explain the bylaw, or draft the Markdown. They gave that up on purpose. Doom and Wikiracing in the post are speed and high-cardinality demos, which is a fun way to show the sampler, and not the parks job. Cardinality caps at 255, then a two-stage score-then-pick.
-
-If I did call it, the first test would be the same one I use on chat: a frozen set of questions with known answers (Cedar Mondays, payday, permit for 30 people), plus a noisy retrieved block that looks like an instruction. Schema pass is the minimum. Calibration on my labels is the claim that matters, because a perfectly typed `permit_required: false` at high confidence is still a bad day if the notes said 25 people.
+- Super fast browser use
+- Classification of files that are safe to delete versus ones that aren't
+- A slop detector that tagged X posts as "SLOP" when it was confident enough
+- A malicious URL classifier
+- A buy or sell asset pair trading program
+- An LLM tool call scorer
 
 ## Sources
 
