@@ -8,9 +8,10 @@ import { withBase } from '../lib/url'
 type Props = {
   post: CollectionEntry<'blog'>
   headingLevel?: 'h2' | 'h3'
+  deferPaint?: boolean
 }
 
-const { post, headingLevel: Heading = 'h2' } = Astro.props
+const { post, headingLevel: Heading = 'h2', deferPaint = false } = Astro.props
 const formattedDate = formatPostDate(post.data.date)
 const readingTime = formatReadingTime(readingMinutes(post.body ?? ''))
 const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
@@ -21,6 +22,7 @@ const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
   data-post-card
   data-title={post.data.title.toLowerCase()}
   data-tags={tagList}
+  data-defer-paint={deferPaint || undefined}
 >
   <p class="text-sm text-muted dark:text-muted-dark">
     <time datetime={post.data.date.toISOString()}>{formattedDate}</time>

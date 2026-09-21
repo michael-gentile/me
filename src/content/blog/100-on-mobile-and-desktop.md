@@ -40,15 +40,23 @@ Mobile lab metrics: First Contentful Paint 0.8 s, Largest Contentful Paint 1.2 s
 
 Desktop from the same session: First Contentful Paint 0.2 s, Largest Contentful Paint 0.3 s, Total Blocking Time 0 ms, Cumulative Layout Shift 0, Speed Index 0.3 s.
 
+## Blog and contact
+
+[Blog](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-blog/trqcxnp27d?form_factor=mobile) was 99 on mobile and 100 on desktop. Accessibility, Best Practices, and SEO were already 100. Mobile Speed Index was 3.6 s. First Contentful Paint 0.9 s, Largest Contentful Paint 1.4 s, Total Blocking Time 0 ms, Cumulative Layout Shift 0.
+
+On a phone the first screen was a wrapped pile of tag chips, then every post in the archive. The filter script restyled those chips on load even when the URL had no search. I stopped that. The selected chip is `aria-current` in CSS, and the script leaves the HTML alone until there is a `q` or `tag` query. The chips sit on one scrolling row. Cards below the first couple use `content-visibility: auto` so the browser is not laying out the whole list before first paint.
+
+[Contact](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-contact/i203w864xs?form_factor=mobile) was 100 for Performance, Best Practices, and SEO, and 95 for Accessibility, on mobile and desktop. PSI's note: "Links rely on color to be distinguishable." LinkedIn and GitHub sit in a sentence of body copy, teal, with no underline. I underlined them.
+
 ## What was already small
 
-The rest of the score is the stack I already wanted. Pages compile to static HTML on GitHub Pages. The only client script is the theme toggle, which reads `localStorage`, falls back to `prefers-color-scheme`, and flips a `dark` class. No analytics. No CMS JavaScript. No contact-form backend. If the inline boot script in the layout has already run, you shouldn't see a flash of the wrong theme.
+The rest of the score is the stack I already wanted. Pages compile to static HTML on GitHub Pages. Most pages only run the theme toggle, which reads `localStorage`, falls back to `prefers-color-scheme`, and flips a `dark` class. The blog list has a small filter script as well. No analytics. No CMS JavaScript. No contact-form backend. If the inline boot script in the layout has already run, you shouldn't see a flash of the wrong theme.
 
 That's the clone path too. If you take this repo, keep the self-hosted fonts and the sized WebP screenshots, you're starting from a home that PSI scored 100 on mobile and 100 on desktop. Your posts can still blow the budget if you drop a 2 MB PNG in a note. The plumbing is the part that was worth writing down.
 
 ## Sources
 
-- [PageSpeed Insights](https://pagespeed.web.dev/): live home, mobile and desktop
+- [PageSpeed Insights](https://pagespeed.web.dev/): live home, [blog](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-blog/trqcxnp27d?form_factor=mobile), and [contact](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-contact/i203w864xs?form_factor=mobile)
 - [Astro fonts](https://docs.astro.build/en/guides/fonts/): `fontProviders.google()`, `<Font>` preload
 - [The stack behind this site](/me/blog/the-stack-behind-this-site/)
 

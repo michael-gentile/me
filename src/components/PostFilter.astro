@@ -28,23 +28,27 @@ const { tags } = Astro.props
         class="w-full border-b border-line bg-transparent py-2 text-base text-ink placeholder:text-muted focus:border-accent dark:border-line-dark dark:text-ink-dark dark:placeholder:text-muted-dark dark:focus:border-accent-dark"
         data-post-search
       />
-      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Filter by tag">
-        <li>
+      <ul
+        class="mt-4 flex flex-nowrap gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        aria-label="Filter by tag"
+      >
+        <li class="shrink-0">
           <a
             href={blogFilterHref()}
-            class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark"
+            class="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent aria-current:border-accent aria-current:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark dark:aria-current:border-accent-dark dark:aria-current:text-accent-dark"
             data-tag-filter
             data-tag=""
+            aria-current="true"
           >
             All
           </a>
         </li>
         {
           tags.map((tag) => (
-            <li>
+            <li class="shrink-0">
               <a
                 href={`?tag=${encodeURIComponent(tag)}`}
-                class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark"
+                class="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent aria-current:border-accent aria-current:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark dark:aria-current:border-accent-dark dark:aria-current:text-accent-dark"
                 data-tag-filter
                 data-tag={tag}
               >
@@ -68,19 +72,6 @@ const { tags } = Astro.props
   const tagLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-tag-filter]')]
 
   if (root && searchInput && cards.length > 0) {
-    const selectedClass = [
-      'border-accent',
-      'text-accent',
-      'dark:border-accent-dark',
-      'dark:text-accent-dark',
-    ]
-    const idleClass = [
-      'border-line',
-      'text-muted',
-      'dark:border-line-dark',
-      'dark:text-muted-dark',
-    ]
-
     const readFilters = () => {
       const params = new URLSearchParams(window.location.search)
       return {
@@ -123,7 +114,6 @@ const { tags } = Astro.props
         const matchesTag = !activeTagLower || tags.includes(activeTagLower)
         const isVisible = matchesQuery && matchesTag
         card.hidden = !isVisible
-        card.classList.toggle('hidden', !isVisible)
 
         if (isVisible) {
           visibleCount += 1
@@ -150,15 +140,17 @@ const { tags } = Astro.props
         } else {
           link.removeAttribute('aria-current')
         }
-        link.classList.remove(...selectedClass, ...idleClass)
-        link.classList.add(...(isActive ? selectedClass : idleClass))
       }
     }
 
     const { query, tag } = readFilters()
-    searchInput.value = query
-    setActiveTag(tag)
-    applyFilters()
+
+    // PSI hits /blog/ with no query. Leave the HTML alone until someone filters.
+    if (query || tag) {
+      searchInput.value = query
+      setActiveTag(tag)
+      applyFilters()
+    }
 
     searchInput.addEventListener('input', () => {
       writeFilters(searchInput.value.trim(), selectedTag())
