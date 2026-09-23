@@ -13,11 +13,12 @@ const pathname = Astro.url.pathname
   Skip to content
 </a>
 
-<header class="border-b border-line dark:border-line-dark" transition:persist="site-header">
+<header class="border-b border-line dark:border-line-dark">
   <div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-5">
     <a
       href={withBase('/')}
       class="font-serif text-lg tracking-tight text-ink no-underline hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+      data-nav-home
       aria-current={isCurrentPath(pathname, '/') ? 'page' : undefined}
       aria-label={`${siteMeta.name} home`}
       transition:name="site-name"
@@ -34,6 +35,7 @@ const pathname = Astro.url.pathname
                 <li>
                   <a
                     href={withBase(item.href)}
+                    data-nav-href={item.href}
                     class:list={[
                       'transition-colors hover:text-accent dark:hover:text-accent-dark',
                       current
@@ -54,3 +56,48 @@ const pathname = Astro.url.pathname
     </div>
   </div>
 </header>
+
+<script>
+  const ACTIVE = ['text-accent', 'dark:text-accent-dark']
+  const IDLE = ['text-muted', 'dark:text-muted-dark']
+
+  const normalizePath = (pathname: string) => pathname.replace(/\/$/, '') || '/'
+
+  const syncNav = () => {
+    const current = normalizePath(window.location.pathname)
+    const home = document.querySelector<HTMLAnchorElement>('[data-nav-home]')
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-nav-href]')
+
+    if (home) {
+      const homeHref = normalizePath(home.pathname)
+      const isHome = current === homeHref
+      if (isHome) {
+        home.setAttribute('aria-current', 'page')
+      } else {
+        home.removeAttribute('aria-current')
+      }
+    }
+
+    for (const link of links) {
+      const href = link.dataset.navHref ?? ''
+      const target = normalizePath(link.pathname)
+      // Blog stays current for posts under /blog/
+      const isCurrent =
+        href === '/blog'
+          ? current === target || current.startsWith(`${target}/`)
+          : current === target
+
+      link.classList.remove(...ACTIVE, ...IDLE)
+      link.classList.add(...(isCurrent ? ACTIVE : IDLE))
+
+      if (isCurrent) {
+        link.setAttribute('aria-current', 'page')
+      } else {
+        link.removeAttribute('aria-current')
+      }
+    }
+  }
+
+  syncNav()
+  document.addEventListener('astro:page-load', syncNav)
+</script>

@@ -18,5 +18,15 @@ export const withBase = (path: string) => {
 export const isCurrentPath = (pathname: string, href: string) => {
   const current = pathname.replace(/\/$/, '') || '/'
   const target = withBase(href).replace(/\/$/, '') || '/'
-  return current === target
+
+  if (current === target) {
+    return true
+  }
+
+  // Keep Blog current on post pages under /blog/
+  if (href === '/blog') {
+    return current.startsWith(`${target}/`)
+  }
+
+  return false
 }
