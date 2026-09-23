@@ -14,13 +14,13 @@ const { posts } = Astro.props
     <section class="mt-16 max-w-[65ch]" aria-labelledby="related-posts">
       <h2
         id="related-posts"
-        class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark"
+        class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-accent dark:border-line-dark dark:text-accent-dark"
       >
         Related posts
       </h2>
-      <div class="mt-4 border-t border-line dark:border-line-dark">
+      <div class="mt-6 flex flex-col gap-10">
         {posts.map((post) => (
-          <article class="border-b border-line py-6 dark:border-line-dark">
+          <article>
             <h3 class="font-serif text-2xl tracking-tight">
               <a
                 class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
