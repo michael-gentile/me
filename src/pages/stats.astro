@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { buildSiteStats } from '../lib/stats'
+import { withBase } from '../lib/url'
+
+const stats = await buildSiteStats(Astro.generator)
+const maxTagCount = Math.max(...stats.topics.tags.map((tag) => tag.count), 1)
+const maxYearCount = Math.max(...stats.cadence.map((year) => year.count), 1)
+
+const formatNumber = (value: number) => value.toLocaleString('en-CA')
+---
+
+<BaseLayout
+  title="Stats"
+  description="Build-time inventory of this site: archive size, tags, reading load, and stack facts. Not live analytics."
+>
+  <section>
+    <p class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark">
+      Stats
+    </p>
+    <h1 class="mt-3 font-serif text-4xl tracking-tight">Site inventory</h1>
+    <p class="mt-4 text-lg text-muted dark:text-muted-dark">
+      Numbers baked at deploy from the markdown collection. No page views, no trackers, nothing that moves between builds.
+    </p>
+  </section>
+
+  <section class="mt-14" aria-labelledby="archive-heading">
+    <h2
+      id="archive-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Archive
+    </h2>
+    <dl class="mt-6 grid gap-6 sm:grid-cols-2">
+      <div>
+        <dt class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">Posts</dt>
+        <dd class="mt-1 font-serif text-3xl tracking-tight">{formatNumber(stats.archive.postCount)}</dd>
+      </div>
+      <div>
+        <dt class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+          Total reading time
+        </dt>
+        <dd class="mt-1 font-serif text-3xl tracking-tight">
+          {formatNumber(stats.archive.totalMinutes)} min
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+          Median post
+        </dt>
+        <dd class="mt-1 font-serif text-3xl tracking-tight">
+          {formatNumber(stats.archive.medianMinutes)} min
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+          Average post
+        </dt>
+        <dd class="mt-1 font-serif text-3xl tracking-tight">
+          {formatNumber(stats.archive.averageMinutes)} min
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">Words</dt>
+        <dd class="mt-1 font-serif text-3xl tracking-tight">
+          {formatNumber(stats.archive.totalWords)}
+        </dd>
+      </div>
+    </dl>
+
+    <ul class="mt-8 space-y-3 text-base text-muted dark:text-muted-dark">
+      {
+        stats.archive.latestPost && (
+          <li>
+            Latest:{' '}
+            <a
+              class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+              href={withBase(`/blog/${stats.archive.latestPost.id}`)}
+            >
+              {stats.archive.latestPost.title}
+            </a>
+            <span aria-hidden="true"> · </span>
+            {stats.archive.latestPost.date}
+          </li>
+        )
+      }
+      {
+        stats.archive.firstPost && (
+          <li>
+            Earliest:{' '}
+            <a
+              class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+              href={withBase(`/blog/${stats.archive.firstPost.id}`)}
+            >
+              {stats.archive.firstPost.title}
+            </a>
+            <span aria-hidden="true"> · </span>
+            {stats.archive.firstPost.date}
+          </li>
+        )
+      }
+      {
+        stats.archive.longestPost && (
+          <li>
+            Longest:{' '}
+            <a
+              class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+              href={withBase(`/blog/${stats.archive.longestPost.id}`)}
+            >
+              {stats.archive.longestPost.title}
+            </a>
+            <span aria-hidden="true"> · </span>
+            {stats.archive.longestPost.minutes} min
+          </li>
+        )
+      }
+      {
+        stats.archive.shortestPost && (
+          <li>
+            Shortest:{' '}
+            <a
+              class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+              href={withBase(`/blog/${stats.archive.shortestPost.id}`)}
+            >
+              {stats.archive.shortestPost.title}
+            </a>
+            <span aria-hidden="true"> · </span>
+            {stats.archive.shortestPost.minutes} min
+          </li>
+        )
+      }
+    </ul>
+  </section>
+
+  <section class="mt-14" aria-labelledby="cadence-heading">
+    <h2
+      id="cadence-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Cadence
+    </h2>
+    {
+      stats.cadence.length === 0 ? (
+        <p class="mt-6 text-muted dark:text-muted-dark">No posts yet.</p>
+      ) : (
+        <ul class="mt-6 space-y-3" aria-label="Posts per year">
+          {stats.cadence.map((year) => (
+            <li class="grid grid-cols-[4rem_1fr_auto] items-center gap-3 text-sm">
+              <span class="font-medium text-ink dark:text-ink-dark">{year.year}</span>
+              <div
+                class="h-2 rounded-sm bg-line dark:bg-line-dark"
+                aria-hidden="true"
+              >
+                <div
+                  class="h-full rounded-sm bg-accent dark:bg-accent-dark"
+                  style={`width: ${(year.count / maxYearCount) * 100}%`}
+                />
+              </div>
+              <span class="tabular-nums text-muted dark:text-muted-dark">
+                {year.count}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="mt-14" aria-labelledby="topics-heading">
+    <h2
+      id="topics-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Topics
+    </h2>
+    <p class="mt-4 text-base text-muted dark:text-muted-dark">
+      {formatNumber(stats.topics.uniqueTags)} unique tags across{' '}
+      {formatNumber(stats.topics.taggedPosts)} tagged posts
+      {
+        stats.topics.untaggedPosts > 0 && (
+          <>
+            {' '}
+            ({formatNumber(stats.topics.untaggedPosts)} untagged)
+          </>
+        )
+      }
+      .
+    </p>
+    {
+      stats.topics.tags.length === 0 ? (
+        <p class="mt-6 text-muted dark:text-muted-dark">No tags yet.</p>
+      ) : (
+        <ul class="mt-6 space-y-3" aria-label="Tag frequency">
+          {stats.topics.tags.map((tag) => (
+            <li class="grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-3 text-sm sm:grid-cols-[minmax(0,10rem)_1fr_auto]">
+              <a
+                class="truncate text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+                href={`${withBase('/blog')}?tag=${encodeURIComponent(tag.tag)}`}
+              >
+                {tag.tag}
+              </a>
+              <div
+                class="h-2 rounded-sm bg-line dark:bg-line-dark"
+                aria-hidden="true"
+              >
+                <div
+                  class="h-full rounded-sm bg-accent dark:bg-accent-dark"
+                  style={`width: ${(tag.count / maxTagCount) * 100}%`}
+                />
+              </div>
+              <span class="tabular-nums text-muted dark:text-muted-dark">
+                {tag.count}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="mt-14" aria-labelledby="surfaces-heading">
+    <h2
+      id="surfaces-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Surfaces
+    </h2>
+    <ul class="mt-6 space-y-2 text-base">
+      {
+        stats.surfaces.map((surface) => (
+          <li>
+            <a
+              class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+              href={surface.url}
+            >
+              {surface.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="mt-14" aria-labelledby="stack-heading">
+    <h2
+      id="stack-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Stack
+    </h2>
+    <dl class="mt-6 space-y-4 text-base">
+      <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+        <dt class="text-muted dark:text-muted-dark">Generator</dt>
+        <dd class="text-ink dark:text-ink-dark">{stats.site.generator}</dd>
+      </div>
+      <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+        <dt class="text-muted dark:text-muted-dark">Hosting</dt>
+        <dd class="text-ink dark:text-ink-dark">{stats.site.hosting}</dd>
+      </div>
+      <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+        <dt class="text-muted dark:text-muted-dark">Site</dt>
+        <dd class="text-ink dark:text-ink-dark">{stats.site.origin}</dd>
+      </div>
+      <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+        <dt class="text-muted dark:text-muted-dark">Base</dt>
+        <dd class="text-ink dark:text-ink-dark">{stats.site.base}</dd>
+      </div>
+      <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+        <dt class="text-muted dark:text-muted-dark">Fonts</dt>
+        <dd class="text-ink dark:text-ink-dark">{stats.site.fonts.join(', ')}</dd>
+      </div>
+      {
+        stats.gitSha && (
+          <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+            <dt class="text-muted dark:text-muted-dark">Commit</dt>
+            <dd class="font-mono text-sm text-ink dark:text-ink-dark">{stats.gitSha}</dd>
+          </div>
+        )
+      }
+      {
+        stats.buildTime && (
+          <div class="grid gap-1 sm:grid-cols-[8rem_1fr]">
+            <dt class="text-muted dark:text-muted-dark">Built</dt>
+            <dd class="text-ink dark:text-ink-dark">
+              <time datetime={stats.buildTime}>{stats.buildTime}</time>
+            </dd>
+          </div>
+        )
+      }
+    </dl>
+  </section>
+</BaseLayout>

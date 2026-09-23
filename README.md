@@ -24,7 +24,7 @@ npm run preview
 
 ## What's in here
 
-Posts are markdown files in `src/content/blog/`. The blog index can filter by title or tag (search box and tag chips). No CMS, no form backend. Frontmatter `date` is the published date on the page; it can be backdated. Reading time is computed at build from the markdown word count (200 words per minute). Each post page has a collapsible table of contents from the markdown headings, and up to three related posts that share tags. The homepage lists the three latest posts. Post pages include a reading progress bar, older/newer links, a copy-link control, and a build-time Open Graph PNG under `/me/og/{slug}.png` (default card at `/me/og/default.png`). Soft page transitions use Astro View Transitions and respect `prefers-reduced-motion`.
+Posts are markdown files in `src/content/blog/`. The blog index can filter by title or tag (search box and tag chips). No CMS, no form backend. Frontmatter `date` is the published date on the page; it can be backdated. Reading time is computed at build from the markdown word count (200 words per minute). Each post page has a collapsible table of contents from the markdown headings, and up to three related posts that share tags. The homepage lists the three latest posts. Post pages include a reading progress bar, older/newer links, a copy-link control, and a build-time Open Graph PNG under `/me/og/{slug}.png` (default card at `/me/og/default.png`). Soft page transitions use Astro View Transitions and respect `prefers-reduced-motion`. The Stats page (`/me/stats/`) shows build-time archive, tag, and stack inventory; it is not live analytics.
 
 Newsreader and Source Sans 3 are downloaded at build and served from this site, so the pages do not wait on fonts.googleapis.com.
 
@@ -34,6 +34,7 @@ The same writing also ships as files that crawlers and agents can fetch:
 
 - `/me/llms.txt`: curated index (llms.txt v2, scoped to this GitHub Pages path)
 - `/me/posts.json`: catalog (title, date, tags, HTML and markdown URLs)
+- `/me/stats.json`: build-time archive, tags, reading totals, stack facts
 - `/me/openapi.json`: OpenAPI 3.1 for that catalog
 - `/me/rss.xml`: RSS feed
 - `/me/blog/{slug}.md`: markdown body for each post

@@ -25,6 +25,18 @@ export const GET: APIRoute = () => {
           },
         },
       },
+      [withBase('/stats.json')]: {
+        get: {
+          operationId: 'siteStats',
+          summary: 'Build-time site inventory',
+          responses: {
+            '200': {
+              description:
+                'Archive size, tag frequencies, reading totals, stack facts. Not live analytics.',
+            },
+          },
+        },
+      },
       [withBase('/llms.txt')]: {
         get: {
           operationId: 'llmsTxt',

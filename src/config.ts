@@ -13,5 +13,6 @@ export const siteMeta = {
 
 export const navItems = [
   { href: '/blog', label: 'Blog' },
+  { href: '/stats', label: 'Stats' },
   { href: '/contact', label: 'Contact' },
 ] as const

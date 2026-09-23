@@ -72,6 +72,7 @@ ${postLines}
 ## Catalog
 
 - [posts.json](${absoluteUrl('/posts.json')}): title, date, tags, summary, HTML URL, and markdown URL for every post
+- [stats.json](${absoluteUrl('/stats.json')}): build-time archive, tag, and stack inventory (not live analytics)
 - [openapi.json](${absoluteUrl('/openapi.json')}): OpenAPI 3.1 description of the catalog
 - [RSS](${absoluteUrl('/rss.xml')}): dated feed of posts
 
@@ -79,6 +80,7 @@ ${postLines}
 
 - [Home](${absoluteUrl('/')}): intro and latest posts
 - [Blog](${absoluteUrl('/blog')}): HTML index with title and tag filter
+- [Stats](${absoluteUrl('/stats')}): HTML inventory of the same build-time numbers
 - [Contact](${absoluteUrl('/contact')}): LinkedIn, then GitHub
 - [Sitemap](${absoluteUrl('/sitemap-index.xml')}): HTML pages for search engines
 `

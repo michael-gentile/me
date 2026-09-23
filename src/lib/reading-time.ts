@@ -1,6 +1,6 @@
 const WORDS_PER_MINUTE = 200
 
-const wordCount = (markdown: string) => {
+export const wordCount = (markdown: string) => {
   const text = markdown.trim()
 
   if (!text) {
