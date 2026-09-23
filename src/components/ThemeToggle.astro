@@ -38,7 +38,21 @@
     syncToggleLabel()
   }
 
-  const toggle = document.getElementById('theme-toggle')
-  toggle?.addEventListener('click', handleThemeToggle)
-  syncToggleLabel()
+  const bindThemeToggle = () => {
+    const toggle = document.getElementById('theme-toggle')
+    if (!toggle) {
+      return
+    }
+
+    // Persist keeps the same node across swaps; only bind once per element.
+    if (toggle.dataset.bound !== 'true') {
+      toggle.dataset.bound = 'true'
+      toggle.addEventListener('click', handleThemeToggle)
+    }
+
+    syncToggleLabel()
+  }
+
+  bindThemeToggle()
+  document.addEventListener('astro:page-load', bindThemeToggle)
 </script>

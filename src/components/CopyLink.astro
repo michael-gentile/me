@@ -1,0 +1,49 @@
+---
+type Props = {
+  url: string
+}
+
+const { url } = Astro.props
+---
+
+<button
+  type="button"
+  class="text-sm uppercase tracking-[0.14em] text-muted transition-colors hover:text-accent dark:text-muted-dark dark:hover:text-accent-dark"
+  data-copy-link
+  data-url={url}
+  aria-label="Copy link to this post"
+>
+  Copy link
+</button>
+
+<script>
+  const bindCopyLink = () => {
+    const button = document.querySelector<HTMLButtonElement>('[data-copy-link]')
+    if (!button || button.dataset.bound === 'true') {
+      return
+    }
+
+    button.dataset.bound = 'true'
+    const idleLabel = 'Copy link'
+
+    button.addEventListener('click', async () => {
+      const target = button.dataset.url || window.location.href
+
+      try {
+        await navigator.clipboard.writeText(target)
+        button.textContent = 'Copied'
+        window.setTimeout(() => {
+          button.textContent = idleLabel
+        }, 1600)
+      } catch {
+        button.textContent = 'Copy failed'
+        window.setTimeout(() => {
+          button.textContent = idleLabel
+        }, 1600)
+      }
+    })
+  }
+
+  bindCopyLink()
+  document.addEventListener('astro:page-load', bindCopyLink)
+</script>

@@ -46,7 +46,7 @@ If I do end up using a custom domain one day, `site` becomes that URL, `base` be
 
 Astro renders `.astro` templates at build time. `BaseLayout.astro` is the shell: fonts, metadata, header, footer, the paper background. Each route fills the middle.
 
-I don't hand-write a page type per post. `src/pages/blog/[slug].astro` asks the collection for every markdown file, then `getStaticPaths` emits one HTML file per post. The body is ordinary markdown (headings, lists, tables, the occasional screenshot) inside a `prose` column capped around `65ch`.
+I don't hand-write a page type per post. `src/pages/blog/[slug].astro` asks the collection for every markdown file, then `getStaticPaths` emits one HTML file per post. The body is ordinary markdown (headings, lists, tables, the occasional screenshot) inside a `prose` column that fills the `max-w-4xl` shell.
 
 Dates in frontmatter are UTC. `2026-05-10` means that calendar day, not "midnight UTC which is still yesterday in Ontario." The formatter uses `en-CA` and UTC so the date in the file is the date on the page.
 
@@ -56,7 +56,7 @@ The only client script is the theme toggle. It reads `localStorage`, falls back 
 
 I wanted this to have an editorial-like column layout. A regular portfolio grid would have been the wrong type of site.
 
-- **Measure over chrome.** Main column is `max-w-3xl` / `65ch`. Nav is the name, Blog, Contact, and the theme control.
+- **Measure over chrome.** Main column is `max-w-4xl`. Nav is the name, Blog, Contact, and the theme control.
 - **One accent.** Teal (`#0f766e`, lighter in dark mode) for labels, links, and the current nav item. Everything else is ink on paper.
 - **Paper.** Cream in light mode (`#f6f1e8`), near-black green-gray in dark (`#141716`). The default follows the OS but the toggle is there as well.
 - **Still type.** I tried a darker, more theatrical version with pointer-tilt and scroll-in 3D. Fun for a day. I didn't like it for a site that's mostly notes.

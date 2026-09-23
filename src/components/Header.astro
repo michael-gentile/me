@@ -13,13 +13,14 @@ const pathname = Astro.url.pathname
   Skip to content
 </a>
 
-<header class="border-b border-line dark:border-line-dark">
-  <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 px-6 py-5">
+<header class="border-b border-line dark:border-line-dark" transition:persist="site-header">
+  <div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-5">
     <a
       href={withBase('/')}
       class="font-serif text-lg tracking-tight text-ink no-underline hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
       aria-current={isCurrentPath(pathname, '/') ? 'page' : undefined}
       aria-label={`${siteMeta.name} home`}
+      transition:name="site-name"
     >
       {siteMeta.name}
     </a>

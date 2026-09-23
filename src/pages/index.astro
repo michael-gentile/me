@@ -12,7 +12,7 @@ const latestPosts = posts.slice(0, 3)
 ---
 
 <BaseLayout>
-  <section class="max-w-[65ch]">
+  <section>
     <p class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark">
       {siteMeta.location}
     </p>
@@ -43,7 +43,7 @@ const latestPosts = posts.slice(0, 3)
 
   {
     latestPosts.length > 0 && (
-      <section class="mt-16 max-w-[65ch]" aria-labelledby="latest-posts">
+      <section class="mt-16" aria-labelledby="latest-posts">
         <h2
           id="latest-posts"
           class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"

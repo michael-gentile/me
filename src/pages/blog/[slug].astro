@@ -2,6 +2,9 @@
 import { getCollection, render } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import CopyLink from '../../components/CopyLink.astro'
+import PostNav from '../../components/PostNav.astro'
+import ReadingProgress from '../../components/ReadingProgress.astro'
 import RelatedPosts from '../../components/RelatedPosts.astro'
 import TableOfContents from '../../components/TableOfContents.astro'
 import { postMarkdownPath, postPagePath } from '../../lib/catalog'
@@ -19,18 +22,25 @@ export const getStaticPaths = async () => {
   const posts = (await getCollection('blog')).sort(
     (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
   )
-  return posts.map((post) => ({
+  return posts.map((post, index) => ({
     params: { slug: post.id },
-    props: { post, related: relatedByTags(post, posts) },
+    props: {
+      post,
+      related: relatedByTags(post, posts),
+      newer: index > 0 ? posts[index - 1] : undefined,
+      older: index < posts.length - 1 ? posts[index + 1] : undefined,
+    },
   }))
 }
 
 type Props = {
   post: CollectionEntry<'blog'>
   related: CollectionEntry<'blog'>[]
+  newer?: CollectionEntry<'blog'>
+  older?: CollectionEntry<'blog'>
 }
 
-const { post, related } = Astro.props
+const { post, related, newer, older } = Astro.props
 const { Content, headings } = await render(post)
 const formattedDate = formatPostDate(post.data.date, {
   year: 'numeric',
@@ -41,6 +51,7 @@ const minutes = readingMinutes(post.body ?? '')
 const readingTime = formatReadingTime(minutes)
 const pageUrl = absoluteUrl(postPagePath(post))
 const markdownHref = absoluteUrl(postMarkdownPath(post))
+const ogImage = absoluteUrl(`/og/${post.id}.png`)
 const jsonLd = [
   {
     '@type': 'BlogPosting',
@@ -54,6 +65,7 @@ const jsonLd = [
     inLanguage: 'en-CA',
     timeRequired: readingDurationIso(minutes),
     keywords: post.data.tags.join(', '),
+    image: ogImage,
     author: { '@id': `${homeUrl()}#person` },
     publisher: { '@id': `${homeUrl()}#person` },
   },
@@ -66,9 +78,11 @@ const jsonLd = [
   ogType="article"
   publishedTime={post.data.date}
   markdownHref={markdownHref}
+  ogImage={ogImage}
   jsonLd={jsonLd}
 >
-  <article class="max-w-[65ch]">
+  <ReadingProgress />
+  <article>
     <p class="text-sm text-muted dark:text-muted-dark">
       <a
         class="hover:text-accent dark:hover:text-accent-dark"
@@ -81,11 +95,14 @@ const jsonLd = [
     <p class="mt-5 font-serif text-xl leading-relaxed text-muted dark:text-muted-dark">
       {post.data.summary}
     </p>
-    <p class="mt-6 text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
-      <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
-      <span aria-hidden="true"> · </span>
-      <span>{readingTime}</span>
-    </p>
+    <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+      <p>
+        <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+        <span aria-hidden="true"> · </span>
+        <span>{readingTime}</span>
+      </p>
+      <CopyLink url={pageUrl} />
+    </div>
     {
       post.data.tags.length > 0 && (
         <ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags">
@@ -107,5 +124,6 @@ const jsonLd = [
       <Content />
     </div>
   </article>
+  <PostNav older={older} newer={newer} />
   <RelatedPosts posts={related} />
 </BaseLayout>

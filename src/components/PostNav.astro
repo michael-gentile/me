@@ -1,0 +1,57 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { withBase } from '../lib/url'
+
+type Props = {
+  older?: CollectionEntry<'blog'>
+  newer?: CollectionEntry<'blog'>
+}
+
+const { older, newer } = Astro.props
+---
+
+{
+  (older || newer) && (
+    <nav
+      class="mt-16"
+      aria-label="Adjacent posts"
+    >
+      <div class="grid gap-10 sm:grid-cols-2">
+        <div>
+          {
+            older ? (
+              <>
+                <p class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+                  Older
+                </p>
+                <a
+                  class="mt-2 block font-serif text-xl tracking-tight text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+                  href={withBase(`/blog/${older.id}`)}
+                >
+                  {older.data.title}
+                </a>
+              </>
+            ) : null
+          }
+        </div>
+        <div class="sm:text-right">
+          {
+            newer ? (
+              <>
+                <p class="text-sm uppercase tracking-[0.14em] text-muted dark:text-muted-dark">
+                  Newer
+                </p>
+                <a
+                  class="mt-2 block font-serif text-xl tracking-tight text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+                  href={withBase(`/blog/${newer.id}`)}
+                >
+                  {newer.data.title}
+                </a>
+              </>
+            ) : null
+          }
+        </div>
+      </div>
+    </nav>
+  )
+}
