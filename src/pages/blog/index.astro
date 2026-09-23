@@ -5,10 +5,13 @@ import PostCard from '../../components/PostCard.astro'
 import PostFilter from '../../components/PostFilter.astro'
 import { uniquePostTags } from '../../lib/tags'
 
+const PAGE_SIZE = 10
+
 const posts = (await getCollection('blog')).sort(
   (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
 )
 const tags = uniquePostTags(posts)
+const hasMore = posts.length > PAGE_SIZE
 ---
 
 <BaseLayout
@@ -21,7 +24,7 @@ const tags = uniquePostTags(posts)
     <p class="mt-4 text-lg text-muted dark:text-muted-dark">
       Read what I've been learning about.
     </p>
-    {posts.length > 0 && <PostFilter tags={tags} />}
+    {posts.length > 0 && <PostFilter pageSize={PAGE_SIZE} tags={tags} />}
   </section>
 
   <section class="mt-12 max-w-[65ch]" aria-labelledby="all-posts">
@@ -32,24 +35,53 @@ const tags = uniquePostTags(posts)
         <>
           <h2
             id="all-posts"
-            class="text-sm uppercase tracking-[0.18em] text-muted dark:text-muted-dark"
+            class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
           >
             Posts
           </h2>
-          <div class="mt-2">
+          <div class="mt-6 flex flex-col gap-10" data-post-list>
             {posts.map((post, index) => (
-              <PostCard deferPaint={index >= 2} post={post} />
+              <PostCard
+                deferPaint={index >= 2}
+                initiallyHidden={index >= PAGE_SIZE}
+                post={post}
+              />
             ))}
             <p
-              class="border-t border-line py-8 text-muted dark:border-line-dark dark:text-muted-dark"
+              class="py-4 text-muted dark:text-muted-dark"
               data-filter-empty
               hidden
             >
               No posts match that search.
             </p>
           </div>
+          {
+            hasMore && (
+              <p class="mt-10">
+                <button
+                  type="button"
+                  class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+                  data-load-more
+                  aria-controls="all-posts"
+                >
+                  Show more posts
+                </button>
+              </p>
+            )
+          }
         </>
       )
     }
   </section>
+
+  <noscript>
+    <style>
+      [data-post-card][hidden] {
+        display: block !important;
+      }
+      [data-load-more] {
+        display: none !important;
+      }
+    </style>
+  </noscript>
 </BaseLayout>

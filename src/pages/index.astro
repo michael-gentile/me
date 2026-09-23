@@ -46,11 +46,11 @@ const latestPosts = posts.slice(0, 3)
       <section class="mt-16 max-w-[65ch]" aria-labelledby="latest-posts">
         <h2
           id="latest-posts"
-          class="text-sm uppercase tracking-[0.18em] text-muted dark:text-muted-dark"
+          class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
         >
           Latest Posts
         </h2>
-        <div class="mt-2">
+        <div class="mt-6 flex flex-col gap-10">
           {latestPosts.map((post) => (
             <PostCard headingLevel="h3" post={post} />
           ))}

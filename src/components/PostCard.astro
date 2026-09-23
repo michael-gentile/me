@@ -9,20 +9,27 @@ type Props = {
   post: CollectionEntry<'blog'>
   headingLevel?: 'h2' | 'h3'
   deferPaint?: boolean
+  initiallyHidden?: boolean
 }
 
-const { post, headingLevel: Heading = 'h2', deferPaint = false } = Astro.props
+const {
+  post,
+  headingLevel: Heading = 'h2',
+  deferPaint = false,
+  initiallyHidden = false,
+} = Astro.props
 const formattedDate = formatPostDate(post.data.date)
 const readingTime = formatReadingTime(readingMinutes(post.body ?? ''))
 const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
 ---
 
 <article
-  class="border-t border-line py-8 dark:border-line-dark"
+  class="py-1"
   data-post-card
   data-title={post.data.title.toLowerCase()}
   data-tags={tagList}
   data-defer-paint={deferPaint || undefined}
+  hidden={initiallyHidden || undefined}
 >
   <p class="text-sm text-muted dark:text-muted-dark">
     <time datetime={post.data.date.toISOString()}>{formattedDate}</time>

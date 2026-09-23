@@ -41,7 +41,7 @@ html.dark body {
 /* Skip layout of blog cards below the first screen so mobile Speed Index is not waiting on the whole list. */
 [data-post-card][data-defer-paint] {
   content-visibility: auto;
-  contain-intrinsic-size: auto 11rem;
+  contain-intrinsic-size: auto 9rem;
 }
 
 :focus-visible {

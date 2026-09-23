@@ -1,20 +1,22 @@
 ---
 /**
  * Client-side filter for the blog list: title/tag search plus tag chips.
+ * Also pages the list (see pageSize) via the Show more button on the blog page.
  * Tag links still work without JS via ?tag= on the URL.
  */
 import { blogFilterHref } from '../lib/tags'
 
 type Props = {
   tags: string[]
+  pageSize?: number
 }
 
-const { tags } = Astro.props
+const { tags, pageSize = 10 } = Astro.props
 ---
 
 {
   tags.length > 0 && (
-    <div class="mt-8" data-post-filter>
+    <div class="mt-8" data-post-filter data-page-size={pageSize}>
       <label class="sr-only" for="post-search">
         Search posts by title or tag
       </label>
@@ -28,11 +30,8 @@ const { tags } = Astro.props
         class="w-full border-b border-line bg-transparent py-2 text-base text-ink placeholder:text-muted focus:border-accent dark:border-line-dark dark:text-ink-dark dark:placeholder:text-muted-dark dark:focus:border-accent-dark"
         data-post-search
       />
-      <ul
-        class="mt-4 flex flex-nowrap gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-        aria-label="Filter by tag"
-      >
-        <li class="shrink-0">
+      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Filter by tag">
+        <li>
           <a
             href={blogFilterHref()}
             class="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent aria-current:border-accent aria-current:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark dark:aria-current:border-accent-dark dark:aria-current:text-accent-dark"
@@ -45,7 +44,7 @@ const { tags } = Astro.props
         </li>
         {
           tags.map((tag) => (
-            <li class="shrink-0">
+            <li>
               <a
                 href={`?tag=${encodeURIComponent(tag)}`}
                 class="inline-block rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent aria-current:border-accent aria-current:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark dark:aria-current:border-accent-dark dark:aria-current:text-accent-dark"
@@ -68,10 +67,14 @@ const { tags } = Astro.props
   const searchInput = document.querySelector<HTMLInputElement>('[data-post-search]')
   const status = document.querySelector('[data-filter-status]')
   const empty = document.querySelector('[data-filter-empty]')
+  const loadMore = document.querySelector<HTMLButtonElement>('[data-load-more]')
   const cards = [...document.querySelectorAll<HTMLElement>('[data-post-card]')]
   const tagLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-tag-filter]')]
+  const pageSize = Number(root?.getAttribute('data-page-size') ?? 10) || 10
 
-  if (root && searchInput && cards.length > 0) {
+  if (cards.length > 0) {
+    let revealed = pageSize
+
     const readFilters = () => {
       const params = new URLSearchParams(window.location.search)
       return {
@@ -99,36 +102,61 @@ const { tags } = Astro.props
     const selectedTag = () =>
       tagLinks.find((link) => link.getAttribute('aria-current') === 'true')?.dataset.tag ?? ''
 
+    const cardMatches = (card: HTMLElement, query: string, activeTagLower: string) => {
+      const title = card.dataset.title ?? ''
+      const tags = (card.dataset.tags ?? '')
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+      const matchesQuery = !query || title.includes(query) || tags.some((tag) => tag.includes(query))
+      const matchesTag = !activeTagLower || tags.includes(activeTagLower)
+      return matchesQuery && matchesTag
+    }
+
     const applyFilters = () => {
-      const query = searchInput.value.trim().toLowerCase()
+      const query = searchInput?.value.trim().toLowerCase() ?? ''
       const activeTagLower = selectedTag().toLowerCase()
-      let visibleCount = 0
+      let matchCount = 0
+      let shownCount = 0
 
       for (const card of cards) {
-        const title = card.dataset.title ?? ''
-        const tags = (card.dataset.tags ?? '')
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter(Boolean)
-        const matchesQuery = !query || title.includes(query) || tags.some((tag) => tag.includes(query))
-        const matchesTag = !activeTagLower || tags.includes(activeTagLower)
-        const isVisible = matchesQuery && matchesTag
-        card.hidden = !isVisible
+        const matches = cardMatches(card, query, activeTagLower)
 
-        if (isVisible) {
-          visibleCount += 1
+        if (!matches) {
+          card.hidden = true
+          continue
+        }
+
+        matchCount += 1
+
+        if (shownCount < revealed) {
+          card.hidden = false
+          shownCount += 1
+        } else {
+          card.hidden = true
         }
       }
 
       if (empty instanceof HTMLElement) {
-        empty.hidden = visibleCount > 0
+        empty.hidden = matchCount > 0
+      }
+
+      if (loadMore) {
+        const hasMore = matchCount > revealed
+        loadMore.hidden = !hasMore
+        if (loadMore.parentElement instanceof HTMLElement) {
+          loadMore.parentElement.hidden = !hasMore
+        }
       }
 
       if (status) {
-        status.textContent =
-          visibleCount === cards.length
-            ? ''
-            : `${visibleCount} post${visibleCount === 1 ? '' : 's'} shown`
+        if (matchCount === cards.length && shownCount === matchCount) {
+          status.textContent = ''
+        } else if (shownCount < matchCount) {
+          status.textContent = `${shownCount} of ${matchCount} posts shown`
+        } else {
+          status.textContent = `${matchCount} post${matchCount === 1 ? '' : 's'} shown`
+        }
       }
     }
 
@@ -143,18 +171,24 @@ const { tags } = Astro.props
       }
     }
 
-    const { query, tag } = readFilters()
-
-    // PSI hits /blog/ with no query. Leave the HTML alone until someone filters.
-    if (query || tag) {
-      searchInput.value = query
-      setActiveTag(tag)
+    const resetAndApply = () => {
+      revealed = pageSize
       applyFilters()
     }
 
-    searchInput.addEventListener('input', () => {
+    const { query, tag } = readFilters()
+
+    if (searchInput && (query || tag)) {
+      searchInput.value = query
+      setActiveTag(tag)
+    }
+
+    // Always page the list once JS is available (SSR hid cards past pageSize).
+    applyFilters()
+
+    searchInput?.addEventListener('input', () => {
       writeFilters(searchInput.value.trim(), selectedTag())
-      applyFilters()
+      resetAndApply()
     })
 
     for (const link of tagLinks) {
@@ -162,9 +196,14 @@ const { tags } = Astro.props
         event.preventDefault()
         const nextTag = link.dataset.tag ?? ''
         setActiveTag(nextTag)
-        writeFilters(searchInput.value.trim(), nextTag)
-        applyFilters()
+        writeFilters(searchInput?.value.trim() ?? '', nextTag)
+        resetAndApply()
       })
     }
+
+    loadMore?.addEventListener('click', () => {
+      revealed += pageSize
+      applyFilters()
+    })
   }
 </script>
