@@ -2,13 +2,13 @@
 ---
 
 <div
-  class="pointer-events-none fixed inset-x-0 top-[4.25rem] z-40 h-0.5 bg-transparent print:hidden sm:top-[4.5rem]"
+  class="pointer-events-none fixed inset-x-0 top-0 z-50 h-1 bg-transparent print:hidden"
   data-reading-progress
   hidden
   aria-hidden="true"
 >
   <div
-    class="h-full origin-left scale-x-0 bg-accent transition-none dark:bg-accent-dark"
+    class="h-full w-0 bg-accent dark:bg-accent-dark"
     data-reading-progress-bar
   ></div>
 </div>
@@ -28,6 +28,12 @@
       return
     }
 
+    // Soft-nav remounts this node; skip only if this instance is already bound.
+    if (root.dataset.bound === 'true') {
+      return
+    }
+
+    root.dataset.bound = 'true'
     root.hidden = false
 
     const update = () => {
@@ -39,7 +45,7 @@
       const end = articleTop + articleHeight - viewport
       const range = Math.max(end - start, 1)
       const progress = Math.min(1, Math.max(0, (window.scrollY - start) / range))
-      bar.style.transform = `scaleX(${progress})`
+      bar.style.width = `${progress * 100}%`
     }
 
     update()

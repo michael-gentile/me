@@ -96,6 +96,8 @@ const sitemapHref = absoluteUrl('/sitemap-index.xml')
   </head>
   <body class="min-h-screen bg-paper text-ink antialiased dark:bg-paper-dark dark:text-ink-dark">
     <Header />
+    <!-- Outside <main>: View Transitions transform main, which traps position:fixed. -->
+    <slot name="chrome" />
     <main id="main" class="mx-auto max-w-4xl px-6 py-16" transition:animate="fade">
       <slot />
     </main>
