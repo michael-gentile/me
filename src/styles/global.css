@@ -25,6 +25,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keep layout width stable when short pages (e.g. Contact) have no scrollbar. */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: reduce) {
