@@ -50,11 +50,11 @@ When they disagree, CIS wins for policy. When CIS is silent on Docker publishing
 
 ## Manual steps versus automation
 
-After you understand the moves, Ansible (or any config management) fights drift — covered in [Ansible after manual hardening](/me/blog/ansible-and-the-linux-server-guide/).
+After you understand the moves, Ansible (or any config management) fights drift — covered in [Ansible after manual hardening](/me/blog/ansible-after-manual-hardening/).
 
 Manual first is not Luddite. It is how you notice that `hidepid=2` broke something on your systemd version, or that your ISP blocks outbound SMTP. Automation encodes decisions you already tested.
 
 ## Sources
 
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/), [Ansible after manual hardening](/me/blog/ansible-and-the-linux-server-guide/)
+- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/), [Ansible after manual hardening](/me/blog/ansible-after-manual-hardening/)

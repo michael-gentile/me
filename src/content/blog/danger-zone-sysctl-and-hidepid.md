@@ -23,7 +23,7 @@ That is **consensus hardening**, not first-principles engineering. Reasonable fo
 
 My bar: change one knob at a time on a VM clone, run your real workload (SSH, Docker publish, mail outbound), then promote. Same discipline as [Learn first, CIS second](/me/blog/learn-first-cis-second/): benchmarks may mandate kernel parameters your ISP's network cannot tolerate.
 
-Treat bundled sysctl lists as a **menu**, not a batch paste — especially if Ansible will apply them later ([automation post](/me/blog/ansible-and-the-linux-server-guide/)).
+Treat bundled sysctl lists as a **menu**, not a batch paste — especially if Ansible will apply them later ([automation post](/me/blog/ansible-after-manual-hardening/)).
 
 ## hidepid=2 on /proc (basics, not Danger Zone — but same theme)
 
