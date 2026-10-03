@@ -8,7 +8,7 @@ import { withBase } from '../lib/url'
 const posts = (await getCollection('blog')).sort(
   (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
 )
-const latestPosts = posts.slice(0, 3)
+const latestPosts = posts.slice(0, 1)
 ---
 
 <BaseLayout>
