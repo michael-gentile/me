@@ -63,14 +63,36 @@ Prefer common words. Avoid filler and stacked clauses.
 
 If the topic is not a procedure, ask for descriptive STE limits instead of fake command lists.
 
+## A skill for agent-facing English
+
+Karpathy's tip is a prompt. [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill) turns the same idea into a Claude Code skill aimed at text another machine has to parse: tool descriptions, error messages, system prompts, instructions between agents. Their analogy matches the hangar: no human on the line to ask "did you mean X or Y?"
+
+Two modes matter for how honest the rewrite can be:
+
+- **Strict** — procedures, errors, tool specs. Hard length caps and one-word-one-meaning discipline.
+- **STE-flavored** — READMEs, PR notes, explanations. Same sentence habits; lexical lockdown treated as advisory.
+
+That split lines up with the caveat above. The skill encodes Issue 9 rule *categories* and a structural checklist (active voice, no phrasal verbs, no semicolons, noun clusters ≤3 words, and so on). It does **not** ship ASD's ~900-word approved dictionary. The README is clear why: the standard is free to *get*, not free to *redistribute*. So you get principle-level rewrites and an optional `scripts/ste-lint.py` for mechanical checks, not a compliance stamp.
+
+Install from a project root with the skills CLI:
+
+```bash
+npx skills add danyuchn/asd-ste100-skill
+```
+
+Or clone into `~/.claude/skills/` if you want a live checkout. Ask it to disambiguate a tool description, or to "apply ASD-STE100" to a pasted error string. Default output is the rewrite alone; add "show the diff" when you want the rule table.
+
+One line from their boundaries is worth keeping next to any STE prompt: short and empty is still empty. The form got fixed. The substance did not.
+
 ## Where it sits in his ladder
 
-Writing is only the first rung in that post. He prefers diagrams when a figure would parse faster, HTML when interactivity helps, and custom explainer videos when the topic needs motion. The shared idea is the same as the STE tip: **change the packaging of understanding**, because more of the job is reviewing what the model produced.
+Writing is only the first rung in that post. He prefers diagrams when a figure would parse faster, HTML when interactivity helps, and custom explainer videos when the topic needs motion. The shared idea is the same as the STE tip: change the packaging of understanding, because more of the job is reviewing what the model produced.
 
-For me the controlled-language ask is the cheap experiment. No API key. No video pipeline. One sentence in the prompt, then see whether the explanation got shorter without losing the parts that matter.
+For chat, the cheap experiment is still one sentence in the prompt. For agent plumbing — tool schemas, error strings, handoffs — the skill is the packaged version of that ask, with modes that admit when dictionary compliance is out of reach.
 
 ## Sources
 
 - [Andrej Karpathy on X](https://x.com/karpathy/status/2105819303471976479) (ASD-STE100 tip and related output formats)
 - [ASD-STE100 / STEMG](https://asd-ste100.org/)
+- [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill)
 - Related: [A fluent citation can still be fake](/me/blog/fluency-is-not-a-control/)
