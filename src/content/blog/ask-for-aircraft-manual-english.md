@@ -1,6 +1,6 @@
 ---
 title: "Ask for aircraft-manual English"
-date: 2026-10-03
+date: 2026-10-02
 tags:
   - llm
   - prompts
