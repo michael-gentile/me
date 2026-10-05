@@ -57,7 +57,7 @@ summary: "One or two sentences for the list."
 Body of the post.
 ```
 
-The filename becomes the URL slug. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.webp` so they also work in the markdown alternate.
+The filename becomes the URL slug. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.webp` so they also work in the markdown alternate. Interactive Archify diagrams ship from `public/archify/` (source JSON under `.archify/`).
 
 ## GitHub Pages
 

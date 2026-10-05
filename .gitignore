@@ -30,3 +30,6 @@ Thumbs.db
 .cursor/
 *.swp
 *.swo
+
+# local Archify CLI checkout used while authoring diagrams
+.tmp-archify/
