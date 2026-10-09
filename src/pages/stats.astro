@@ -165,9 +165,11 @@ const topicChipClass =
       </a>
     </p>
     <div class="mt-6 overflow-hidden rounded-md border border-line dark:border-line-dark">
+      <!-- Height is set from the SVG after load; aspect-ratio is the viewBox fallback (1020×718). -->
       <iframe
         title="Architecture diagram of this site"
-        class="block h-[28rem] w-full bg-paper dark:bg-paper-dark"
+        class="block w-full bg-paper dark:bg-paper-dark"
+        style="aspect-ratio: 1020 / 734; height: auto"
         loading="lazy"
         data-archify-embed
         data-archify-base={archifyFullHref}
@@ -351,8 +353,46 @@ const topicChipClass =
 </BaseLayout>
 
 <script>
+  const archifyIframe = () =>
+    document.querySelector<HTMLIFrameElement>('[data-archify-embed]')
+
+  /** Fit the iframe to the diagram so desktop is not clipped and mobile has no empty band. */
+  const resizeArchifyEmbed = () => {
+    const iframe = archifyIframe()
+    if (!iframe) {
+      return
+    }
+
+    try {
+      const doc = iframe.contentDocument
+      if (!doc) {
+        return
+      }
+
+      const svg = doc.querySelector<SVGSVGElement>('.diagram-container svg')
+      const container = doc.querySelector<HTMLElement>('.diagram-container')
+      const measured = Math.ceil(
+        Math.max(
+          svg?.getBoundingClientRect().height ?? 0,
+          container?.getBoundingClientRect().height ?? 0,
+          doc.documentElement.scrollHeight,
+          doc.body?.scrollHeight ?? 0
+        )
+      )
+
+      if (measured < 80) {
+        return
+      }
+
+      iframe.style.height = `${measured}px`
+      iframe.style.aspectRatio = 'auto'
+    } catch {
+      // Cross-origin or not ready — keep CSS aspect-ratio fallback.
+    }
+  }
+
   const syncArchifyTheme = () => {
-    const iframe = document.querySelector<HTMLIFrameElement>('[data-archify-embed]')
+    const iframe = archifyIframe()
     if (!iframe) {
       return
     }
@@ -370,21 +410,47 @@ const topicChipClass =
     }
   }
 
-  const bindArchifyTheme = () => {
-    syncArchifyTheme()
-
-    if (document.documentElement.dataset.archifyThemeBound === 'true') {
+  const bindArchifyEmbed = () => {
+    const iframe = archifyIframe()
+    if (!iframe) {
       return
     }
 
-    document.documentElement.dataset.archifyThemeBound = 'true'
+    syncArchifyTheme()
+
+    if (iframe.dataset.resizeBound !== 'true') {
+      iframe.dataset.resizeBound = 'true'
+      iframe.addEventListener('load', () => {
+        // Layout settles after Archify's reader-fit pass.
+        window.requestAnimationFrame(() => {
+          resizeArchifyEmbed()
+          window.setTimeout(resizeArchifyEmbed, 100)
+        })
+      })
+    }
+
+    if (iframe.contentDocument?.readyState === 'complete') {
+      resizeArchifyEmbed()
+    }
+
+    if (document.documentElement.dataset.archifyEmbedBound === 'true') {
+      return
+    }
+
+    document.documentElement.dataset.archifyEmbedBound = 'true'
     const observer = new MutationObserver(syncArchifyTheme)
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     })
+
+    let resizeTimer = 0
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer)
+      resizeTimer = window.setTimeout(resizeArchifyEmbed, 150)
+    })
   }
 
-  bindArchifyTheme()
-  document.addEventListener('astro:page-load', bindArchifyTheme)
+  bindArchifyEmbed()
+  document.addEventListener('astro:page-load', bindArchifyEmbed)
 </script>
