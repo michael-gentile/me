@@ -10,6 +10,8 @@ type Props = {
   headingLevel?: 'h2' | 'h3'
   deferPaint?: boolean
   initiallyHidden?: boolean
+  /** Filter non-match at SSR; noscript must not force these visible. */
+  ssrExcluded?: boolean
 }
 
 const {
@@ -17,6 +19,7 @@ const {
   headingLevel: Heading = 'h2',
   deferPaint = false,
   initiallyHidden = false,
+  ssrExcluded = false,
 } = Astro.props
 const formattedDate = formatPostDate(post.data.date)
 const readingTime = formatReadingTime(readingMinutes(post.body ?? ''))
@@ -29,6 +32,7 @@ const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
   data-title={post.data.title.toLowerCase()}
   data-tags={tagList}
   data-defer-paint={deferPaint || undefined}
+  data-ssr-excluded={ssrExcluded || undefined}
   hidden={initiallyHidden || undefined}
 >
   <p class="text-sm text-muted dark:text-muted-dark">

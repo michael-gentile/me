@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import PostCard from '../../components/PostCard.astro'
 import PostFilter from '../../components/PostFilter.astro'
-import { uniquePostTags } from '../../lib/tags'
+import { postMatchesFilter, uniquePostTags } from '../../lib/tags'
 
 const PAGE_SIZE = 10
 
@@ -11,7 +11,46 @@ const posts = (await getCollection('blog')).sort(
   (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
 )
 const tags = uniquePostTags(posts)
-const hasMore = posts.length > PAGE_SIZE
+
+const initialQuery = (Astro.url.searchParams.get('q') ?? '').trim()
+const initialQueryLower = initialQuery.toLowerCase()
+const requestedTag = (Astro.url.searchParams.get('tag') ?? '').trim()
+const requestedTagLower = requestedTag.toLowerCase()
+const knownTags = new Set(tags.map((tag) => tag.toLowerCase()))
+const initialTag =
+  requestedTagLower && knownTags.has(requestedTagLower) ? requestedTag : ''
+const activeTagLower = initialTag.toLowerCase()
+const hasActiveFilter = initialQueryLower !== '' || activeTagLower !== ''
+
+const matchFlags = posts.map((post) =>
+  postMatchesFilter(
+    post.data.title.toLowerCase(),
+    post.data.tags.map((tag) => tag.toLowerCase()),
+    initialQueryLower,
+    activeTagLower
+  )
+)
+const matchCount = matchFlags.filter(Boolean).length
+
+// With an active filter, show all matches without JS. Otherwise page the list.
+let matchOrdinal = 0
+const cardState = matchFlags.map((matches) => {
+  if (!matches) {
+    return { matches: false, initiallyHidden: true, ssrExcluded: true }
+  }
+
+  const ordinal = matchOrdinal
+  matchOrdinal += 1
+  const pastPage = !hasActiveFilter && ordinal >= PAGE_SIZE
+  return {
+    matches: true,
+    initiallyHidden: pastPage,
+    ssrExcluded: false,
+  }
+})
+
+const shownCount = cardState.filter((state) => state.matches && !state.initiallyHidden).length
+const hasMore = hasActiveFilter ? false : matchCount > PAGE_SIZE
 ---
 
 <BaseLayout
@@ -24,7 +63,19 @@ const hasMore = posts.length > PAGE_SIZE
     <p class="mt-4 text-lg text-muted dark:text-muted-dark">
       Read what I've been learning about.
     </p>
-    {posts.length > 0 && <PostFilter pageSize={PAGE_SIZE} tags={tags} />}
+    {
+      posts.length > 0 && (
+        <PostFilter
+          pageSize={PAGE_SIZE}
+          tags={tags}
+          initialQuery={initialQuery}
+          initialTag={initialTag}
+          totalCount={posts.length}
+          matchCount={matchCount}
+          shownCount={shownCount}
+        />
+      )
+    }
   </section>
 
   <section class="mt-12" aria-labelledby="all-posts">
@@ -39,18 +90,20 @@ const hasMore = posts.length > PAGE_SIZE
           >
             Posts
           </h2>
-          <div class="mt-6 flex flex-col gap-10" data-post-list>
+          <div class="mt-6 flex flex-col gap-10" id="post-list" data-post-list>
             {posts.map((post, index) => (
               <PostCard
                 deferPaint={index >= 2}
-                initiallyHidden={index >= PAGE_SIZE}
+                headingLevel="h3"
+                initiallyHidden={cardState[index].initiallyHidden}
                 post={post}
+                ssrExcluded={cardState[index].ssrExcluded}
               />
             ))}
             <p
               class="py-4 text-muted dark:text-muted-dark"
               data-filter-empty
-              hidden
+              hidden={matchCount > 0 || undefined}
             >
               No posts match that search.
             </p>
@@ -62,7 +115,7 @@ const hasMore = posts.length > PAGE_SIZE
                   type="button"
                   class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
                   data-load-more
-                  aria-controls="all-posts"
+                  aria-controls="post-list"
                 >
                   Show more posts
                 </button>
@@ -76,7 +129,8 @@ const hasMore = posts.length > PAGE_SIZE
 
   <noscript>
     <style>
-      [data-post-card][hidden] {
+      /* Reveal pagination-hidden cards only; keep SSR filter exclusions hidden. */
+      [data-post-card][hidden]:not([data-ssr-excluded]) {
         display: block !important;
       }
       [data-load-more] {

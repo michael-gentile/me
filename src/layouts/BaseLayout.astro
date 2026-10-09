@@ -15,6 +15,7 @@ type Props = {
   jsonLd?: Record<string, unknown>[]
   markdownHref?: string
   ogImage?: string
+  noIndex?: boolean
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   jsonLd = [],
   markdownHref,
   ogImage,
+  noIndex = false,
 } = Astro.props
 
 const pageTitle = title ? `${title} · ${siteMeta.name}` : siteMeta.name
@@ -47,6 +49,7 @@ const sitemapHref = absoluteUrl('/sitemap-index.xml')
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex" />}
     <meta name="author" content={siteMeta.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />

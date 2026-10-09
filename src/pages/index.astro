@@ -27,13 +27,13 @@ const latestPosts = posts.slice(0, 1)
     </p>
     <p class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-base">
       <a
-        class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+        class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-accent-hover hover:decoration-accent dark:text-accent-dark dark:decoration-accent-dark/40 dark:hover:text-accent-hover-dark dark:hover:decoration-accent-dark"
         href={withBase('/blog')}
       >
         Read the blog
       </a>
       <a
-        class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+        class="text-muted hover:text-accent dark:text-muted-dark dark:hover:text-accent-dark"
         href={withBase('/contact')}
       >
         Contact
@@ -48,13 +48,21 @@ const latestPosts = posts.slice(0, 1)
           id="latest-posts"
           class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
         >
-          Latest Posts
+          Latest Post
         </h2>
         <div class="mt-6 flex flex-col gap-10">
           {latestPosts.map((post) => (
             <PostCard headingLevel="h3" post={post} />
           ))}
         </div>
+        <p class="mt-8">
+          <a
+            class="text-sm text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+            href={withBase('/blog')}
+          >
+            All posts
+          </a>
+        </p>
       </section>
     )
   }

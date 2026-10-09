@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { withBase } from '../lib/url'
+---
+
+<BaseLayout
+  title="Not found"
+  description="That page is not on this site."
+  noIndex={true}
+>
+  <section>
+    <p class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark">404</p>
+    <h1 class="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">Page not found</h1>
+    <p class="mt-4 text-lg text-muted dark:text-muted-dark">
+      That URL is not part of this site. Try the home page or the blog.
+    </p>
+    <p class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-base">
+      <a
+        class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-accent-hover hover:decoration-accent dark:text-accent-dark dark:decoration-accent-dark/40 dark:hover:text-accent-hover-dark dark:hover:decoration-accent-dark"
+        href={withBase('/')}
+      >
+        Home
+      </a>
+      <a
+        class="text-muted hover:text-accent dark:text-muted-dark dark:hover:text-accent-dark"
+        href={withBase('/blog')}
+      >
+        Blog
+      </a>
+    </p>
+  </section>
+</BaseLayout>

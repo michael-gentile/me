@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import { siteMeta } from '../config'
-import { homeUrl } from '../lib/site'
+import { siteOrigin } from '../lib/site'
 import { withBase } from '../lib/url'
 
 export const GET: APIRoute = () => {
@@ -12,7 +12,8 @@ export const GET: APIRoute = () => {
       description:
         'Read-only catalog of posts on this static site. There is no search RPC. Fetch this list and filter locally, then GET the markdown URL for a post body.',
     },
-    servers: [{ url: homeUrl().replace(/\/$/, '') }],
+    // Origin only: paths already include `/me` via withBase. Home as server would double `/me`.
+    servers: [{ url: siteOrigin() }],
     paths: {
       [withBase('/posts.json')]: {
         get: {

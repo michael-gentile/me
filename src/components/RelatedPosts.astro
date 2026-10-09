@@ -10,7 +10,7 @@ const { posts } = Astro.props
 ---
 
 {
-  posts.length > 0 && (
+  posts.length > 0 ? (
     <section class="mt-16" aria-labelledby="related-posts">
       <h2
         id="related-posts"
@@ -35,6 +35,23 @@ const { posts } = Astro.props
           </article>
         ))}
       </div>
+      <p class="mt-8">
+        <a
+          class="text-sm text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+          href={withBase('/blog')}
+        >
+          All posts
+        </a>
+      </p>
     </section>
+  ) : (
+    <p class="mt-16">
+      <a
+        class="text-sm text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+        href={withBase('/blog')}
+      >
+        All posts
+      </a>
+    </p>
   )
 }

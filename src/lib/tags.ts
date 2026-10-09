@@ -23,6 +23,21 @@ export const blogFilterHref = (tag?: string) => {
   return `${path}?tag=${encodeURIComponent(tag)}`
 }
 
+/** Shared by SSR blog index and client PostFilter — keep rules identical. */
+export const postMatchesFilter = (
+  titleLower: string,
+  tagsLower: string[],
+  query: string,
+  activeTagLower: string
+) => {
+  const matchesQuery =
+    !query ||
+    titleLower.includes(query) ||
+    tagsLower.some((tag) => tag.includes(query))
+  const matchesTag = !activeTagLower || tagsLower.includes(activeTagLower)
+  return matchesQuery && matchesTag
+}
+
 export const relatedByTags = (
   current: CollectionEntry<'blog'>,
   posts: CollectionEntry<'blog'>[],
