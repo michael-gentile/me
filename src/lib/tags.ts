@@ -13,6 +13,24 @@ export const uniquePostTags = (posts: CollectionEntry<'blog'>[]) => {
   return [...tags].sort((left, right) => left.localeCompare(right))
 }
 
+/** Tags sorted by post frequency (desc), then name — same rule as site stats. */
+export const tagsByPopularity = (posts: CollectionEntry<'blog'>[]) => {
+  const tagCounts = new Map<string, number>()
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+    }
+  }
+
+  return [...tagCounts.entries()]
+    .sort(
+      (left, right) =>
+        right[1] - left[1] || left[0].localeCompare(right[0])
+    )
+    .map(([tag]) => tag)
+}
+
 export const blogFilterHref = (tag?: string) => {
   const path = withBase('/blog')
 

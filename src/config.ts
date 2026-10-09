@@ -1,9 +1,9 @@
 export const siteMeta = {
   name: 'Michael Gentile',
-  role: 'Program Manager, IT Enterprise Systems',
+  role: 'Husband, father and professional nerd.',
   location: 'Ontario, Canada',
   tagline:
-    'Husband, father and professional nerd. I\'ve spent 10+ years in the IT industry and write here from time to time about things I\'m tinkering with.',
+    'I\'ve spent 10+ years in the IT industry and write here from time to time about things I\'m tinkering with. Explore my notes on AI architecture, small software experiments, and how systems work under the hood.',
   description:
     'Personal site and notes from Michael Gentile.',
   linkedinUrl: 'https://www.linkedin.com/in/michaelmgentile/',

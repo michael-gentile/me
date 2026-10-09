@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import PostCard from './PostCard.astro'
 import { withBase } from '../lib/url'
 
 type Props = {
@@ -18,21 +19,9 @@ const { posts } = Astro.props
       >
         Related posts
       </h2>
-      <div class="mt-6 flex flex-col gap-10">
+      <div class="mt-6 flex flex-col gap-6">
         {posts.map((post) => (
-          <article>
-            <h3 class="font-serif text-2xl tracking-tight">
-              <a
-                class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
-                href={withBase(`/blog/${post.id}`)}
-              >
-                {post.data.title}
-              </a>
-            </h3>
-            <p class="mt-2 text-base leading-relaxed text-muted dark:text-muted-dark">
-              {post.data.summary}
-            </p>
-          </article>
+          <PostCard headingLevel="h3" post={post} />
         ))}
       </div>
       <p class="mt-8">

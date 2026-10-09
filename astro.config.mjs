@@ -1,7 +1,9 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
+import { satteri } from '@astrojs/markdown-satteri'
 import tailwindcss from '@tailwindcss/vite'
+import { codeBlockPlugin } from './src/lib/rehype-code-block.ts'
 
 // GitHub Pages project site until a custom domain is attached.
 // After a custom domain, set `site` to that URL and `base` to '/'.
@@ -10,6 +12,12 @@ export default defineConfig({
   base: '/me',
   trailingSlash: 'always',
   integrations: [sitemap()],
+  markdown: {
+    // Keep Sätteri (Astro 7 default); hastPlugins run after Shiki highlighting.
+    processor: satteri({
+      hastPlugins: [codeBlockPlugin],
+    }),
+  },
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {

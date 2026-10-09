@@ -3,14 +3,14 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import PostCard from '../../components/PostCard.astro'
 import PostFilter from '../../components/PostFilter.astro'
-import { postMatchesFilter, uniquePostTags } from '../../lib/tags'
+import { postMatchesFilter, tagsByPopularity } from '../../lib/tags'
 
 const PAGE_SIZE = 10
 
 const posts = (await getCollection('blog')).sort(
   (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
 )
-const tags = uniquePostTags(posts)
+const tags = tagsByPopularity(posts)
 
 const initialQuery = (Astro.url.searchParams.get('q') ?? '').trim()
 const initialQueryLower = initialQuery.toLowerCase()

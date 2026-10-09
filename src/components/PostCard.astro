@@ -24,10 +24,11 @@ const {
 const formattedDate = formatPostDate(post.data.date)
 const readingTime = formatReadingTime(readingMinutes(post.body ?? ''))
 const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
+const postHref = withBase(`/blog/${post.id}`)
 ---
 
 <article
-  class="py-1"
+  class="group relative rounded-md border border-line/80 bg-transparent px-4 py-4 transition-colors hover:border-accent/45 hover:bg-accent/5 focus-within:border-accent/45 focus-within:bg-accent/5 dark:border-line-dark/80 dark:hover:border-accent-dark/45 dark:hover:bg-accent-dark/5 dark:focus-within:border-accent-dark/45 dark:focus-within:bg-accent-dark/5"
   data-post-card
   data-title={post.data.title.toLowerCase()}
   data-tags={tagList}
@@ -35,15 +36,10 @@ const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
   data-ssr-excluded={ssrExcluded || undefined}
   hidden={initiallyHidden || undefined}
 >
-  <p class="text-sm text-muted dark:text-muted-dark">
-    <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
-    <span aria-hidden="true"> · </span>
-    <span>{readingTime}</span>
-  </p>
-  <Heading class="mt-2 font-serif text-2xl tracking-tight">
+  <Heading class="font-serif text-2xl tracking-tight">
     <a
-      class="text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
-      href={withBase(`/blog/${post.id}`)}
+      class="text-ink after:absolute after:inset-0 after:z-[1] group-hover:text-accent dark:text-ink-dark dark:group-hover:text-accent-dark"
+      href={postHref}
     >
       {post.data.title}
     </a>
@@ -51,9 +47,14 @@ const tagList = post.data.tags.map((tag) => tag.toLowerCase()).join(',')
   <p class="mt-3 max-w-[68ch] text-base leading-relaxed text-muted dark:text-muted-dark">
     {post.data.summary}
   </p>
+  <p class="mt-3 text-sm text-muted dark:text-muted-dark">
+    <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+    <span aria-hidden="true"> · </span>
+    <span>{readingTime}</span>
+  </p>
   {
     post.data.tags.length > 0 && (
-      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+      <ul class="relative z-10 mt-4 flex flex-wrap gap-2" aria-label="Tags">
         {post.data.tags.map((tag) => (
           <li>
             <a
