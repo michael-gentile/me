@@ -9,36 +9,62 @@ const posts = (await getCollection('blog')).sort(
   (left, right) => right.data.date.valueOf() - left.data.date.valueOf()
 )
 const latestPosts = posts.slice(0, 1)
+const avatarLight = withBase('/images/avatar-light.webp')
+const avatarDark = withBase('/images/avatar-dark.webp')
+const avatarAlt = `${siteMeta.name} with his son Giorgio`
 ---
 
 <BaseLayout>
   <section>
-    <p class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark">
-      {siteMeta.location}
-    </p>
-    <h1 class="mt-4 font-serif text-5xl leading-tight tracking-tight sm:text-6xl">
-      {siteMeta.name}
-    </h1>
-    <p class="mt-6 text-xl text-ink dark:text-ink-dark">
-      {siteMeta.role}
-    </p>
-    <p class="mt-4 text-lg text-muted dark:text-muted-dark">
-      {siteMeta.tagline}
-    </p>
-    <p class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-base">
-      <a
-        class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-accent-hover hover:decoration-accent dark:text-accent-dark dark:decoration-accent-dark/40 dark:hover:text-accent-hover-dark dark:hover:decoration-accent-dark"
-        href={withBase('/blog')}
-      >
-        Browse all {posts.length} posts
-      </a>
-      <a
-        class="text-muted hover:text-accent dark:text-muted-dark dark:hover:text-accent-dark"
-        href={withBase('/contact')}
-      >
-        Get in contact
-      </a>
-    </p>
+    <!-- Mobile: location → name → avatar → role. Desktop: avatar beside the copy. -->
+    <div class="grid grid-cols-1 gap-x-12 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <p class="text-sm uppercase tracking-[0.18em] text-accent dark:text-accent-dark sm:col-start-1">
+        {siteMeta.location}
+      </p>
+      <h1 class="mt-4 font-serif text-5xl leading-tight tracking-tight sm:col-start-1 sm:text-6xl">
+        {siteMeta.name}
+      </h1>
+
+      <div class="avatar-fade mx-auto mt-6 w-40 sm:col-start-2 sm:row-span-5 sm:row-start-1 sm:mx-0 sm:mt-0 sm:w-52 md:w-56">
+        <img
+          src={avatarLight}
+          alt={avatarAlt}
+          width="836"
+          height="1023"
+          class="h-auto w-full dark:hidden"
+          decoding="async"
+        />
+        <img
+          src={avatarDark}
+          alt={avatarAlt}
+          width="836"
+          height="1023"
+          class="hidden h-auto w-full dark:block"
+          decoding="async"
+        />
+      </div>
+
+      <p class="mt-6 text-xl text-ink dark:text-ink-dark sm:col-start-1">
+        {siteMeta.role}
+      </p>
+      <p class="mt-4 text-lg text-muted dark:text-muted-dark sm:col-start-1">
+        {siteMeta.tagline}
+      </p>
+      <p class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-base sm:col-start-1">
+        <a
+          class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-accent-hover hover:decoration-accent dark:text-accent-dark dark:decoration-accent-dark/40 dark:hover:text-accent-hover-dark dark:hover:decoration-accent-dark"
+          href={withBase('/blog')}
+        >
+          Browse all {posts.length} posts
+        </a>
+        <a
+          class="text-muted hover:text-accent dark:text-muted-dark dark:hover:text-accent-dark"
+          href={withBase('/contact')}
+        >
+          Get in contact
+        </a>
+      </p>
+    </div>
   </section>
 
   {
@@ -67,3 +93,15 @@ const latestPosts = posts.slice(0, 1)
     )
   }
 </BaseLayout>
+
+<style>
+  .avatar-fade {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 62%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+  }
+</style>
