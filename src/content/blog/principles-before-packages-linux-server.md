@@ -2,7 +2,7 @@
 title: "Principles before packages on a Linux box"
 date: 2026-09-23
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "Before Fail2Ban or UFW, name your threat model, recovery path, and how alerts leave the machine. Practitioner guides start there for a reason."
 ---

@@ -2,7 +2,7 @@
 title: "Learn first, CIS second"
 date: 2026-09-24
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "One ordered practitioner path for learning and copy-paste, then CIS benchmarks to trump your choices. That sequence is deliberate, not a compromise."
 ---

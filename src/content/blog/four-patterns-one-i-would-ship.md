@@ -2,8 +2,7 @@
 title: "Four prompt patterns, one parks excerpt"
 date: 2026-06-13
 tags:
-  - llm
-  - prompts
+  - ai
 summary: "Zero-shot, few-shot, JSON, and a rubric against the same invented parks policy. Which output would I put in front of a staff member?"
 ---
 

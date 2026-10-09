@@ -2,9 +2,7 @@
 title: "Prompt, context, harness, loop, graph"
 date: 2026-09-21
 tags:
-  - llm
-  - architecture
-  - prompts
+  - ai
 summary: "Five jobs around a next-token model: the message array, what fills the window, the process that gates and scores, the retry-until-stop agent loop, and the graph that decides which of those even run."
 ---
 

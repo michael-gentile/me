@@ -2,8 +2,7 @@
 title: "The context window is a token budget"
 date: 2026-05-27
 tags:
-  - llm
-  - tokens
+  - ai
 summary: "Generation is one token at a time until a stop condition. Paste-the-whole-PDF isn't a retrieval strategy, and where a fact sits in a long prompt can change whether it is used."
 ---
 

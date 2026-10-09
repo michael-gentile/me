@@ -2,7 +2,7 @@
 title: "Ansible after manual hardening"
 date: 2026-09-27
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "Encode the same order you ran by hand: users and SSH, UFW, Fail2Ban, mail, audits. Automation fights drift once you understand the steps — with links to each topic in this series."
 ---

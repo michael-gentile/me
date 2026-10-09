@@ -2,8 +2,7 @@
 title: "A fluent citation can still be fake"
 date: 2026-06-18
 tags:
-  - llm
-  - prompts
+  - ai
 summary: "Three ordinary questions: a fake bylaw citation, a system/user format fight, and a leading legal premise. No attack recipes. The model still fails like a product."
 ---
 

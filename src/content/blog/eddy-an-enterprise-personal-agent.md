@@ -2,10 +2,7 @@
 title: "Eddy: an enterprise personal agent"
 date: 2026-09-24
 tags:
-  - llm
-  - architecture
-  - agents
-  - enterprise
+  - ai
 summary: "Muse, OpenClaw, and Grok Bot all give an agent a computer. What if that computer lived in your cloud, under SSO, with connectors to your systems? A conceptual sketch of Eddy—and what security would have to look like."
 ---
 

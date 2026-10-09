@@ -2,8 +2,8 @@
 title: "Don't mix a visitor page with policy"
 date: 2026-07-03
 tags:
-  - llm
-  - prompts
+  - ai
+  - security
 summary: "Official policy and a visitor blog in the same prompt is one trust boundary. Two calls, two roles, and a summary that isn't allowed to become a rule."
 ---
 

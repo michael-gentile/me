@@ -2,8 +2,8 @@
 title: "Threat-model the chatbot first"
 date: 2026-06-28
 tags:
-  - llm
-  - architecture
+  - ai
+  - security
 summary: "A staff policy assistant: SSO, a question box, a document store, a hosted model, a future send-email button. Trust boundaries first, OWASP names as a catalogue."
 ---
 

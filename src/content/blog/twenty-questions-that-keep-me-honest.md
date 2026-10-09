@@ -2,8 +2,7 @@
 title: "Twenty questions that keep me honest"
 date: 2026-06-23
 tags:
-  - llm
-  - evals
+  - ai
 summary: "A fixed pool schedule, twenty questions, two system prompts, keyword scoring. Crude on purpose. A prompt change is a regression test."
 ---
 

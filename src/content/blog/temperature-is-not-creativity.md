@@ -2,8 +2,7 @@
 title: "Temperature is not creativity"
 date: 2026-05-30
 tags:
-  - llm
-  - sampling
+  - ai
 summary: "Ten runs of the same prompt at three temperatures. Sampling is a draw from a distribution. Evals have to pin the knobs."
 ---
 

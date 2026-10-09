@@ -2,8 +2,7 @@
 title: "Ship a tiny tool without shipping Node"
 date: 2026-10-03
 tags:
-  - typescript
-  - tooling
+  - programming
 summary: "Vercel Labs' scriptc turns a typed TypeScript file into a standalone binary. Coverage tells you when you're still dragging a JS engine along."
 ---
 

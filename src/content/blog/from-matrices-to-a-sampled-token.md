@@ -2,8 +2,7 @@
 title: "From matrices to a sampled token"
 date: 2026-08-13
 tags:
-  - llm
-  - architecture
+  - ai
 summary: "Tokens and matrices, pretraining, SFT and preference, adapters versus prompts, then inference with a KV cache and speculative decoding. Same job the whole way: next-token prediction."
 ---
 

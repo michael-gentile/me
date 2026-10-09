@@ -2,9 +2,7 @@
 title: "100 on mobile and desktop"
 date: 2026-08-20
 tags:
-  - astro
-  - github-pages
-  - performance
+  - web
 summary: I ran PageSpeed Insights on the live home. Mobile was 89, desktop 99. Here are the two things that brought the scores to 100.
 ---
 

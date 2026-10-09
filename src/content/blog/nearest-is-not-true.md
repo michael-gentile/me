@@ -2,8 +2,7 @@
 title: "The word bank fools a retriever"
 date: 2026-05-24
 tags:
-  - llm
-  - retrieval
+  - ai
 summary: "Embeddings are geometry. Paraphrases cluster. The word bank also clusters. A retriever will fetch the wrong paragraph without anyone hacking anything."
 ---
 

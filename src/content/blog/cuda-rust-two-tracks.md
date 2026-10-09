@@ -2,9 +2,8 @@
 title: "CUDA Rust, two tracks"
 date: 2026-09-20
 tags:
-  - cuda
-  - rust
-  - gpu
+  - infrastructure
+  - programming
 summary: "NVIDIA's September post: C++ and Python stay the mature kernel languages. They're adding native Rust so the serving stack and the kernel can share a language."
 ---
 

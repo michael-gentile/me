@@ -16,7 +16,7 @@ const initialQuery = (Astro.url.searchParams.get('q') ?? '').trim()
 const initialQueryLower = initialQuery.toLowerCase()
 const requestedTag = (Astro.url.searchParams.get('tag') ?? '').trim()
 const requestedTagLower = requestedTag.toLowerCase()
-const knownTags = new Set(tags.map((tag) => tag.toLowerCase()))
+const knownTags = new Set(tags.map(({ tag }) => tag.toLowerCase()))
 const initialTag =
   requestedTagLower && knownTags.has(requestedTagLower) ? requestedTag : ''
 const activeTagLower = initialTag.toLowerCase()

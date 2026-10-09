@@ -2,8 +2,7 @@
 title: "JevDraft: typed picks for a fantasy NHL draft"
 date: 2026-09-22
 tags:
-  - llm
-  - architecture
+  - ai
 summary: "A local CLI that rescores a public hockey board to my ESPN league, then asks Jev for pick-time choices with confidence gates. Just for fun."
 ---
 

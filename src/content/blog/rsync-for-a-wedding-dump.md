@@ -2,9 +2,7 @@
 title: "rsync for a wedding dump"
 date: 2026-09-19
 tags:
-  - rsync
-  - macos
-  - storage
+  - infrastructure
 summary: "A year later we got the RAW photos and video on a 1TB SSD. Finder would have been hours with no gui copy feature I trusted to resume, so I used caffeinate and rsync."
 ---
 

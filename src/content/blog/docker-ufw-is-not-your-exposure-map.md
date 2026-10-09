@@ -2,7 +2,7 @@
 title: "UFW said deny; Docker published anyway"
 date: 2026-09-22
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "Published container ports bypass UFW INPUT. A green firewall UI is not a complete map of what the internet can reach."
 ---

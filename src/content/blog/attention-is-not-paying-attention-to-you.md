@@ -2,7 +2,7 @@
 title: "What attention actually computes"
 date: 2026-06-03
 tags:
-  - llm
+  - ai
 summary: "A CIO version and an engineer version of the same stack: frozen model, post-training, and the application layer. Attention is tokens looking at tokens."
 ---
 

@@ -2,8 +2,8 @@
 title: "Retrieved text is still just tokens"
 date: 2026-07-08
 tags:
-  - llm
-  - prompts
+  - ai
+  - security
 summary: "A parks FAQ with a clean policy and a noisy one. The noisy file contains a sentence that looks like an instruction. The application has to keep that sentence in the data channel."
 ---
 

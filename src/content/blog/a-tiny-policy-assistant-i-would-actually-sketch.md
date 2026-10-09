@@ -2,8 +2,7 @@
 title: "A tiny policy assistant"
 date: 2026-08-23
 tags:
-  - llm
-  - architecture
+  - ai
 summary: "A weekend CLI: fake logins, two made-up policy notes, retrieval that respects audience, and a send_email button that never fires. Offline on purpose."
 ---
 

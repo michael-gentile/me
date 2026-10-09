@@ -2,8 +2,7 @@
 title: "Models don't read words. They read tokens."
 date: 2026-05-21
 tags:
-  - llm
-  - tokens
+  - ai
 summary: "The same sentences through two tokenizers, and why word-count limits are the wrong unit for cost, context, and input size."
 ---
 

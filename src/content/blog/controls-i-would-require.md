@@ -2,8 +2,8 @@
 title: "A control matrix, including leftover risk"
 date: 2026-08-03
 tags:
-  - llm
-  - architecture
+  - ai
+  - security
 summary: "A design-review matrix: max length, labelled channels, dual-step summarizers, output policy, humans before send, least-privilege tools, logs. Three I would put in a statement of work."
 ---
 

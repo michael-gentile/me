@@ -2,8 +2,7 @@
 title: "RAG with ACLs, citations, and a threshold"
 date: 2026-07-18
 tags:
-  - llm
-  - retrieval
+  - ai
 summary: "After the nearest-chunk failure: required ACLs, citations, a similarity threshold, per-user mapping. Residual risk includes the caller forging the audience."
 ---
 

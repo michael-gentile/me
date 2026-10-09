@@ -2,8 +2,7 @@
 title: "Ask for aircraft-manual English"
 date: 2026-10-02
 tags:
-  - llm
-  - prompts
+  - ai
 summary: "Karpathy's tip: explain it in ASD-STE100. Controlled English from aerospace manuals. Short sentences, one meaning per word, and why models often sound clearer under that constraint."
 ---
 

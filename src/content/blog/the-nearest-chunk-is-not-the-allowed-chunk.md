@@ -2,8 +2,8 @@
 title: "Similarity is not authorization"
 date: 2026-07-13
 tags:
-  - llm
-  - retrieval
+  - ai
+  - security
 summary: "A tiny retrieve-then-generate pipeline over two notes. Similarity will fetch HR for a recreation question. Authorization is a second filter."
 ---
 

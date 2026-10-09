@@ -2,8 +2,8 @@
 title: "Never assign model output to innerHTML"
 date: 2026-07-23
 tags:
-  - llm
-  - html
+  - ai
+  - security
 summary: "LLM text is untrusted the same way any other user-influenced string is. innerHTML makes the model an HTML author for your origin."
 ---
 

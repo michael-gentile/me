@@ -2,7 +2,7 @@
 title: "Danger Zone: sysctl by consensus and hidepid"
 date: 2026-09-26
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "Kernel tunables and /proc hiding can break your system. Good guides say so out loud — and still document hidepid=2 for multi-user privacy."
 ---

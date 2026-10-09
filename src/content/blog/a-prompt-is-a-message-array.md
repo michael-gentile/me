@@ -2,8 +2,7 @@
 title: "A prompt is a message array"
 date: 2026-06-08
 tags:
-  - llm
-  - prompts
+  - ai
 summary: "Chat APIs aren't one string in. Where you put an instruction (system, user, or both) changes how often it is followed, and there is no guaranteed winner."
 ---
 

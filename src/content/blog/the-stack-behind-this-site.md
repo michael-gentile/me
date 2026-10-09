@@ -2,9 +2,7 @@
 title: "The stack behind this site"
 date: 2026-05-15
 tags:
-  - astro
-  - github-pages
-  - tailwind-css
+  - web
 summary: "Astro, markdown posts, Tailwind, GitHub Pages. I push to main and it ships."
 ---
 

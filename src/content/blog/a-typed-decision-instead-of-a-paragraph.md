@@ -2,7 +2,7 @@
 title: "A typed decision instead of a paragraph"
 date: 2026-09-16
 tags:
-  - llm
+  - ai
 summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilities instead of tokens."
 ---
 

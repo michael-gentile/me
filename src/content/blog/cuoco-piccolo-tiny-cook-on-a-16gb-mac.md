@@ -2,10 +2,8 @@
 title: "Cuoco Piccolo: a tiny cook on a 16 GB Mac"
 date: 2026-10-03
 tags:
-  - llm
-  - mlx
-  - rag
-  - fastapi
+  - ai
+  - programming
 summary: "LoRA on Qwen2.5-0.5B-Instruct (4-bit) via MLX, BM25 recipe RAG from TheMealDB, and a router that returns markdown cards instead of letting a small model invent quantities."
 ---
 

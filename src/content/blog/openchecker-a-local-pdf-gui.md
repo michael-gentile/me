@@ -2,10 +2,7 @@
 title: "openChecker: a local PDF GUI"
 date: 2026-08-28
 tags:
-  - pdf
-  - python
-  - fastapi
-  - accessibility
+  - programming
 summary: I wrapped an open-source Java PDF extractor in a local drop-a-file page. Markdown, JSON with bounding boxes, and an annotated overlay.
 ---
 

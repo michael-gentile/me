@@ -13,8 +13,13 @@ export const uniquePostTags = (posts: CollectionEntry<'blog'>[]) => {
   return [...tags].sort((left, right) => left.localeCompare(right))
 }
 
-/** Tags sorted by post frequency (desc), then name — same rule as site stats. */
-export const tagsByPopularity = (posts: CollectionEntry<'blog'>[]) => {
+export type TagCount = {
+  tag: string
+  count: number
+}
+
+/** Tags with counts, sorted by frequency (desc), then name — same rule as site stats. */
+export const tagsByPopularity = (posts: CollectionEntry<'blog'>[]): TagCount[] => {
   const tagCounts = new Map<string, number>()
 
   for (const post of posts) {
@@ -24,11 +29,11 @@ export const tagsByPopularity = (posts: CollectionEntry<'blog'>[]) => {
   }
 
   return [...tagCounts.entries()]
+    .map(([tag, count]) => ({ tag, count }))
     .sort(
       (left, right) =>
-        right[1] - left[1] || left[0].localeCompare(right[0])
+        right.count - left.count || left.tag.localeCompare(right.tag)
     )
-    .map(([tag]) => tag)
 }
 
 export const blogFilterHref = (tag?: string) => {

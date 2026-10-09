@@ -2,9 +2,7 @@
 title: "Muse and the personal agent"
 date: 2026-09-24
 tags:
-  - llm
-  - architecture
-  - agents
+  - ai
 summary: "Meta shipped a personal agent with a per-user VM and a pocket Charm. The interesting part isn’t the demo—it’s how that shape compares to OpenClaw and the DIY personal-agent stack, rolled out for people who won’t self-host."
 ---
 

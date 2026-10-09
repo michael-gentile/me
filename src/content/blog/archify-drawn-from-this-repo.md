@@ -2,9 +2,7 @@
 title: "Archify, drawn from this repo"
 date: 2026-10-05
 tags:
-  - astro
-  - github-pages
-  - tooling
+  - web
 summary: "I pointed Archify at this Astro site and got a source-backed architecture diagram for the push → build → Pages path."
 ---
 

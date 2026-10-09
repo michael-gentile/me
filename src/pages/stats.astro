@@ -4,10 +4,18 @@ import { buildSiteStats } from '../lib/stats'
 import { withBase } from '../lib/url'
 
 const stats = await buildSiteStats(Astro.generator)
-const maxTagCount = Math.max(...stats.topics.tags.map((tag) => tag.count), 1)
 const maxYearCount = Math.max(...stats.cadence.map((year) => year.count), 1)
+const cadenceBarMaxPx = 96
 
 const formatNumber = (value: number) => value.toLocaleString('en-CA')
+
+const archifyFullHref = withBase('/archify/me-site.html')
+const archifyEmbedHref = `${archifyFullHref}?embed=1&theme=light`
+const archifyPostHref = withBase('/blog/archify-drawn-from-this-repo')
+const archifyStillSrc = withBase('/images/blog/archify-me-site.webp')
+
+const topicChipClass =
+  'inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent dark:border-line-dark dark:text-muted-dark dark:hover:border-accent-dark dark:hover:text-accent-dark'
 ---
 
 <BaseLayout
@@ -132,6 +140,55 @@ const formatNumber = (value: number) => value.toLocaleString('en-CA')
     </ul>
   </section>
 
+  <section class="mt-14" aria-labelledby="sitemap-heading">
+    <h2
+      id="sitemap-heading"
+      class="border-b border-line pb-3 text-sm uppercase tracking-[0.18em] text-muted dark:border-line-dark dark:text-muted-dark"
+    >
+      Site map
+    </h2>
+    <p class="mt-4 text-base text-muted dark:text-muted-dark">
+      Source-backed architecture of this static site — push, build, Pages, and discovery surfaces.
+      {' '}
+      <a
+        class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+        href={archifyFullHref}
+      >
+        Open full diagram
+      </a>
+      <span aria-hidden="true"> · </span>
+      <a
+        class="text-accent hover:text-accent-hover dark:text-accent-dark dark:hover:text-accent-hover-dark"
+        href={archifyPostHref}
+      >
+        How it was drawn
+      </a>
+    </p>
+    <div class="mt-6 overflow-hidden rounded-md border border-line dark:border-line-dark">
+      <iframe
+        title="Architecture diagram of this site"
+        class="block h-[28rem] w-full bg-paper dark:bg-paper-dark"
+        loading="lazy"
+        data-archify-embed
+        data-archify-base={archifyFullHref}
+        src={archifyEmbedHref}
+      ></iframe>
+    </div>
+    <noscript>
+      <p class="mt-6">
+        <a href={archifyFullHref}>
+          <img
+            src={archifyStillSrc}
+            alt="Archify architecture diagram of this site: author pushes to GitHub Actions, Astro builds markdown into GitHub Pages under /me."
+            class="w-full rounded-md border border-line dark:border-line-dark"
+            width="1200"
+            height="675"
+          />
+        </a>
+      </p>
+    </noscript>
+  </section>
+
   <section class="mt-14" aria-labelledby="cadence-heading">
     <h2
       id="cadence-heading"
@@ -143,24 +200,33 @@ const formatNumber = (value: number) => value.toLocaleString('en-CA')
       stats.cadence.length === 0 ? (
         <p class="mt-6 text-muted dark:text-muted-dark">No posts yet.</p>
       ) : (
-        <ul class="mt-6 space-y-3" aria-label="Posts per year">
-          {stats.cadence.map((year) => (
-            <li class="grid grid-cols-[4rem_1fr_auto] items-center gap-3 text-sm">
-              <span class="font-medium text-ink dark:text-ink-dark">{year.year}</span>
-              <div
-                class="h-2 rounded-sm bg-line dark:bg-line-dark"
-                aria-hidden="true"
-              >
+        <ul
+          class="mt-6 flex flex-wrap items-end gap-6"
+          aria-label="Posts per year"
+        >
+          {stats.cadence.map((year) => {
+            const barHeight = Math.max(
+              8,
+              Math.round((year.count / maxYearCount) * cadenceBarMaxPx)
+            )
+            return (
+              <li class="flex w-14 flex-col items-center gap-2 text-center text-sm">
+                <span class="tabular-nums text-muted dark:text-muted-dark">
+                  {year.count}
+                </span>
                 <div
-                  class="h-full rounded-sm bg-accent dark:bg-accent-dark"
-                  style={`width: ${(year.count / maxYearCount) * 100}%`}
-                />
-              </div>
-              <span class="tabular-nums text-muted dark:text-muted-dark">
-                {year.count}
-              </span>
-            </li>
-          ))}
+                  class="flex h-24 w-8 items-end rounded-sm bg-line dark:bg-line-dark"
+                  aria-hidden="true"
+                >
+                  <div
+                    class="w-full rounded-sm bg-accent dark:bg-accent-dark"
+                    style={`height: ${barHeight}px`}
+                  />
+                </div>
+                <span class="font-medium text-ink dark:text-ink-dark">{year.year}</span>
+              </li>
+            )
+          })}
         </ul>
       )
     }
@@ -190,27 +256,20 @@ const formatNumber = (value: number) => value.toLocaleString('en-CA')
       stats.topics.tags.length === 0 ? (
         <p class="mt-6 text-muted dark:text-muted-dark">No tags yet.</p>
       ) : (
-        <ul class="mt-6 space-y-3" aria-label="Tag frequency">
+        <ul class="mt-6 flex flex-wrap gap-2" aria-label="Tag frequency">
           {stats.topics.tags.map((tag) => (
-            <li class="grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-3 text-sm sm:grid-cols-[minmax(0,10rem)_1fr_auto]">
+            <li>
               <a
-                class="truncate text-ink hover:text-accent dark:text-ink-dark dark:hover:text-accent-dark"
+                class={topicChipClass}
                 href={`${withBase('/blog')}?tag=${encodeURIComponent(tag.tag)}`}
               >
-                {tag.tag}
+                <span>{tag.tag}</span>
+                <span aria-hidden="true">·</span>
+                <span class="tabular-nums">{tag.count}</span>
+                <span class="sr-only">
+                  , {tag.count} post{tag.count === 1 ? '' : 's'}
+                </span>
               </a>
-              <div
-                class="h-2 rounded-sm bg-line dark:bg-line-dark"
-                aria-hidden="true"
-              >
-                <div
-                  class="h-full rounded-sm bg-accent dark:bg-accent-dark"
-                  style={`width: ${(tag.count / maxTagCount) * 100}%`}
-                />
-              </div>
-              <span class="tabular-nums text-muted dark:text-muted-dark">
-                {tag.count}
-              </span>
             </li>
           ))}
         </ul>
@@ -290,3 +349,42 @@ const formatNumber = (value: number) => value.toLocaleString('en-CA')
     </dl>
   </section>
 </BaseLayout>
+
+<script>
+  const syncArchifyTheme = () => {
+    const iframe = document.querySelector<HTMLIFrameElement>('[data-archify-embed]')
+    if (!iframe) {
+      return
+    }
+
+    const base = iframe.dataset.archifyBase
+    if (!base) {
+      return
+    }
+
+    const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    const next = `${base}?embed=1&theme=${theme}`
+
+    if (iframe.getAttribute('src') !== next) {
+      iframe.setAttribute('src', next)
+    }
+  }
+
+  const bindArchifyTheme = () => {
+    syncArchifyTheme()
+
+    if (document.documentElement.dataset.archifyThemeBound === 'true') {
+      return
+    }
+
+    document.documentElement.dataset.archifyThemeBound = 'true'
+    const observer = new MutationObserver(syncArchifyTheme)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+  }
+
+  bindArchifyTheme()
+  document.addEventListener('astro:page-load', bindArchifyTheme)
+</script>

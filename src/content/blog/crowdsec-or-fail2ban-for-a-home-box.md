@@ -2,7 +2,7 @@
 title: "CrowdSec or Fail2Ban on a home box"
 date: 2026-09-25
 tags:
-  - linux
+  - infrastructure
   - security
 summary: "Both read logs and ban addresses. CrowdSec adds shared blocklists and explicit privacy questions. Pick based on telemetry appetite and false-positive tolerance, not hype."
 ---

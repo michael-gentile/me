@@ -2,7 +2,7 @@
 title: "The model is not the product"
 date: 2026-05-18
 tags:
-  - llm
+  - ai
 summary: "Three different things get sold as AI: a next-token model, a vendor product, and the application you actually have to design."
 ---
 

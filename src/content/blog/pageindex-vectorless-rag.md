@@ -2,9 +2,7 @@
 title: "PageIndex: retrieval without the vector DB"
 date: 2026-09-29
 tags:
-  - llm
-  - retrieval
-  - architecture
+  - ai
 summary: "VectifyAI’s PageIndex builds a tree index and lets an LLM walk it. Similarity search is optional. Notes on how that sits next to the nearest-chunk RAG I’ve been writing about."
 ---
 

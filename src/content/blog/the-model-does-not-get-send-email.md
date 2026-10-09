@@ -2,8 +2,7 @@
 title: "The model does not get send_email"
 date: 2026-07-28
 tags:
-  - llm
-  - architecture
+  - ai
 summary: "Tool-calling is the model emitting JSON. Your process decides whether to run it. Weather can pass a gate. Email and delete cannot, even if the model asked."
 ---
 

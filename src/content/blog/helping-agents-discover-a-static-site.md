@@ -2,8 +2,7 @@
 title: "Helping agents discover a static site"
 date: 2026-08-18
 tags:
-  - astro
-  - github-pages
+  - web
 summary: "Dries Buytaert exposed blog search over MCP because he has a live API. This site is HTML on GitHub Pages, so calling it here is GET."
 ---
 

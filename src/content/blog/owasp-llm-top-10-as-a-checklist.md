@@ -2,8 +2,8 @@
 title: "OWASP LLM Top 10 as a review checklist"
 date: 2026-08-08
 tags:
-  - llm
-  - architecture
+  - ai
+  - security
 summary: "Notes against the OWASP list: one sentence of meaning, where it shows up in an enterprise assistant, the control I would require."
 ---
 
