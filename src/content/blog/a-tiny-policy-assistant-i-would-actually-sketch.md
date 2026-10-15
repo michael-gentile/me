@@ -6,7 +6,7 @@ tags:
 summary: "A weekend CLI: fake logins, two made-up policy notes, retrieval that respects audience, and a send_email button that never fires. Offline on purpose."
 ---
 
-I got tired of five separate notes, so I glued them into one weekend CLI. Fake logins, two made-up policy files, and a send_email button that never sends. Who is asking, which notes they may see, whether the answer is grounded, and whether "send this by email" is allowed to become a send.
+I got tired of five separate notes ([Don't mix a visitor page with policy](/me/blog/the-webpage-is-untrusted-input/), [Retrieved text is data](/me/blog/retrieved-text-is-data/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [Never assign model output to innerHTML](/me/blog/never-assign-model-output-to-innerhtml/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)), so I glued them into one weekend CLI. Fake logins, two made-up policy files, and a send_email button that never sends. Who is asking, which notes they may see, whether the answer is grounded, and whether "send this by email" is allowed to become a send.
 
 There's no ChatGPT or Claude key in this sketch. The traces below are from an **offline** assistant: keyword overlap instead of embeddings, extractive sentences instead of a chat model, gates in Python. A live model can sit in the same slots later. It doesn't replace the slots, which is the whole reason Alex's payday dies in Python and not in a paragraph.
 
@@ -84,11 +84,11 @@ In a version with tool-calling JSON, the gate still keys off the **tool name** a
 
 Every turn appends a JSON line: user, question, document ids, answer, timestamp. That log is now a sensitive store of its own. Retention is a product decision. "We log for safety" without a retention sentence is how you grow a second leak.
 
-Answers are printed as text. No `innerHTML`. A chat pane that assigns model output to the DOM is a different bug.
+Answers are printed as text. No `innerHTML`. A chat pane that assigns model output to the DOM is a [different bug](/me/blog/never-assign-model-output-to-innerhtml/).
 
 ## Controls, named
 
-Same catalogue as the OWASP LLM list, used as a review table, not a score.
+Same catalogue as the [OWASP LLM Top 10 as a review checklist](/me/blog/owasp-llm-top-10-as-a-checklist/), used as a review table, not a score.
 
 | Idea | Where it shows up | What the toy actually does |
 | --- | --- | --- |

@@ -46,7 +46,7 @@ Read it from the bottom. The model only ever sees a list of token IDs. Everythin
 
 ## Prompt engineering
 
-A prompt is a message array with roles, not a paragraph in a text box. Chat APIs concatenate `system` / `developer`, `user`, `assistant`, and later `tool` into one sequence, usually with special tokens around each role. The model was post-trained on that layout. Where you put a rule changes how often it is followed, and there's no guaranteed winner across vendors or even across weeks of post-training.
+[A prompt is a message array](/me/blog/a-prompt-is-a-message-array/) with roles, not a paragraph in a text box. Chat APIs concatenate `system` / `developer`, `user`, `assistant`, and later `tool` into one sequence, usually with special tokens around each role. The model was post-trained on that layout. Where you put a rule changes how often it is followed, and there's no guaranteed winner across vendors or even across weeks of post-training.
 
 For Cedar Mondays the array I'd actually send looks like this:
 
@@ -63,7 +63,7 @@ What the model does next is still next-token prediction. Temperature, top-p, and
 
 ## Context engineering
 
-The window is a token budget. Prompt plus completion have to fit. If the prompt already used 6,000 of 8,192, you have 2,192 tokens left for the answer, and `max_tokens=4096` on that call doesn't give you 4096. Context engineering is the job of deciding which tokens occupy that budget: retrieved notes, prior turns, tool results, the visitor page you should not have mixed with policy.
+[The context window is a token budget](/me/blog/the-window-is-finite/). Prompt plus completion have to fit. If the prompt already used 6,000 of 8,192, you have 2,192 tokens left for the answer, and `max_tokens=4096` on that call doesn't give you 4096. Context engineering is the job of deciding which tokens occupy that budget: retrieved notes, prior turns, tool results, [the visitor page you should not have mixed with policy](/me/blog/the-webpage-is-untrusted-input/).
 
 Alex's Monday question should never see the HR payday file. Similarity doesn't know about users. Filter the store to recreation, then rank, then maybe generate. If the best score is junk, skip the model and print `Not in the notes.` That's context work. The prompt didn't change. The bytes in the window did.
 

@@ -9,11 +9,7 @@ summary: "Anthropic’s engineering post on Scion: they outgrew git’s offline 
 
 Coding agents changed where I spend skepticism. I used to worry about the harness around the model ([Prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)). Anthropic’s [Redesigning source control](https://www.anthropic.com/engineering/redesigning-source-control) points at an older wall: git, CI, and review queues built for humans typing one change at a time.
 
-In May 2026 they averaged about 2,500 merges a day into their monorepo. By September it was over 30,000. They call the latent demand for merging “practically infinite.” Their answer was Scion, an in-house VCS, plus Antique for review, code search, and a richer IAM story, shipped in about five months by a small team that also used Claude heavily to build it. Read it as a design memo. You cannot `brew install` Scion.
-
-## The claim in one sentence
-
-Git assumes every clone is a full offline peer. Agent-scale monorepos need a server that answers history, blame, diffs, and checkouts for clients that are online by definition. Scion redesigns around that server, rather than stacking more mirrors and seeds on git forever.
+In May 2026 they averaged about 2,500 merges a day into their monorepo. By September it was over 30,000. They call the latent demand for merging “practically infinite.” Git assumes every clone is a full offline peer; agent-scale monorepos need a server that answers history, blame, diffs, and checkouts for clients that are online by definition. Their answer was Scion, an in-house VCS, plus Antique for review, code search, and a richer IAM story, shipped in about five months by a small team that also used Claude heavily to build it. Read it as a design memo. You cannot `brew install` Scion.
 
 ## Why git started to hurt
 
@@ -53,9 +49,9 @@ A seven-person team built Scion and Antique while merge volume climbed 10x. Engi
 
 The merge-queue prior broke. Hundreds of changes can land while tests still run. They invested in post-merge and pre-deploy automation instead of a global lock, and treat concurrent conflicts as something Claude can often repair faster than a human can triage.
 
-Security got directory-level permissions inside the monorepo and review rules that distinguish comment-only edits from sensitive logic, so humans spend attention where it matters. That rhymes with [Uber ADR](/me/blog/uber-adr-sensor-the-agent-session/) and my control-matrix notes: you still need observability and policy when volume goes up.
+Security got directory-level permissions inside the monorepo and review rules that distinguish comment-only edits from sensitive logic, so humans spend attention where it matters. That rhymes with [Uber ADR](/me/blog/uber-adr-sensor-the-agent-session/) and [A control matrix, including leftover risk](/me/blog/controls-i-would-require/): you still need observability and policy when volume goes up.
 
-## What I would still require
+## What I’d steal on a normal repo
 
 Scion is not a git replacement for a normal team, and Anthropic says so. Migrating means review, search, and CI move with it. Their internal token spend for dogfooding is not a budget you should copy.
 
@@ -63,11 +59,9 @@ For a shop where agents help a lot but the monorepo still fits git, I would stea
 
 If you *are* in Anthropic’s size class, put these on the whiteboard before cloning the idea: who may land to main without a human, what “reviewed” means when the author is an agent, how post-merge breakage pages a human, and whether directory ACLs in the monorepo match how you segregate secrets and regulated code.
 
-## Bottom line
-
-When agents merge all day, source control becomes the tax. Anthropic’s post shows a VCS built for always-online clients and server-side truth, with numbers and a clear “don’t install this at home” section. I would read it for the principles and the CI/checkout architecture. For a small repo I would leave Scion alone and ask which of my CI jobs still clone a full history to answer a question the forge could answer over RPC.
+When agents merge all day, source control becomes the tax. I would read Anthropic’s post for the principles and the CI/checkout architecture. For a small repo I would leave Scion alone and ask which of my CI jobs still clone a full history to answer a question the forge could answer over RPC.
 
 ## Sources
 
 - [Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control) (Anthropic Engineering, Oct 13, 2026)
-- Earlier notes: [Prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [Uber ADR: sensor the agent session](/me/blog/uber-adr-sensor-the-agent-session/), [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)
+- Earlier notes: [Prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [Uber ADR: sensor the agent session](/me/blog/uber-adr-sensor-the-agent-session/), [A control matrix, including leftover risk](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

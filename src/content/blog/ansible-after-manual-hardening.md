@@ -27,7 +27,7 @@ After the first successful run you should use the key and `-e ansible_ssh_port=.
 | SSH, groups, pwquality | SSH server, basics | [Principles before packages](/me/blog/principles-before-packages-linux-server/) |
 | UFW default deny, SSH limit | Network | [UFW said deny; Docker published anyway](/me/blog/docker-ufw-is-not-your-exposure-map/) — **Docker publish rules are rarely automatic**; add tasks or compose loopback binds yourself |
 | PSAD + Fail2Ban | Network IDS | [CrowdSec or Fail2Ban](/me/blog/crowdsec-or-fail2ban-for-a-home-box/) — many playbooks ship Fail2Ban, not CrowdSec |
-| msmtp / mail | Outbound alerts | Alerts as a control in principles post |
+| msmtp / mail | Outbound alerts | Alerts as a control in [Principles before packages](/me/blog/principles-before-packages-linux-server/) |
 | unattended-upgrades, apticron | Automatic updates | Security patches without you remembering |
 | ClamAV, rkhunter, auditd | Auditing | Detection, not prevention — logs and scans |
 | Lynis + email report | Lynis audit | A numeric "score" is a snapshot; your mileage varies |

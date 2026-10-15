@@ -10,7 +10,7 @@ I’ve been writing about vector RAG as the default stack: embed chunks, cosine 
 
 [PageIndex](https://github.com/VectifyAI/PageIndex) (VectifyAI) is an open-source, vectorless RAG engine built around that bet. You can find more information in their Docs at [docs.pageindex.ai](https://docs.pageindex.ai/). 
 
-## The claim in one sentence
+## The bet
 
 Vector RAG retrieves what *looks like* the question. PageIndex builds a hierarchical tree of natural sections, then asks an LLM to *reason* which nodes to open. It's akin to flipping through a table of contents versus a nearest-neighbour search.
 
@@ -51,7 +51,7 @@ On FinanceBench (financial document QA), they report **98.7%** for a PageIndex-b
 
 They also publish local indexing cost (~$0.001/page with a cheap index model in their notes), query cost vs stuffing the whole PDF, and an OSS lookup benchmark. Index once; reuse the tree. Chat model quality matters more on the search step than on summarising section titles at index time. It's a practical split.
 
-## What I would still wire myself
+## What still sits outside PageIndex
 
 PageIndex swaps the retriever. It does not replace the application around it.
 
@@ -66,7 +66,7 @@ PageIndex swaps the retriever. It does not replace the application around it.
 
 Long, structured PDFs: annual reports, manuals, bylaws with appendices, textbooks. Questions that need “look in the liabilities section” rather than “find sentences that sound like liabilities.” Follow-on turns that depend on where you already were in the report.
 
-I would keep vector RAG (with ACLs and a threshold) for large, flat, heterogeneous corpora where approximate nearest neighbour is the right first cut. The interesting enterprise setup might be hybrid: metadata or a light vector pass to pick *documents*, PageIndex-style tree search *inside* the winners—same spirit as their multi-document notes.
+I would keep [vector RAG with ACLs and a threshold](/me/blog/rag-i-would-actually-ship/) for large, flat, heterogeneous corpora where approximate nearest neighbour is the right first cut. A hybrid that uses metadata or a light vector pass to pick *documents*, then PageIndex-style tree search *inside* the winners, matches their multi-document notes.
 
 ## Quickstart shape
 
@@ -85,9 +85,7 @@ answer = client.chat("What was the 2023 operating margin?", doc_id=doc_id)
 
 Cloud mode moves OCR and managed storage to them; chat can still use your model. MCP and agent SDK hooks are documented if you want tools instead of a chat wrapper.
 
-## Bottom line
-
-PageIndex is a serious attempt to treat retrieval as navigation, not vibes. That is the right diagnosis for the failures I’ve been documenting with cosine. It does not erase authorization, logging, or cost. For parks policy notes in a folder, I would still start with ACL-filtered retrieve-then-generate. For a 200-page financial statement or a fat operations manual, I would rather an agent walk a ToC than trust the nearest 800 tokens.
+PageIndex treats retrieval as navigation. That is the right diagnosis for the failures I’ve been documenting with cosine. It does not erase authorization, logging, or cost. For parks policy notes in a folder, I would still start with ACL-filtered retrieve-then-generate. For a 200-page financial statement or a fat operations manual, I would rather an agent walk a ToC than trust the nearest 800 tokens.
 
 ## Sources
 
