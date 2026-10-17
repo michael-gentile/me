@@ -43,3 +43,8 @@ Homebrew on a Mac often has a JDK and still reports `Unable to locate a Java Run
 The benchmark numbers on the upstream README are theirs. What I needed was a page I'd click, on a laptop, without sending a PDF to a cloud parser I don't run.
 
 Run it locally. Drop a born-digital file. Read the Markdown. Scroll the JSON until you see a bounding box. I got tired of remembering the CLI flags.
+
+## Sources
+
+- [opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf) (upstream extractor)
+- [pypdfium2](https://github.com/pypdfium2-team/pypdfium2) (page raster for the annotated-PDF tab)

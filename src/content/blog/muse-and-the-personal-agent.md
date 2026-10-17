@@ -88,7 +88,7 @@ Charm as a listening surface. Pocket hardware with mics and always-available wak
 
 Quotas versus real agent work. Background sub-agents and long browser jobs burn allowance. Free tiers teach habits; paid tiers teach whether the economics work.
 
-Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design. Whether they hold when the agent reads hostile mail is empirical, same class as [mixing a visitor page with policy](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [`send_email`](/me/blog/the-model-does-not-get-send-email/) without a gate.
+Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design. Whether they hold when the agent reads hostile mail is empirical, same class as [mixing a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [`send_email`](/me/blog/the-model-does-not-get-send-email/) without a gate.
 
 ## Sources
 

@@ -75,3 +75,10 @@ math fallback: <player> | fill_d_now=0.41 | reach≈1.2
 I would not ask Jev who wins the Art Ross with an empty state. I would not paste the whole JSON board into every call. I would not treat a steep-reach score as a dare. The playbook in the repo is the dry-run checklist: update config from live ESPN, fetch the week of the draft, mock a few snakes offline, then turn the key on.
 
 JevDraft is tinkering with the same shape as the TypeSafe notes: code does the arithmetic and the board, Jev does the pick-time labels, I keep the click. For fun, on draft night, with the remote handy if the API hiccups.
+
+## Sources
+
+- [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) (TypeSafe)
+- [A typed decision instead of a paragraph](/me/blog/a-typed-decision-instead-of-a-paragraph/) (prior note on this site)
+- [Hockey Insights](https://hockey-insights.com/) (pool data used by the fetch step)
+- [ESPN Fantasy](https://fantasy.espn.com/) (draft board I still click myself)

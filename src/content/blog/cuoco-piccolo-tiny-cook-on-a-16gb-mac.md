@@ -110,7 +110,7 @@ Recipe **cards** in the live app always go through `format_recipe_card`. That is
 
 If the query names a tagged main, candidates are restricted to that bucket, then ranked inside it — so “spicy chicken” prefers a jerk-style dish over alphabetical noise. Choice and card paths require a structured recipe (`ingredients_block` + `instructions`, or TheMealDB source). Local technique snippets can still feed LoRA via `format_chunks`; they do not show up as fake recipes in the button list. Free BM25 without a main gets overlap gates so random weak hits stay out of the product path.
 
-Same lesson as [similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) and [the nearest chunk is not “true”](/me/blog/nearest-is-not-true/): retrieval is a search. The app decides what is allowed to become a “recipe.”
+Same lesson as [similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): retrieval is a search. The app decides what is allowed to become a “recipe.”
 
 ## Fine-tuning
 
@@ -124,7 +124,7 @@ That split is the project. Fine-tuning without the router would just make a more
 
 ## Serving choices
 
-The UI is one HTML page: Markdown via `marked` + `DOMPurify` ([never assign model output to `innerHTML` unwashed](/me/blog/never-assign-model-output-to-innerhtml/)), choice buttons from structured `options`, starter chips, and a “Following up on: …” line. Defaults: `temp=0.4`, `max_tokens=384` for freeform turns. Recipe cards are not generation-capped because they are not generated.
+The UI is one HTML page: Markdown via `marked` + `DOMPurify` ([never paint model output as raw HTML](/me/blog/the-webpage-is-untrusted-input/)), choice buttons from structured `options`, starter chips, and a “Following up on: …” line. Defaults: `temp=0.4`, `max_tokens=384` for freeform turns. Recipe cards are not generation-capped because they are not generated.
 
 I did not expose token streaming. Most good answers never hit the LM. Generation sits behind a global MLX lock for thread safety; long-lived SSE adds cancel and backpressure for little gain on a blog-demo UI. Freeform answers get a “Cooking…” wait state instead.
 
@@ -174,14 +174,13 @@ Credit [TheMealDB](https://www.themealdb.com/) for recipe names, ingredients, an
 
 ## What I would keep from the build
 
-The useful artifact is not the 0.5B adapter alone. It is the **router + RAG gate + card formatter**, with LoRA in the leftover slots where style and grounded follow-ups live. That is the same instinct as [RAG I would actually ship](/me/blog/rag-i-would-actually-ship/): put structure around the model before you ask it to sound like a cook.
+The useful artifact is not the 0.5B adapter alone. It is the **router + RAG gate + card formatter**, with LoRA in the leftover slots where style and grounded follow-ups live. That is the same instinct as [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): put structure around the model before you ask it to sound like a cook.
 
 Fun project. Serious enough pipeline to learn the seams.
 
 ## Sources
 
-- Project: `cuoco-piccolo` (local portfolio repo; MLX LoRA + FastAPI UI)
 - [TheMealDB](https://www.themealdb.com/)
 - [Qwen2.5](https://huggingface.co/Qwen) / [mlx-community/Qwen2.5-0.5B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-0.5B-Instruct-4bit)
 - [MLX LM](https://github.com/ml-explore/mlx-lm)
-- Related: [RAG with ACLs, citations, and a threshold](/me/blog/rag-i-would-actually-ship/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [Never assign model output to innerHTML](/me/blog/never-assign-model-output-to-innerhtml/)
+- Related: [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [Don't mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/)

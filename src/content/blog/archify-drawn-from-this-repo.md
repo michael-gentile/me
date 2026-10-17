@@ -52,3 +52,9 @@ If you ever need the CLI by hand, it ships inside the installed skill as `bin/ar
 Mermaid in a markdown file is faster when the audience is a PR description and nobody needs SRC links. A hand-drawn Excalidraw board is better when the topology is still fuzzy. Archify earns its keep when the diagram has to survive as a shareable HTML artifact and stay pinned to a revision of the tree.
 
 I am not replacing the stack post with this drawing. The drawing is for the shape. The stack post is still where fonts, colour, and the `/me` base path live.
+
+## Sources
+
+- [Archify](https://github.com/tt-a1i/archify) (agent skill that builds the HTML diagram)
+- [The stack behind this site](/me/blog/the-stack-behind-this-site/) (prose companion to the drawing)
+- [Interactive diagram](/me/archify/me-site.html) (shipped HTML for this repo)

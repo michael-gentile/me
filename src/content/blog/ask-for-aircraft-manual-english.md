@@ -94,4 +94,4 @@ For chat, the cheap experiment is still one sentence in the prompt. For agent pl
 - [Andrej Karpathy on X](https://x.com/karpathy/status/2105819303471976479) (ASD-STE100 tip and related output formats)
 - [ASD-STE100 / STEMG](https://asd-ste100.org/)
 - [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill)
-- Related: [A fluent citation can still be fake](/me/blog/fluency-is-not-a-control/)
+- Related: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)

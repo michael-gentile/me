@@ -9,7 +9,7 @@ summary: "Before Fail2Ban or UFW, name your threat model, recovery path, and how
 
 Copy-paste hardening is seductive. The long home-server guides are full of snippets for lazy editors, but the good ones open with **identify your principles** because tools without a model become performance art. You installed CrowdSec. You feel safer. You might still never know the box was used as a relay.
 
-That line rhymes with enterprise breach stories: intrusion without vandalism, data copied, disk left unchanged. The parallel to LLM work is not perfect, but the habit is the same as [Threat-model the chatbot first](/me/blog/threat-model-the-chatbot-before-the-prompt/): draw the picture before you buy the next control.
+That line rhymes with enterprise breach stories: intrusion without vandalism, data copied, disk left unchanged. The parallel to LLM work is not perfect, but the habit is the same as [A control matrix, including leftover risk](/me/blog/controls-i-would-require/): draw the picture before you buy the next control.
 
 ## Questions to answer before you install anything
 
@@ -53,4 +53,4 @@ Packages come after the sentences you would put in a one-page threat model. The 
 
 ## Sources
 
-- Related: [Threat-model the chatbot first](/me/blog/threat-model-the-chatbot-before-the-prompt/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Related: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

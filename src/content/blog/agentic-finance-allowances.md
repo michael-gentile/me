@@ -35,7 +35,7 @@ Money shows up in two layers.
 
 **Spend.** OpenAI’s [Delegated Payment Spec](https://developers.openai.com/commerce/specs/payment) sends a single-use, allowance-scoped credential to the merchant’s PSP (max amount, expiry, merchant, checkout session). OpenAI is not the merchant of record. Stripe’s Shared Payment Token is an early compatible path; [Visa](https://corporate.visa.com/en/sites/visa-perspectives/innovation/visa-openai-partnership.html) is wiring tokenized credentials, agent identity, and spend limits into the same class of flow.
 
-Specialist dots (enterprise preview) get their own identity and credentials for well-defined jobs like procurement or invoices; OpenAI is also working with Microsoft Agent 365 on governance. Policy and review still sit in front of money and commitments.
+Specialist dots (in the enterprise preview) get their own identity and credentials for well-defined jobs like invoices or expense drafts; OpenAI is also working with Microsoft Agent 365 on governance. Policy and review still sit in front of money and commitments.
 
 ## Seeing money and spending it
 

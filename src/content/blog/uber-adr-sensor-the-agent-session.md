@@ -7,7 +7,7 @@ tags:
 summary: "Uber’s ADR closes the gap EDR leaves on coding agents: parse the session (prompt → tools), triage cheaply, then spend LLM judgment on the suspicious slice. Notes on the open Sensor, Bench, and Detector."
 ---
 
-On a laptop running Cursor or Claude Code, classic EDR often sees a file write and a network call. The user prompt that started the turn, the agent’s plan, and which MCP tool ran with which arguments usually never show up. [A control matrix, including leftover risk](/me/blog/controls-i-would-require/) and [Threat-model the chatbot first](/me/blog/threat-model-the-chatbot-before-the-prompt/) both assume you can see what happened. That assumption breaks when the endpoint only logs outcomes.
+On a laptop running Cursor or Claude Code, classic EDR often sees a file write and a network call. The user prompt that started the turn, the agent’s plan, and which MCP tool ran with which arguments usually never show up. [A control matrix, including leftover risk](/me/blog/controls-i-would-require/) assumes you can see what happened. That assumption breaks when the endpoint only logs outcomes.
 
 [Uber’s ADR](https://github.com/uber/ADR) (Agentic AI Detection and Response) is aimed at that hole. The MLSys 2026 paper is [on arXiv](https://arxiv.org/abs/2605.17380). Sensor, Discovery, ADR-Bench, and the Detector are open; Explorer and full Prevention are not.
 
@@ -72,4 +72,4 @@ Without prompt → tools → outcome, agent risk is mostly file and network nois
 - [ADR: An Agentic Detection System for Enterprise Agentic AI Security](https://arxiv.org/abs/2605.17380) (arXiv abs/2605.17380)
 - [Sensor README](https://github.com/uber/ADR/blob/main/Sensor/README.md)
 - [Detection README](https://github.com/uber/ADR/blob/main/Detection/README.md)
-- Earlier notes: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/), [Threat-model the chatbot first](/me/blog/threat-model-the-chatbot-before-the-prompt/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Earlier notes: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

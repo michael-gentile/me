@@ -37,7 +37,7 @@ If the kernel can be Rust too, the serving process and the GPU program can share
 
 What supporting Rust *does* change is who can write the GPU part of an AI stack without a second language, and how many of those races get caught at compile time instead of at 3 a.m. on a cluster. For GPUs, it means CUDA is growing another frontend rather than replacing the ones that already ship. For AI, it means the systems layer that's been drifting into Rust can keep drifting all the way to PTX, with Tile as the default and SIMT when you need the knobs.
 
-I still wouldn't staff a production kernel in cuda-oxide tomorrow. I'd watch cutile-rs if the rest of the service is already Rust, and I'd keep C++ and Python as the languages I expect to see in a statement of work for a kernel that has to land this year.
+I still wouldn't staff a production kernel in cuda-oxide tomorrow. I'd watch cutile-rs if the rest of the service is already Rust, and I'd keep C++ and Python as the languages I expect to see if a kernel has to land this year.
 
 ## Sources
 

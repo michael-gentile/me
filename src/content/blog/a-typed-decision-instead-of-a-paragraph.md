@@ -8,7 +8,11 @@ summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilit
 
 Diogo Almeida's first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is the same itch these notes keep hitting: models have been superhuman at chat for years, so where is all the automation?
 
-Chat is a string a person can rewrite. A program needs a value it can branch on, and a confidence it can threshold. Of the four prompt patterns I ran on an invented parks policy, JSON was the only one I'd hand to another process, and even then `json.loads` can throw. Almeida's claim is that they stopped generating the string.
+Chat is a string a person can rewrite. A program needs a value it can branch on, and a confidence it can threshold.
+
+Before Jev, I ran four ordinary prompt patterns on an invented kitchen note (starter Sundays, fridge Saturdays, a few house rules). **Zero-shot** drafts something a human rewrites. **Few-shot** shapes the answer until the example leaks facts the excerpt never had (a fake 22:00 cutoff is the embarrassing run). **JSON** with a schema is the only pattern I'd hand to another process, and even then `json.loads` can throw. **Rubric then answer** is fine for review notes if you still fail invented rules. Skip "think step by step" as a default when you need parseable output: the chain leaks into the string and breaks the parser. Invented cutoffs fail the shipping test even when the prose is nicer.
+
+Almeida's claim is that they stopped generating the string.
 
 Jev is TypeSafe's first public System One model. Early access started 15 September 2026. The interface they describe is unstructured state in, typed probabilistic decisions out. They gave up string generation, sampling is parallel (every answer in one query), and training is Reinforcement Learning for Calibrated Decisions (RLCD). The probabilities are supposed to track accuracy, not a rater's preferred writeup.
 
@@ -77,7 +81,7 @@ They plot structured-output error rates and tool-call error rates from OpenRoute
 
 *Structured-output and tool-call error rates. Same source. The LLM bars are OpenRouter traffic; TypeSafe says the Jev zeros are not empirical.*
 
-A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. I've been writing that fluency isn't a control and that the application owns the message array. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part I'd actually try to measure.
+A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. Fluent citations can still be fake; the application owns the message array and the refuse rule. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part I'd actually try to measure.
 
 ## Some interesting use cases
 

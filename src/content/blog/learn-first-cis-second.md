@@ -19,7 +19,7 @@ The "why yet another guide" argument is really about **documentation design**:
 - Scattered articles disagree on order and defaults.
 - Basics get skipped because they feel boring (who remembers `AllowGroups` until prod?).
 
-A single ordered write-up teaches while it configures. That matches how I use checklists elsewhere — [OWASP LLM Top 10 as a checklist](/me/blog/owasp-llm-top-10-as-a-checklist/) is a catalogue you argue with, not magic compliance dust. Here the artefact is a path you can follow on a Saturday.
+A single ordered write-up teaches while it configures. That matches how I use checklists elsewhere — [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) is a catalogue you argue with, not magic compliance dust. Here the artefact is a path you can follow on a Saturday.
 
 Community-maintained guides keep evolving (CrowdSec, Docker versus UFW, WIP sections for AIDE and ClamAV). A static PDF cannot do that. A living document can, which is why I still start there for "home Linux server" even when I disagree with a step.
 

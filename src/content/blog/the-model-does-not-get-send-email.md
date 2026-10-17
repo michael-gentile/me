@@ -24,7 +24,7 @@ if tool == "get_weather":
     print("gate: would call get_weather(...) [mocked]")
 ```
 
-Three user sentences: weather in Hamilton; email my summary to the whole department; please delete my account. Weather should be allowed. Email and delete should stop at the gate even if the model requested them.
+Three user sentences: weather in Hamilton; email my summary to everyone on this list; please delete my account. Weather should be allowed. Email and delete should stop at the gate even if the model requested them.
 
 Change the wording ("get rid of my profile"). The model may still request `delete_account`. The gate must not care about wording. It cares about the tool name, which is the whole reason the gate lives in Python after `json.loads` and not in a paragraph that says "please don't delete accounts."
 
@@ -36,17 +36,17 @@ The snippet above denies two names and allows weather. A denylist fails open the
 
 Dangerous tools shouldn't be in the model's schema at all if the product can live without them. A schema the model can see is a menu. If `send_email` isn't on the menu, the model can still *write* that it wants to send mail. Your process never sees a callable.
 
-When email has to exist, put it behind a human. Preview the payload: recipients, subject, body, as text, not as a rendered HTML pane. Name the people. A rubber-stamp "Approve" on a collapsed JSON blob is how you get a department-wide send, which is the horror version of "email my summary to the whole department" actually firing.
+When email has to exist, put it behind a human. Preview the payload: recipients, subject, body, as text, not as a rendered HTML pane. Name the people. A rubber-stamp "Approve" on a collapsed JSON blob is how you get a blast send, which is the horror version of "email my summary to everyone" actually firing.
 
 I'd fail a design that binds `send_email` to the model with no second step. The model never calls a tool directly. Your process does.
 
 ## Read-only is still a privilege
 
-`get_weather` is a toy. `get_employee_record` is not. Least privilege applies to the allowlist, not only to the deny list. A recreation clerk's session shouldn't be able to fetch HR rows even if the model asked politely and the JSON was valid.
+`get_weather` is a toy. `get_private_note` is not. Least privilege applies to the allowlist, not only to the deny list. A guest session shouldn't be able to fetch household rent rows even if the model asked politely and the JSON was valid.
 
-The identity that matters is the one your app already authenticated (SSO, session cookie). Don't take `user_id` from the model's arguments and pass it to the database. The model is untrusted input. So is anything it copied from the user message.
+The identity that matters is the one your app already authenticated (session cookie, sign-in token). Don't take `user_id` from the model's arguments and pass it to the database. The model is untrusted input. So is anything it copied from the user message.
 
 ## Sources
 
-- Tool-calling as JSON the application may refuse to execute
-- OWASP excessive agency as a product control, not a prompt
+- [OpenAI function calling](https://platform.openai.com/docs/guides/function-calling) (tool-calling as JSON the application may refuse to execute)
+- [OWASP LLM06: Excessive Agency](https://owasp.org/www-project-top-10-for-large-language-model-applications/) (a product control, not a prompt)

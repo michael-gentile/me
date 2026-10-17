@@ -84,4 +84,4 @@ Generate ed25519 keys before you disable password authentication.
 ## Sources
 
 - [Ansible documentation](https://docs.ansible.com/)
-- Related posts in this series (links above)
+- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/), [UFW said deny; Docker published anyway](/me/blog/docker-ufw-is-not-your-exposure-map/), [CrowdSec or Fail2Ban on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/), [Danger Zone: sysctl by consensus and hidepid](/me/blog/danger-zone-sysctl-and-hidepid/)
