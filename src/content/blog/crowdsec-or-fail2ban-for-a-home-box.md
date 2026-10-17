@@ -7,11 +7,9 @@ tags:
 summary: "Both read logs and ban addresses. CrowdSec adds shared blocklists and explicit privacy questions. Pick based on telemetry appetite and false-positive tolerance, not hype."
 ---
 
-SSH on the public internet collects knock attempts like lint. Home-server hardening paths usually cover **Fail2Ban** and **CrowdSec** under network intrusion prevention — same job description, different architecture.
+This post compares **Fail2Ban** and **CrowdSec** for a home box or small VPS: both tail logs and ban addresses, but CrowdSec adds optional shared blocklists and explicit privacy questions. SSH on the public internet collects knock attempts like lint, and hardening guides usually list both under network intrusion prevention—same job description, different architecture.
 
-Fail2Ban is local: your jails, your thresholds, your ban list. CrowdSec is local **plus** a community signal path: detect on your logs, share metadata, consume a **Community Blocklist** of IPs that crossed collective thresholds elsewhere.
-
-Neither replaces key-only SSH or a sane firewall. Both are speed bumps for password spraying and dumb bots.
+Fail2Ban is local: your jails, your thresholds, your ban list. CrowdSec is local **plus** a community signal path—detect on your logs, share metadata, consume a **Community Blocklist** of IPs that crossed collective thresholds elsewhere. Neither replaces key-only SSH or a sane firewall; both are speed bumps for password spraying and dumb bots.
 
 ## Fail2Ban: boring and yours
 
@@ -46,7 +44,7 @@ I would not stack every tool on a 1 GB VPS without measuring CPU and log volume.
 | Minimal VPS, you hate outbound deps | Fail2Ban |
 | SSH heavily scanned, you want preemptive blocks | CrowdSec with eyes open on sharing |
 | Corp policy forbids threat intel upload | Fail2Ban (or CrowdSec in local-only mode — verify docs for your version) |
-| You already run Docker and fixed [UFW bypass](/me/blog/docker-ufw-is-not-your-exposure-map/) | Either — fix publishing first |
+| You already run Docker and fixed [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) | Either — fix publishing first |
 
 ## Tie-in to principles
 

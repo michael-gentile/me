@@ -1,17 +1,17 @@
 ---
-title: "Similarity is not authorization"
+title: "The nearest chunk is not the allowed chunk"
 date: 2026-07-13
 tags:
   - ai
   - security
-summary: "Embeddings are geometry; nearest is not true. ACLs, citations, and a threshold are the application. Two notes on disk show both failure modes."
+summary: "Vector retrieval ranks by embedding geometry, so the closest chunk can be wrong or out of scope; ACL filters, citation requirements, and a similarity threshold belong in the application before you call the chat model."
 ---
 
-Retrieve-then-generate is a search problem glued to a completion problem. You embed the question, embed the notes, take the nearest note, and ask the model to answer from that note. Two different bugs hide in that sentence. The first is geometry: nearest is not true. The second is authorization: nearest is not allowed. I wanted both on one page, with two files I might actually keep on a laptop.
+Retrieve-then-generate is a search problem glued to a completion problem: you embed the question, embed the notes, take the nearest chunk, and ask the model to answer from it. Two different bugs hide in that one sentence—the first is geometric, because nearest in embedding space is not the same as true or on-topic, and the second is authorization, because nearest among all files on disk is not the same as nearest among chunks this caller may read. I wanted both failure modes on one page, with two files I might actually keep on a laptop.
 
 ## Nearest is not true
 
-Embeddings are geometry. Paraphrases of the same rule cluster. The word "bank" also clusters. A retriever will fetch the wrong paragraph without anyone hacking anything.
+Embeddings are geometry. Paraphrases of the same rule cluster, and the word "bank" also clusters, so a retriever will fetch the wrong paragraph without anyone hacking anything.
 
 Some sentences are paraphrases of a remote-work rule. Some use "bank" in different senses. Some are unrelated.
 
@@ -32,7 +32,7 @@ Embed each one. Cosine similarity of 1.00 means identical direction.
 - **False friend:** (4), (5), (8) share "bank" and will often sit closer than they deserve.
 - **Unrelated:** (6) and (7) should sit low against the work-from-home cluster.
 
-If a retriever used this space, which wrong chunk would it fetch for "Can I work from home?" A shoreline closure and a remote-work rule can share outdoor-ish vocabulary. "Bank" will win against the wrong bank.
+If a retriever used this space, which wrong chunk would it fetch for "Can I work from home?" A shoreline closure and a remote-work rule can share outdoor-ish vocabulary, and "bank" will win against the wrong bank.
 
 ```python
 def cosine(left, right):
@@ -40,7 +40,7 @@ def cosine(left, right):
     return dot / ((sum(a * a for a in left) ** 0.5) * (sum(b * b for b in right) ** 0.5))
 ```
 
-The model name matters. `text-embedding-3-small` and `nomic-embed-text` won't print the same matrix. Record which one you used. Don't compare scores across vendors. Cosine is `dot(a, b) / (||a|| ||b||)`. Retrievers usually store L2-normalized embeddings so cosine collapses to a dot product. The geometry still has no idea that river-bank and lender-bank are different words in English.
+The model name matters. `text-embedding-3-small` and `nomic-embed-text` won't print the same matrix. Record which one you used, and don't compare scores across vendors. Cosine is `dot(a, b) / (||a|| ||b||)`. Retrievers usually store L2-normalized embeddings so cosine collapses to a dot product. The geometry still has no idea that river-bank and lender-bank are different words in English.
 
 A 4×4 slice, invented, so the shape is visible:
 
@@ -51,7 +51,7 @@ A 4×4 slice, invented, so the shape is visible:
 | lender | 0.08 | 0.62 | 1.00 | 0.09 |
 | dusk | 0.14 | 0.21 | 0.09 | 1.00 |
 
-The 0.62 between river bank and lender is the false friend. Closest isn't allowed, current, or the chunk a human would pick. Lexical overlap is a feature of the geometry. A better embedding makes nearest sharper. It still doesn't know who the caller is.
+The 0.62 between river bank and lender is the false friend. Closest isn't allowed, current, or the chunk a human would pick. Lexical overlap is a feature of the geometry. A better embedding makes nearest sharper; it still doesn't know who the caller is.
 
 ## Nearest is not allowed
 
@@ -75,7 +75,7 @@ ranked = sorted(corpus, key=lambda doc: cosine(q_vec, embed([doc["text"]])[0]), 
 top = ranked[0]
 ```
 
-Drop disallowed notes *before* similarity. Don't retrieve everything and hope the model refuses. Don't put "do not mention rent" in the system prompt and call it access control.
+Drop disallowed notes *before* similarity. Don't retrieve everything and hope the model refuses, and don't put "do not mention rent" in the system prompt and call it access control.
 
 Two filters:
 

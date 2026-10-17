@@ -7,9 +7,7 @@ tags:
 summary: "Payment stablecoins pull demand into short Treasuries; firms also put bill yield on-chain. X Money and Cloudflare Wallets are two places that stack might meet people and agents."
 ---
 
-Short Treasuries sit under payment stablecoins. Some asset managers also put bill-like yield on public chains. Consumer apps and agent wallets sit on top. What follows is a map of that stack.
-
-Issuers buy short U.S. government paper so a dollar-pegged coin can redeem at par; apps and wallets are how that instrument shows up for people and agents. USDC and Tether dominate market cap. Ripple USD (RLUSD) is another regulated payment coin, issued under an NYDFS trust charter since late 2024.
+This post is a map of how short U.S. Treasuries sit under payment stablecoins, how tokenized funds put bill-like yield on-chain, and how consumer apps and agent wallets stack on top. Issuers buy short U.S. government paper so a dollar-pegged coin can redeem at par; apps and wallets are how that instrument shows up for people and agents. USDC and Tether dominate market cap. Ripple USD (RLUSD) is another regulated payment coin, issued under an NYDFS trust charter since late 2024.
 
 ## Issuers buy bills
 
@@ -39,7 +37,7 @@ Stablecoins are not the default path yet. [CoinDesk reported](https://www.coinde
 
 The payment glue is x402 (HTTP 402 Payment Required), with Coinbase and Cloudflare among the foundation players: stablecoin micropayments (often USDC on Base, Ethereum, Solana, and other networks) attached to HTTP requests. X Money is social and retail banking UX. Cloudflare’s bet is spend caps for agents that need to try ten APIs without a human pasting a card each time. If stablecoin funding turns on, both surfaces sit downstream of the same Treasury-backed dollar instruments.
 
-The Virtual Wallet design matters for the same reason [least-privilege tools](/me/blog/the-model-does-not-get-send-email/) do: the gate is a dollar limit and an allow list in *your* policy. A stern system prompt is not the control. Same habit as [A control matrix, including leftover risk](/me/blog/controls-i-would-require/).
+The Virtual Wallet design matters for the same reason [least-privilege tools](/me/blog/the-model-does-not-get-send-email/) do: the gate is a dollar limit and an allow list in *your* policy. A stern system prompt is not the control. Same habit as [Controls I would require](/me/blog/controls-i-would-require/).
 
 ## Before you trust a balance
 
@@ -63,4 +61,4 @@ Short Treasuries are becoming backstop inventory for dollar-pegged coins. Separa
 - [GENIUS Act NPRM overview](https://home.treasury.gov/news/press-releases/sb0605) (U.S. Treasury)
 - [Announcing Cloudflare Wallets](https://blog.cloudflare.com/wallets/) · [Cloudflare Wallets docs](https://developers.cloudflare.com/wallets/)
 - [X Money / Cross River (AP)](https://apnews.com/article/elon-musk-x-money-cross-river-payments-0bb86f98e0747757992bc8f435f7014e) · [Creator payouts to X Money (TechCrunch)](https://techcrunch.com/2026/09/02/x-shifts-us-creator-payouts-from-stripe-to-x-money/) · [USDC talks for creators (CoinDesk)](https://www.coindesk.com/business/2026/08/20/elon-musk-s-x-is-exploring-stablecoins-to-pay-influencers-and-content-providers)
-- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)
+- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Controls I would require](/me/blog/controls-i-would-require/)

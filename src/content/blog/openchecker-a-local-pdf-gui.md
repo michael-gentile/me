@@ -6,13 +6,13 @@ tags:
 summary: I wrapped an open-source Java PDF extractor in a local drop-a-file page. Markdown, JSON with bounding boxes, and an annotated overlay.
 ---
 
-A PDF is a pile of drawing instructions. Copy-paste out of a viewer and you get a reading order the file never promised. Dump the raw text into a model and you lose headings, smash columns, and have no coordinates when someone asks where a sentence came from.
+openChecker is a local FastAPI GUI around [opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf): drop a PDF, get Markdown, JSON with bounding boxes, and an annotated overlay without sending the file anywhere.
 
-[opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf) already exists: Apache 2.0, Java 11 underneath, Python bindings on PyPI. Layout analysis, Markdown, JSON with bounding boxes, an annotated overlay. Hybrid OCR and PDF/UA export exist upstream too. I left those off. A wrapper that also boots a second AI server is no longer something I'd run after dinner.
+Copy-paste out of a viewer gives you a reading order the file never promised, and dumping raw text into a model loses headings, smashes columns, and leaves you with no coordinates when someone asks where a sentence came from. The upstream project (Apache 2.0, Java 11, Python bindings on PyPI) already does layout analysis and those export formats; hybrid OCR and PDF/UA exist upstream too, but I left them off because a wrapper that also boots a second AI server is not something I'd run after dinner.
 
 ## The page
 
-openChecker is a local FastAPI app. One HTML page, near-black paper, teal, a drop zone. **Try sample PDF** loads a one-page digital file, or you drop your own. There's a checkbox for a tagged PDF. Hit Check. The server writes the upload to a temp directory and calls `opendataloader_pdf.convert` **once**. Each call starts a JVM. Looping `convert()` per format is how you learn that the hard way: Markdown, JSON, and the overlay come from that one process, not from three JVMs.
+The UI is one HTML page—near-black paper, teal, a drop zone. **Try sample PDF** loads a one-page digital file, or you drop your own, with an optional checkbox for a tagged PDF before you hit Check. The server writes the upload to a temp directory and calls `opendataloader_pdf.convert` **once** (each call starts a JVM, and looping `convert()` per format is how you learn that the hard way): Markdown, JSON, and the overlay come from that one process, not from three JVMs.
 
 <img
   src="/me/images/blog/open-checker-page.webp"

@@ -6,11 +6,9 @@ tags:
 summary: "Muse, OpenClaw, and Grok Bot all give an agent a computer. What if that computer lived in your cloud, under SSO, with connectors to your systems? A conceptual sketch of Eddy—and what security would have to look like."
 ---
 
-I wrote about [Muse and the personal-agent pattern](/me/blog/muse-and-the-personal-agent/) after Meta shipped a consumer agent with a dedicated cloud VM. That note left an open question about enterprise: same shape, your identity, your systems. This is that sketch.
+Eddy is a conceptual sketch of an enterprise personal agent: same product shape as Muse or Grok Bot—a dedicated computer per staffer—but the VM lives in your cloud, under SSO, with connectors scoped to your systems. There is no product; the name is a stand-in for “each staffer gets a named agent under our control.”
 
-Eddy is conceptual. There is no product. The name is a stand-in for “each staffer gets a named agent with a computer under our control.” To keep the ACL questions concrete I invent two roles: Jordan in operations and Riley in finance—so a draft ticket for Jordan must never pull Riley’s payroll note. The architecture is assembled from how Muse, OpenClaw, and Grok Bot actually work, plus the enterprise “secure agent workspace” pattern vendors are publishing for one VM per user.
-
-I sketched this after reading those consumer and self-hosted agents, not after sitting in a design review. Staff already live in Teams, email, ServiceNow, SharePoint. Many shops have Azure or VMware capacity sitting warm. Consumer agents proved the product shape. The hard part is giving Jordan an Eddy that can draft a ticket without ever reading Riley’s payroll note.
+I wrote about [Muse and the personal-agent pattern](/me/blog/muse-and-the-personal-agent/) after Meta shipped a consumer agent with a dedicated cloud VM; this note picks up the enterprise question (your identity, your systems). To keep ACL questions concrete I invent two roles—Jordan in operations and Riley in finance—so a draft ticket for Jordan must never pull Riley’s payroll note. The architecture is assembled from how Muse, OpenClaw, and Grok Bot actually work, plus the enterprise “secure agent workspace” pattern vendors publish for one VM per user. Staff already live in Teams, email, ServiceNow, and SharePoint; many shops have Azure or VMware capacity sitting warm. Consumer agents proved the shape; the hard part is wiring Jordan an Eddy that can draft a ticket without ever reading Riley’s payroll note.
 
 ## How these systems work
 
@@ -111,7 +109,7 @@ Here’s a table I can argue with.
 | Routed inference to approved endpoints | Residencies and “which model saw this” are answerable | Shadow connectors if someone pastes into a public chat UI |
 | SIEM of proposals, approvals, tool calls | You can explain a bad Tuesday | Logs become a sensitive store; retention vs eDiscovery |
 
-Prompt injection through email and SharePoint is the enterprise version of [don’t mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/). Once Eddy can click and send, every message it reads is untrusted input. Credential surrogates and approval gates reduce blast radius. They do not make the model “safe.” Architecture does.
+Prompt injection through email and SharePoint is the enterprise version of [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/): once Eddy can click and send, every message it reads is untrusted input. Credential surrogates and approval gates reduce blast radius but do not make the model “safe”—architecture does.
 
 Over-broad Graph consent is how pilots die quietly. If the connector asks for `Mail.ReadWrite` across the tenant when Jordan only needed drafts in one mailbox, you have built a lateral-move machine with a friendly name.
 
@@ -148,4 +146,4 @@ If I were to guess, Microsoft is likely cooking something up very similar to Mus
 - [OpenClaw security](https://docs.openclaw.ai/gateway/security) and [multi-tenant hosting](https://docs.openclaw.ai/gateway/multi-tenant-hosting)
 - [Grok Bot overview](https://docs.x.ai/grok-bot/overview), [security](https://cursor.com/docs/grok-bot/security), [Teams and Enterprise](https://cursor.com/docs/grok-bot/teams)
 - [NVIDIA Secure Agent Workspace reference architecture](https://docs.nvidia.com/enterprise-reference-architectures/secure-agent-workspace-reference-design/latest/reference-architecture.html)
-- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Don’t mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/), [A control matrix](/me/blog/controls-i-would-require/), [A tiny policy assistant](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)
+- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Controls I would require](/me/blog/controls-i-would-require/), [A tiny policy assistant](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)

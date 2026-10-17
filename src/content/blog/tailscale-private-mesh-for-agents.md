@@ -8,11 +8,11 @@ tags:
 summary: "WireGuard mesh, coordination vs packets, DERP when NAT wins, grants instead of open ports. Why agent fleets care, and a Hermes Desktop remote-gateway setup over a tailnet."
 ---
 
-I keep ending up with the same itch: a laptop on coffee-shop Wi-Fi that needs to talk to a box at home that runs an agent, an MCP server, or a GPU. The old answers were port forwards, a reverse proxy on a public VPS, or an SSH tunnel I forget to restart. What I want is a private network that follows the machines, without opening the home router to the internet.
+This post is about using [Tailscale](https://tailscale.com/) as a private WireGuard mesh so agent hosts at home stay reachable from a laptop without port forwards or a public reverse proxy. I keep hitting the same setup: coffee-shop Wi-Fi that needs a box running an agent, an MCP server, or a GPU on the LAN, and I do not want the home router open to the internet.
 
-[Tailscale](https://tailscale.com/) is a mesh built on [WireGuard](https://www.wireguard.com/). Each device is a node. Nodes get stable addresses in the `100.64.0.0/10` CGNAT range and talk peer-to-peer when they can. When they cannot, encrypted packets still get there through relays that never see plaintext. The coordination service hands out keys and policy; it is not a hairpin for your traffic. That control-versus-data split is why agent hosts (always-on Mini PCs, NAS boxes, worker VMs) keep showing up in Tailscale's [secure AI agent connectivity](https://tailscale.com/use-cases/secure-ai-agent-connectivity) notes and in DIY fleets that refuse to put dashboards on `0.0.0.0` of the public WAN.
+Each Tailscale device is a node with a stable address in the `100.64.0.0/10` CGNAT range; nodes talk peer-to-peer when they can, and when they cannot, encrypted packets still arrive through relays that never see plaintext. The coordination service hands out keys and policy but is not a hairpin for your traffic—that control-versus-data split is why always-on agent hosts (Mini PCs, NAS boxes, worker VMs) keep showing up in Tailscale's [secure AI agent connectivity](https://tailscale.com/use-cases/secure-ai-agent-connectivity) notes and in DIY fleets that refuse to bind dashboards to the public WAN.
 
-This is a field note on how the mesh works, what "no open ports" actually means, how grants carve who may talk to whom, what changes from a home lab to a company IdP, why multi-agent setups like the shape, and a concrete [Hermes Agent](https://hermes-agent.nousresearch.com/) remote-gateway path over Tailscale.
+Below: how the mesh works, what "no open ports" actually means, how grants carve who may talk to whom, what changes from a home lab to a company IdP, why multi-agent setups like the shape, and a concrete [Hermes Agent](https://hermes-agent.nousresearch.com/) remote-gateway path over the tailnet.
 
 ## What a tailnet is
 
@@ -99,7 +99,7 @@ Default is deny. Membership in the tailnet does not mean everything may talk to 
 }
 ```
 
-Same instinct as [a control matrix](/me/blog/controls-i-would-require/): decide who may reach what before the chat UI feels friendly. A stern system prompt does not replace a grant that never routes TCP to the MCP port.
+Same instinct as [Controls I would require](/me/blog/controls-i-would-require/): decide who may reach what before the chat UI feels friendly. A stern system prompt does not replace a grant that never routes TCP to the MCP port.
 
 ## Home vs enterprise
 
@@ -245,4 +245,4 @@ SSH to the box can be a second grant on port 22, or Tailscale SSH rules if you e
 - [Tailscale SSH](https://tailscale.com/docs/features/tailscale-ssh) · [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) · [Funnel](https://tailscale.com/docs/features/tailscale-funnel)
 - [Hermes Desktop (remote backend)](https://hermes-agent.nousresearch.com/docs/user-guide/desktop) · [Web dashboard](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) · [Multi-connection Desktop](https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop)
 - [hermes-tailscale plugin](https://hermes-agent.nousresearch.com/docs/plugins/hermes-tailscale)
-- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)
+- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Controls I would require](/me/blog/controls-i-would-require/)

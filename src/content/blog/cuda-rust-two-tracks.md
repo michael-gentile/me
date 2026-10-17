@@ -7,7 +7,7 @@ tags:
 summary: "NVIDIA's September post: C++ and Python stay the mature kernel languages. They're adding native Rust so the serving stack and the kernel can share a language."
 ---
 
-Sri Koundinyan, Melih Elibol, and Jonathan Bentz published [Introducing CUDA Rust: Two Tracks for Writing GPU Kernels](https://developer.nvidia.com/blog/introducing-cuda-rust-two-tracks-for-writing-gpu-kernels/) on 8 September 2026. CUDA C++ and CUDA Python are mature, enterprise-grade toolchains. Now, NVIDIA is growing CUDA Rust into 2027 and beyond.
+CUDA Rust is NVIDIA's plan to write GPU kernels in Rust along two tracks: SIMT through cuda-oxide (custom codegen to PTX) and Tile through cutile-rs (stable Rust, tile-level abstractions). C++ and Python remain the mature kernel languages; Rust is the new frontend so inference services and device code can share one language and one ownership model. Sri Koundinyan, Melih Elibol, and Jonathan Bentz published [Introducing CUDA Rust: Two Tracks for Writing GPU Kernels](https://developer.nvidia.com/blog/introducing-cuda-rust-two-tracks-for-writing-gpu-kernels/) on 8 September 2026. CUDA C++ and CUDA Python are mature, enterprise-grade toolchains. Now, NVIDIA is growing CUDA Rust into 2027 and beyond.
 
 ## The languages that already ship kernels
 

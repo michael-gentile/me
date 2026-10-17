@@ -6,11 +6,9 @@ tags:
 summary: "Dries Buytaert exposed blog search over MCP because he has a live API. This site is HTML on GitHub Pages, so calling it here is GET."
 ---
 
-[Dries Buytaert's write-up](https://dri.es/helping-agents-discover-my-site-search-with-mcp) on exposing site search to agents is the right *shape* of the problem: finding a service and calling it are different layers. I didn't copy his implementation. The architectures aren't the same.
+This note is about how agents can discover and read a static personal site when there is no search API or MCP server behind it—only HTML on GitHub Pages.
 
-His site has a real search API. Mine is a static Astro build on GitHub Pages. There's no POST and no process that ranks a query. The in-browser filter only hides cards that are already in the HTML. Standing up MCP here would be theatre: a protocol that expects a server, pointed at a CDN that can't answer `tools/call`.
-
-I shipped the pieces that actually fit.
+[Dries Buytaert's write-up](https://dri.es/helping-agents-discover-my-site-search-with-mcp) on exposing site search to agents has the right *shape*: finding a service and calling it are different layers, but I did not copy his implementation because his site has a real search API and mine is a static Astro build with no POST and no process that ranks a query (the in-browser filter only hides cards already in the HTML). Standing up MCP here would be theatre—a protocol that expects a server, pointed at a CDN that cannot answer `tools/call`—so I shipped the pieces that actually fit.
 
 ## Finding vs calling
 
@@ -18,7 +16,7 @@ Dries's useful sentence: ARD (and friends) handle *finding* a service. OpenAPI a
 
 He prefers OpenAPI for an anonymous, read-only API, and MCP when you have multi-step work, auth, or session state. I agree. This site is the first case.
 
-I skipped IETF API Catalog and well-known URIs at the origin root. This is a GitHub Pages *project* site. Files live under `/me/`. I can't put `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo. The [llms.txt v2 spec](https://llmstxt.org/) calls that situation out: a file at a path describes that path. `/me/llms.txt` is the discovery document this host can actually publish.
+I skipped IETF API Catalog and well-known URIs at the origin root because this is a GitHub Pages *project* site under `/me/`, so I cannot publish `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo; the [llms.txt v2 spec](https://llmstxt.org/) calls that out (a file at a path describes that path), and `/me/llms.txt` is the discovery document this host can actually ship.
 
 ## What shipped
 

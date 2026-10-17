@@ -6,17 +6,15 @@ tags:
 summary: "A year later we got the RAW photos and video on a 1TB SSD. Finder would have been hours with no gui copy feature I trusted to resume, so I used caffeinate and rsync."
 ---
 
-After more than a year we got the RAW photos and video from our wedding, on a 1TB SSD. First thought: back it up. My Macbook was already tight on space, so I bought the same 1TB drive on Amazon. It happened to be on sale. Sale on memory doesn't mean much anymore, but the box showed up.
+This post is how I copied a 1TB wedding photo and video dump between two SSDs on a Mac with `caffeinate` and `rsync` when Finder had no resume story I trusted.
 
-I could have plugged both drives in, copy, paste, badaboom badabing. That would have taken hours. On my version of macOS I didn't have a gui copy feature I trusted to continue where it left off if the transfer died, so I didn't use Finder.
+After more than a year we got the RAW files on a master SSD; my MacBook was already tight on space, so I bought a second 1TB drive for backup. I could have plugged both in and copy-pasted for hours, but on my macOS version I did not have a GUI copy feature that would continue where it left off if the transfer died, so I used the terminal instead.
 
 ## What paste actually does
 
 Selecting a folder and copying it doesn't put a terabyte on the clipboard. The clipboard gets a list of paths, a file promise, and then Finder walks the tree: open a file, read it into kernel buffers, write the destination, copy timestamps and permissions, next file.
 
-That's the right tool for a folder of PDFs. You get a progress window, human-readable names, and undo, and a small folder finishes while you make tea.
-
-A tree that almost fills a 1TB SSD is a different job. RAWs and video, hours of wall clock. My laptop may sleep, a cable can wiggle, Spotlight starts indexing the destination while you're still writing it, and USB can hiccup. Monterey added a resume control on a greyed-out copy. I still didn't want a grey folder as the only copy of our wedding.
+That is the right tool for a folder of PDFs—you get a progress window, human-readable names, and undo while a small folder finishes over tea—but a tree that almost fills a 1TB SSD is a different job (RAWs and video, hours on the clock, laptop sleep, cable wiggles, Spotlight indexing the destination while you write, USB hiccups). Monterey added a resume control on a greyed-out copy; I still did not want a grey folder as the only copy of our wedding.
 
 ## The command
 

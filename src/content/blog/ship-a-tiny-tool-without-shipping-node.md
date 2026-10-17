@@ -6,9 +6,9 @@ tags:
 summary: "Vercel Labs' scriptc turns a typed TypeScript file into a standalone binary. Coverage tells you when you're still dragging a JS engine along."
 ---
 
-I keep a pile of useful TypeScript scripts that only become painful when someone else has to run them. Install Node. Match the version. `npm install`. Hope `node_modules` survives the flight. For a ten-line helper, that tax is silly.
+[scriptc](https://github.com/vercel-labs/scriptc) is Vercel Labs' experimental compiler for turning a typed TypeScript file into a single native binary (or a WASI module) without a Node runtime in the deliverable. That is the packaging story I care about for small CLIs. The pain it targets is familiar: I keep useful TypeScript scripts that only become awkward when someone else has to run them. Install Node. Match the version. `npm install`. Hope `node_modules` survives the flight. For a ten-line helper, that tax is silly.
 
-[scriptc](https://github.com/vercel-labs/scriptc) is an experimental compiler from Vercel Labs that aims at a different deliverable: a normal executable. TypeScript (or JavaScript) in, native binary or WebAssembly out. On a fully static program, there is no Node process and no embedded JavaScript engine at runtime.
+On a fully static program, there is no Node process and no embedded JavaScript engine at runtime.
 
 I am not rewriting a web app in this. I am asking whether the next small CLI can leave the house as `./tool`.
 

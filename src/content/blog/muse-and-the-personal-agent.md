@@ -6,9 +6,9 @@ tags:
 summary: "Meta shipped a personal agent with a per-user VM and a pocket Charm. The interesting part isn’t the demo—it’s how that shape compares to OpenClaw and the DIY personal-agent stack, rolled out for people who won’t self-host."
 ---
 
-Meta launched Muse in early September: a personal AI agent meant to act on your behalf. Browse, connect to Gmail and calendars, shop with approvals, plan trips. You talk to it like a chat contact, in the Muse app, on the web, or in WhatsApp. I haven’t run it myself. What follows is from Meta’s posts, partner notes, and the DIY personal-agent stack I’ve been watching.
+Muse is Meta’s personal AI agent—a chat contact in the Muse app, on the web, or in WhatsApp—that browses, connects to Gmail and calendars, shops with approvals, and plans trips on your behalf. Meta launched it in the US in early September 2026; I have not run it myself, and what follows is from Meta’s posts, partner notes, and the DIY personal-agent stack I have been watching.
 
-I like the shape for everyday use. I’m also curious how applications like this grow into the enterprise once approvals and audit logs are boring enough for IT.
+I like the shape for everyday use and I am curious how the same pattern grows into the enterprise once approvals and audit logs are boring enough for IT.
 
 ## What shipped
 
@@ -88,7 +88,7 @@ Charm as a listening surface. Pocket hardware with mics and always-available wak
 
 Quotas versus real agent work. Background sub-agents and long browser jobs burn allowance. Free tiers teach habits; paid tiers teach whether the economics work.
 
-Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design. Whether they hold when the agent reads hostile mail is empirical, same class as [mixing a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [`send_email`](/me/blog/the-model-does-not-get-send-email/) without a gate.
+Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design; whether they hold when the agent reads hostile mail is empirical—the same class as [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [`send_email`](/me/blog/the-model-does-not-get-send-email/) without a gate.
 
 ## Sources
 

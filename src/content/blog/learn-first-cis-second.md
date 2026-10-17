@@ -7,9 +7,9 @@ tags:
 summary: "One ordered practitioner path for learning and copy-paste, then CIS benchmarks to trump your choices. That sequence is deliberate, not a compromise."
 ---
 
-Security guidance splinters across blog posts, distro wikis, and vendor PDFs. The home-server hardening path I follow in this series exists because someone kept notes while building a Debian box and wanted **one** narrative: SSH before firewall, shell snippets for config edits, backups before every file change, and a **Danger Zone** for sysctl you might break.
+This post argues for learning Linux server hardening from one practitioner narrative first, then letting CIS benchmarks override anything that conflicts.
 
-It is also explicit about what it is not: not a Linux course, not physical security, not every LSM nuance (AppArmor and SELinux often sit in the "later" pile). Honest scope beats fake completeness.
+Security guidance splinters across blog posts, distro wikis, and vendor PDFs; the home-server path I follow in this series exists because someone kept notes while building a Debian box and wanted **one** ordered story—SSH before firewall, shell snippets for config edits, backups before every file change, and a **Danger Zone** for sysctl you might break. It is also explicit about what it is not (not a Linux course, not physical security, not every LSM nuance—AppArmor and SELinux often sit in the "later" pile), because honest scope beats fake completeness.
 
 ## Why one long guide still wins for learners
 
@@ -46,7 +46,7 @@ I would not tell a compliance team "we read a long markdown doc." I would tell t
 | Risk tone | Calls out lockout and Danger Zone | Assumes change control |
 | Updates | Community edits over time | Versioned releases |
 
-When they disagree, CIS wins for policy. When CIS is silent on Docker publishing versus UFW, the [Docker/UFW post](/me/blog/docker-ufw-is-not-your-exposure-map/) in this series still applies — benchmarks lag real stacks.
+When they disagree, CIS wins for policy. When CIS is silent on Docker publishing versus UFW, [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) in this series still applies—benchmarks lag real stacks.
 
 ## Manual steps versus automation
 

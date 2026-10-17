@@ -7,11 +7,11 @@ tags:
 summary: "LoRA on Qwen2.5-0.5B-Instruct (4-bit) via MLX, BM25 recipe RAG from TheMealDB, and a router that returns markdown cards instead of letting a small model invent quantities."
 ---
 
-Cuoco Piccolo means “tiny cook” in Italian. That is the whole brief. I wanted an end-to-end cooking specialist that fits a **16 GB Apple Silicon** Mac: fine-tune something small, retrieve real recipes, and ship a local chat UI I would actually click. Not another “wrap the ChatGPT API” demo.
+Cuoco Piccolo (“tiny cook” in Italian) is a local cooking assistant for a **16 GB Apple Silicon** Mac: LoRA on a small instruct model, BM25 recipe retrieval, and a chat UI I would actually click—not another wrap-the-API demo.
 
-The stack is **MLX** / `mlx-lm`, a **LoRA** on `Qwen2.5-0.5B-Instruct` in **4-bit**, **BM25** over a TheMealDB corpus plus a short technique KB, and a **deterministic router** in Python. FastAPI serves a single-page chat. The CLI shares the same `reply_to_message` path.
+The stack is **MLX** / `mlx-lm`, a **LoRA** on `Qwen2.5-0.5B-Instruct` in **4-bit**, **BM25** over a TheMealDB corpus plus a short technique KB, and a **deterministic router** in Python, with FastAPI serving a single-page chat and the CLI sharing the same `reply_to_message` path.
 
-The design rule that mattered most: **the language model does not memorize cookbooks.** Technique, substitutes, and follow-ups can go through LoRA. Concrete recipes with quantities come from retrieval and formatting. A 0.5B model inventing “2 cups of soy sauce” for a casserole is how you get a bad dinner and a useless portfolio story.
+The design rule that mattered most is that **the language model does not memorize cookbooks**: technique, substitutes, and follow-ups can go through LoRA, but concrete recipes with quantities come from retrieval and formatting, because a 0.5B model inventing “2 cups of soy sauce” for a casserole is a bad dinner and a useless portfolio story.
 
 <img
   src="/me/images/blog/cuoco-interface.webp"
@@ -32,7 +32,7 @@ The design rule that mattered most: **the language model does not memorize cookb
 | Recipe fidelity | Retrieve and format cards; do not free-generate quantities |
 | Surface | Local FastAPI SPA + CLI |
 
-Closed cloud models are fine products. They teach you almost nothing about adapters, retrieval filters, session state, or why Gradio quietly skipped your router. This project was homework for that stack.
+Closed cloud models are fine products, but they teach you almost nothing about adapters, retrieval filters, session state, or why Gradio quietly skipped your router—this project was homework for that stack.
 
 ## The hybrid reply path
 
@@ -110,7 +110,7 @@ Recipe **cards** in the live app always go through `format_recipe_card`. That is
 
 If the query names a tagged main, candidates are restricted to that bucket, then ranked inside it — so “spicy chicken” prefers a jerk-style dish over alphabetical noise. Choice and card paths require a structured recipe (`ingredients_block` + `instructions`, or TheMealDB source). Local technique snippets can still feed LoRA via `format_chunks`; they do not show up as fake recipes in the button list. Free BM25 without a main gets overlap gates so random weak hits stay out of the product path.
 
-Same lesson as [similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): retrieval is a search. The app decides what is allowed to become a “recipe.”
+Same lesson as [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): retrieval is a search, and the app decides what is allowed to become a “recipe.”
 
 ## Fine-tuning
 
@@ -124,7 +124,7 @@ That split is the project. Fine-tuning without the router would just make a more
 
 ## Serving choices
 
-The UI is one HTML page: Markdown via `marked` + `DOMPurify` ([never paint model output as raw HTML](/me/blog/the-webpage-is-untrusted-input/)), choice buttons from structured `options`, starter chips, and a “Following up on: …” line. Defaults: `temp=0.4`, `max_tokens=384` for freeform turns. Recipe cards are not generation-capped because they are not generated.
+The UI is one HTML page: Markdown via `marked` + `DOMPurify` ([The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/)—never paint model output as raw HTML), choice buttons from structured `options`, starter chips, and a “Following up on: …” line. Defaults: `temp=0.4`, `max_tokens=384` for freeform turns. Recipe cards are not generation-capped because they are not generated.
 
 I did not expose token streaming. Most good answers never hit the LM. Generation sits behind a global MLX lock for thread safety; long-lived SSE adds cancel and backpressure for little gain on a blog-demo UI. Freeform answers get a “Cooking…” wait state instead.
 
@@ -174,7 +174,7 @@ Credit [TheMealDB](https://www.themealdb.com/) for recipe names, ingredients, an
 
 ## What I would keep from the build
 
-The useful artifact is not the 0.5B adapter alone. It is the **router + RAG gate + card formatter**, with LoRA in the leftover slots where style and grounded follow-ups live. That is the same instinct as [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): put structure around the model before you ask it to sound like a cook.
+The useful artifact is not the 0.5B adapter alone. It is the **router + RAG gate + card formatter**, with LoRA in the leftover slots where style and grounded follow-ups live. That is the same instinct as [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/): put structure around the model before you ask it to sound like a cook.
 
 Fun project. Serious enough pipeline to learn the seams.
 
@@ -183,4 +183,4 @@ Fun project. Serious enough pipeline to learn the seams.
 - [TheMealDB](https://www.themealdb.com/)
 - [Qwen2.5](https://huggingface.co/Qwen) / [mlx-community/Qwen2.5-0.5B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-0.5B-Instruct-4bit)
 - [MLX LM](https://github.com/ml-explore/mlx-lm)
-- Related: [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [Don't mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/)
+- Related: [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/)

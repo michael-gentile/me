@@ -3,18 +3,18 @@ title: "PageIndex: retrieval without the vector DB"
 date: 2026-09-29
 tags:
   - ai
-summary: "VectifyAI’s PageIndex builds a tree index and lets an LLM walk it. Similarity search is optional. Notes on how that sits next to the nearest-chunk RAG I’ve been writing about."
+summary: "VectifyAI PageIndex builds a hierarchical tree index and uses an LLM to walk it for retrieval, without embedding search on the query path. How that compares to vector RAG and the nearest-chunk problems I have written about elsewhere."
 ---
 
-I’ve been writing about vector RAG as the default stack: embed chunks, cosine the question, take the nearest paragraph, hope the geometry meant relevance. [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) still stands but leaves a hole. What if you stop ranking by similarity at all?
+[PageIndex](https://github.com/VectifyAI/PageIndex) from VectifyAI is an open-source vectorless RAG engine: it indexes documents as a tree of natural sections and uses an LLM to reason over that tree at query time instead of ranking fixed chunks by cosine similarity. I have been writing about vector RAG as the default stack—embed chunks, cosine the question, take the nearest paragraph, and hope the geometry meant relevance—and [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) still stands, but it leaves a hole. What if you stop ranking by similarity at all?
 
-[PageIndex](https://github.com/VectifyAI/PageIndex) (VectifyAI) is an open-source, vectorless RAG engine built around that bet. You can find more information in their Docs at [docs.pageindex.ai](https://docs.pageindex.ai/). 
+You can find more information in their docs at [docs.pageindex.ai](https://docs.pageindex.ai/).
 
 ## The bet
 
-Vector RAG retrieves what *looks like* the question. PageIndex builds a hierarchical tree of natural sections, then asks an LLM to *reason* which nodes to open. It's akin to flipping through a table of contents versus a nearest-neighbour search.
+Vector RAG retrieves what *looks like* the question. PageIndex builds a hierarchical tree of natural sections, then asks an LLM to *reason* which nodes to open, which is akin to flipping through a table of contents rather than running a nearest-neighbour search.
 
-Their line is blunt: **similarity ≠ relevance**. Similarity still has it's place. Relevance is a different job.
+Their line is blunt: **similarity ≠ relevance**. Similarity still has its place; relevance is a different job.
 
 ## Two steps
 
@@ -25,7 +25,7 @@ Their line is blunt: **similarity ≠ relevance**. Similarity still has it's pla
 
 *Document → tree → LLM tree search → answer. Figure from the [PageIndex GitHub README](https://github.com/VectifyAI/PageIndex) / docs cookbook art.*
 
-No embedding model on the query path. No Pinecone/Chroma in the critical path for that document. The index is an in-context table of contents the model can navigate, including following “see Appendix G” style pointers when the text says so. This is something cosine rarely does unless you build a graph on top.
+No embedding model sits on the query path, and Pinecone or Chroma are not in the critical path for that document. The index is an in-context table of contents the model can navigate, including following “see Appendix G” style pointers when the text says so, which cosine rarely does unless you build a graph on top.
 
 ## Next to ordinary vector RAG
 
@@ -39,7 +39,7 @@ No embedding model on the query path. No Pinecone/Chroma in the critical path fo
 | Query context | Mostly the query embedding    | Can include chat history and domain hints in the search prompt |
 
 
-Hard chunking is the quiet damage in the left column. Mid-sentence cuts, split tables, orphaned “see above.” PageIndex’s pitch is that sections stay whole, and if a node is thin the agent can walk to a neighbour. That does not remove ACL work. It changes *which* failure you get when the wrong text is near the right words.
+Hard chunking is the quiet damage in the left column: mid-sentence cuts, split tables, orphaned “see above.” PageIndex’s pitch is that sections stay whole, and if a node is thin the agent can walk to a neighbour. That does not remove ACL work; it changes *which* failure you get when the wrong text is near the right words.
 
 ## Where the numbers show up
 
@@ -49,22 +49,22 @@ On FinanceBench (financial document QA), they report **98.7%** for a PageIndex-b
 
 *FinanceBench accuracy comparison from the [PageIndex README](https://github.com/VectifyAI/PageIndex). Their evaluation write-up: [Mafin2.5 / FinanceBench](https://vectify.ai/blog/Mafin2.5).*
 
-They also publish local indexing cost (~$0.001/page with a cheap index model in their notes), query cost vs stuffing the whole PDF, and an OSS lookup benchmark. Index once; reuse the tree. Chat model quality matters more on the search step than on summarising section titles at index time. It's a practical split.
+They also publish local indexing cost (~$0.001/page with a cheap index model in their notes), query cost versus stuffing the whole PDF, and an OSS lookup benchmark. Index once and reuse the tree; chat model quality matters more on the search step than on summarising section titles at index time, which is a practical split.
 
 ## What still sits outside PageIndex
 
-PageIndex swaps the retriever. It does not replace the application around it.
+PageIndex swaps the retriever; it does not replace the application around it.
 
-- **ACL before content leaves the store.** Audience filter in the app, same as [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Tree search that can see every node is still a leak if the tree spans audiences.
+- **ACL before content leaves the store.** Audience filter in the app, same as [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Tree search that can see every node is still a leak if the tree spans audiences.
 - **Citations.** Their design wants page/section refs. Keep that as an eval, not a hope.
-- **Cost and latency.** Each tree walk is LLM calls. Fine for a long filing and a few questions. Different economics than cosine over a million FAQ chunks.
+- **Cost and latency.** Each tree walk is LLM calls. Fine for a long filing and a few questions; different economics than cosine over a million FAQ chunks.
 - **Corpus scale.** Per-document trees shine on long professional PDFs. Millions of tiny notes still need a way to pick *which* document first (they describe a “PageIndex File System” layer for that). Do not pretend one ToC solves a SharePoint tenancy.
 
 
 
 ## When I would reach for it
 
-Long, structured PDFs: annual reports, manuals, handbooks with appendices, textbooks. Questions that need “look in the liabilities section” rather than “find sentences that sound like liabilities.” Follow-on turns that depend on where you already were in the report.
+Long, structured PDFs fit best: annual reports, manuals, handbooks with appendices, textbooks. Questions that need “look in the liabilities section” rather than “find sentences that sound like liabilities,” and follow-on turns that depend on where you already were in the report.
 
 I would keep [vector RAG with ACLs and a threshold](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) for large, flat, heterogeneous corpora where approximate nearest neighbour is the right first cut. A hybrid that uses metadata or a light vector pass to pick *documents*, then PageIndex-style tree search *inside* the winners, matches their multi-document notes.
 
@@ -85,7 +85,7 @@ answer = client.chat("What was the 2023 operating margin?", doc_id=doc_id)
 
 Cloud mode moves OCR and managed storage to them; chat can still use your model. MCP and agent SDK hooks are documented if you want tools instead of a chat wrapper.
 
-PageIndex treats retrieval as navigation. That is the right diagnosis for the failures I’ve been documenting with cosine. It does not erase authorization, logging, or cost. For a small folder of kitchen and household notes, I would still start with ACL-filtered retrieve-then-generate. For a 200-page financial statement or a fat operations manual, I would rather an agent walk a ToC than trust the nearest 800 tokens.
+PageIndex treats retrieval as navigation, which is the right diagnosis for the failures I have been documenting with cosine. It does not erase authorization, logging, or cost. For a small folder of kitchen and household notes, I would still start with ACL-filtered retrieve-then-generate. For a 200-page financial statement or a fat operations manual, I would rather an agent walk a ToC than trust the nearest 800 tokens.
 
 ## Sources
 
@@ -93,5 +93,5 @@ PageIndex treats retrieval as navigation. That is the right diagnosis for the fa
 - [PageIndex developer docs](https://docs.pageindex.ai/)
 - [PageIndex: Next-Generation Vectorless, Reasoning-based RAG](https://pageindex.ai/blog/pageindex-intro) (intro post)
 - [Mafin2.5 / FinanceBench results](https://vectify.ai/blog/Mafin2.5)
-- Earlier notes: [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
+- Earlier notes: [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
 

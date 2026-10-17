@@ -6,11 +6,9 @@ tags:
 summary: "Tokens and matrices, pretraining, SFT and preference, adapters versus prompts, then inference with a KV cache and speculative decoding. Same job the whole way: next-token prediction."
 ---
 
-Product talk jumps layers. This is the object underneath, in order: what a GPT-style model *is*, how the weights get there, what "tuning" actually changes, and what happens at inference, including the trick that makes coding assistants feel instant. When I read a vendor write-up, I want to know which of those layers they are actually selling.
+This post walks the stack under product talk about “AI”: what a GPT-style model *is* (tokens and matrices), how weights get there (pretraining, SFT, preference), what “tuning” actually changes, and what happens at inference—including the KV cache and speculative decoding that make coding assistants feel instant. When I read a vendor write-up, I want to know which of those layers they are actually selling.
 
-Three different things get sold as "AI": a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). The slide that names the model is naming one layer. The threat model lives in the application and the UI.
-
-The whole stack is one job, predict the next token, and everything else is how you get that prediction and what you wrap around it.
+Three different things get sold as "AI": a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). The slide that names the model is naming one layer; the threat model lives in the application and the UI. The whole stack is still one job—predict the next token—and everything else is how you get that prediction and what you wrap around it.
 
 ```text
 text → tokens → vectors → transformer blocks
@@ -33,7 +31,7 @@ From there, almost every learned piece is a matrix multiply plus a nonlinearity:
 
 GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It doesn't change the job, and it doesn't give you a roommate who knows this week's note.
 
-I'd stop treating "the model" as a person and start treating it as stacked linear maps over a token window. You don't need the derivation for that. You need it so "tune the model" and "fetch the PDF" don't end up as the same sentence in your notes.
+I'd stop treating "the model" as a person and start treating it as stacked linear maps over a token window—you do not need the derivation for that, but you do need it so "tune the model" and "fetch the PDF" do not end up as the same sentence in your notes.
 
 ## Pretraining
 

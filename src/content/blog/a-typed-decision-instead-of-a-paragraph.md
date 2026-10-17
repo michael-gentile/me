@@ -6,7 +6,7 @@ tags:
 summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilities instead of tokens."
 ---
 
-Diogo Almeida's first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is the same itch these notes keep hitting: models have been superhuman at chat for years, so where is all the automation?
+Jev is TypeSafe's bet that automation should return typed probabilistic decisions, not paragraphs you parse after the fact. Diogo Almeida's first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) hits the same itch these notes keep returning to: models have been superhuman at chat for years, so where is all the automation?
 
 Chat is a string a person can rewrite. A program needs a value it can branch on, and a confidence it can threshold.
 

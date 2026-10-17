@@ -6,9 +6,9 @@ tags:
 summary: "I pointed Archify at this Astro site and got a source-backed architecture diagram for the push → build → Pages path."
 ---
 
-[Archify](https://github.com/tt-a1i/archify) is an agent skill that turns a small typed JSON document into a self-contained HTML diagram. Architecture, workflow, sequence, data flow, lifecycle. Schema validation and layout checks run before the file replaces the last good output. For a real repository the agent pins a commit, attaches line-range `sources` on the nodes, and passes `--repo-root` so the claims have to match the tree.
+This post describes using [Archify](https://github.com/tt-a1i/archify)—an agent skill that turns a typed JSON document into a self-contained HTML architecture diagram—on this Astro site so the push → build → GitHub Pages path is drawn with line-range sources pinned to the repo. Schema validation and layout checks run before output replaces the last good file; for a real tree the agent pins a commit, attaches `sources` on nodes, and passes `--repo-root` so claims have to match the tree.
 
-You install the skill once, then ask an agent that can load skills. No separate clone of the Archify repo:
+You install the skill once, then ask an agent that can load skills—no separate clone of the Archify repo:
 
 ```sh
 npx skills add tt-a1i/archify -g

@@ -6,9 +6,9 @@ tags:
 summary: "Karpathy's tip: explain it in ASD-STE100. Controlled English from aerospace manuals. Short sentences, one meaning per word, and why models often sound clearer under that constraint."
 ---
 
-[Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) posted a short list of ways to spend less time fighting model prose. The first tip is the one I kept: ask the model to explain something in **ASD-STE100**.
+This post is about asking models for **ASD-STE100**—aircraft-manual English—when you want explanations that are short, active, and hard to pad. [Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) posted a short list of ways to spend less time fighting model prose; the first tip is the one I kept: explain something in STE.
 
-That is [Simplified Technical English](https://asd-ste100.org/), a controlled language built for aerospace maintenance documentation. Airlines needed manuals that readers with limited English could follow without guessing which meaning of "close" or "replace" the writer meant. The writing rules and dictionary are public from ASD. The goal was fewer misunderstandings on the hangar floor. The side effect, for chat, is text that is hard to pad.
+That is [Simplified Technical English](https://asd-ste100.org/), a controlled language built for aerospace maintenance documentation. Airlines needed manuals that readers with limited English could follow without guessing which meaning of "close" or "replace" the writer meant; the writing rules and dictionary are public from ASD. The hangar-floor goal was fewer misunderstandings, and the side effect for chat is prose with less room for hedging.
 
 ## What the specification actually is
 
@@ -94,4 +94,4 @@ For chat, the cheap experiment is still one sentence in the prompt. For agent pl
 - [Andrej Karpathy on X](https://x.com/karpathy/status/2105819303471976479) (ASD-STE100 tip and related output formats)
 - [ASD-STE100 / STEMG](https://asd-ste100.org/)
 - [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill)
-- Related: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)
+- Related: [Controls I would require](/me/blog/controls-i-would-require/)

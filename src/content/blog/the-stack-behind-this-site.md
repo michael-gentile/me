@@ -6,15 +6,13 @@ tags:
 summary: "Astro, markdown posts, Tailwind, GitHub Pages. I push to main and it ships."
 ---
 
-I've always wanted a personal site where I could post about the odd technical adventure here and there. I wanted this to be my inaugural blog post so I could remember why I kept the stack for this site so small.
+This site is a static Astro blog on GitHub Pages: markdown posts, Tailwind, and a deploy pipeline that rebuilds on push to `main`.
 
-## Constraint
-
-I didn't want this site to be complex. I wanted it to be easy to maintain and easy to contribute content. There's no CMS here. No contact-form backend. It's just HTML on a CDN, plus a small script to toggle the theme. All posts are markdown files and with a simple git push, I can keep it up to date. 
+I kept the stack small on purpose—no CMS, no contact-form backend, just HTML on a CDN plus a small script to toggle the theme—so maintaining it is mostly adding a `.md` file and pushing.
 
 ## Routes
 
-The layout is pretty simple as well.
+The layout is three routes and shared config.
 
 - Home: a super brief introduction about myself
 - Blog: dated markdown posts about things here and there that I'm tinkering with
@@ -81,9 +79,7 @@ I skipped an About page, a projects index, analytics, and a CMS. I didn't see th
 
 ## Deploy
 
-Deploying is a piece of cake. Push to `main`. GitHub Actions checks out the repo, `withastro/action` installs and builds, `deploy-pages` publishes `dist/`. I have to set **Settings → Pages → Source: GitHub Actions** once. After that the pipeline is the site.
-
-This workflow means there is no database to migrate, no server process to babysit. If the build is green, everything is candy.
+Deploy is push to `main`: GitHub Actions checks out the repo, `withastro/action` installs and builds, and `deploy-pages` publishes `dist/` (set **Settings → Pages → Source: GitHub Actions** once). There is no database to migrate and no server process to babysit—if the build is green, the site is current.
 
 ## Adding a post
 

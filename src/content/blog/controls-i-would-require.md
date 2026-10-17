@@ -1,13 +1,13 @@
 ---
-title: "A control matrix, including leftover risk"
+title: "Controls I would require"
 date: 2026-08-03
 tags:
   - ai
   - security
-summary: "Draw the chatbot first, then walk a table: channels, ACLs, humans before send, output handling, logs. Three controls I would actually keep, plus residual risk."
+summary: "For a retrieve-then-generate chatbot, draw trust boundaries and a control matrix before you invest in prompts. Three controls I would keep, plus honest residual risk in the table."
 ---
 
-Draw the system before you write more prompts. Same habit as hardening a home box: data flow, trust boundaries, questions at each boundary. The prompt can wait until the picture has a place for the future send-email button.
+Before you write more prompts for a retrieve-then-generate chatbot, draw the system’s trust boundaries and a control matrix the same way you would map data flow on a home box: who talks to what, where identity is enforced, and what must never be bound to the model. The prompt can wait until the picture has a place for the future send-email button.
 
 ## The toy, with boundaries
 
@@ -71,4 +71,4 @@ Gaps I wouldn't go live with: no retrieval ACL, `innerHTML` on the answer, and a
 
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [STRIDE threat modeling](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)
-- Related: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Don't mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/), [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
+- Related: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)

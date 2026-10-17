@@ -6,7 +6,7 @@ tags:
 summary: "Tool-calling is the model emitting JSON. Your process decides whether to run it. Weather can pass a gate. Email and delete cannot, even if the model asked."
 ---
 
-Excessive agency: the model's text becomes a command. Least privilege and approval live in *your* code, because a sterner system prompt doesn't stop HTTP. The tools in this write-up are mocked. Nothing is sent or deleted.
+Tool-calling looks like the model emitting JSON, but your process decides whether anything runs—least privilege and approval live in *your* code because a sterner system prompt does not stop HTTP (OWASP's excessive-agency pattern). The tools in this write-up are mocked; nothing is sent or deleted.
 
 ## The model proposes, the process disposes
 

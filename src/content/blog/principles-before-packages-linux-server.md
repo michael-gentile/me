@@ -4,12 +4,12 @@ date: 2026-09-23
 tags:
   - infrastructure
   - security
-summary: "Before Fail2Ban or UFW, name your threat model, recovery path, and how alerts leave the machine. Practitioner guides start there for a reason."
+summary: "Before Fail2Ban or UFW on a home Linux box, name your threat model, recovery path, and how alerts leave the machine—the same opening move practitioner guides insist on."
 ---
 
-Copy-paste hardening is seductive. The long home-server guides are full of snippets for lazy editors, but the good ones open with **identify your principles** because tools without a model become performance art. You installed CrowdSec. You feel safer. You might still never know the box was used as a relay.
+Before you install Fail2Ban, UFW, or CrowdSec on a home Linux box, name your threat model, recovery path, and how alerts leave the machine—the same opening move the long practitioner guides insist on.
 
-That line rhymes with enterprise breach stories: intrusion without vandalism, data copied, disk left unchanged. The parallel to LLM work is not perfect, but the habit is the same as [A control matrix, including leftover risk](/me/blog/controls-i-would-require/): draw the picture before you buy the next control.
+Copy-paste hardening is seductive: the guides are full of snippets for lazy editors, but tools without a model become performance art (you installed CrowdSec, you feel safer, and you might still never know the box was used as a relay). That line rhymes with enterprise breach stories—intrusion without vandalism, data copied, disk left unchanged—and the parallel to LLM work is not perfect, but the habit is the same as [Controls I would require](/me/blog/controls-i-would-require/): draw the picture before you buy the next control.
 
 ## Questions to answer before you install anything
 
@@ -47,10 +47,10 @@ Document the script. Test on a VM. If your real password and panic password diff
 1. Principles and recovery (including how you get back in if SSH changes go wrong).
 2. Outbound mail or another alert channel that works.
 3. SSH — keys, groups, hardening — with a second session open while you reload `sshd`.
-4. Updates and only then the network stack ([UFW and Docker](/me/blog/docker-ufw-is-not-your-exposure-map/) if you publish ports).
+4. Updates and only then the network stack ([Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) if you publish ports).
 
 Packages come after the sentences you would put in a one-page threat model. The long guides stay long because Linux installs are rare; the principles section is short because it has to stick.
 
 ## Sources
 
-- Related: [A control matrix, including leftover risk](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Related: [Controls I would require](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

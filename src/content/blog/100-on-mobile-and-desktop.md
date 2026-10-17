@@ -1,14 +1,12 @@
 ---
-title: "100 on mobile and desktop"
+title: "PageSpeed 100 on mobile and desktop"
 date: 2026-08-20
 tags:
   - web
-summary: I ran PageSpeed Insights on the live home. Mobile was 89, desktop 99. Here are the two things that brought the scores to 100.
+summary: "PageSpeed Insights on the live home: mobile 89 and desktop 99 at first. Self-hosted fonts and sized WebP screenshots brought both viewports to 100."
 ---
 
-I ran [PageSpeed Insights](https://pagespeed.web.dev/) on [michael-gentile.github.io/me](https://michael-gentile.github.io/me/) after the site went live. Mobile came back 89. Desktop came back 99. it's definitely a good score for a small static site, especially on desktop. But It's also not 100.
-
-The report pointed at two things sitting on the critical path: a Google Fonts stylesheet, and PNG screenshots that were wider than the column. I changed those and ran it again.
+I ran [PageSpeed Insights](https://pagespeed.web.dev/) on [michael-gentile.github.io/me](https://michael-gentile.github.io/me/) after the site went live to see where a small static site still leaked performance budget. Mobile came back 89 and desktop 99. Those are respectable scores, especially on desktop, but the report named two fixes on the critical path: a Google Fonts stylesheet and PNG screenshots wider than the column. I changed both and re-ran PSI until both viewports hit 100.
 
 ## Self-hosted fonts
 
@@ -57,4 +55,3 @@ That's the clone path too. If you take this repo, keep the self-hosted fonts and
 - [PageSpeed Insights](https://pagespeed.web.dev/): live home, [blog](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-blog/trqcxnp27d?form_factor=mobile), and [contact](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-contact/i203w864xs?form_factor=mobile)
 - [Astro fonts](https://docs.astro.build/en/guides/fonts/): `fontProviders.google()`, `<Font>` preload
 - [The stack behind this site](/me/blog/the-stack-behind-this-site/)
-

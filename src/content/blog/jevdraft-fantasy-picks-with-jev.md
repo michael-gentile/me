@@ -6,9 +6,9 @@ tags:
 summary: "A local CLI that rescores a public hockey board to my ESPN league, then asks Jev for pick-time choices with confidence gates. Just for fun."
 ---
 
-I already wrote about [Jev](/me/blog/a-typed-decision-instead-of-a-paragraph/): state in, typed answers out, confidence you can threshold. Fantasy hockey draft night is a pile of those decisions. Who among the five still on the board? Is this a reach vs ADP? Should I take a goalie *now*? The math can rank players. The situational call is what I wanted to try on Jev.
+**JevDraft** is a local Node CLI that uses typed pick-time decisions from [Jev](/me/blog/a-typed-decision-instead-of-a-paragraph/) on fantasy NHL draft night: who among the shortlist, whether the choice is a reach versus ADP, and two noul gates for goalies and defense. Fantasy hockey at the clock is a pile of those decisions. The math can rank players; the situational call is what I wanted to try on a System One model.
 
-So I built **JevDraft**, a small Node CLI I run locally. It pulls the free [Hockey Insights](https://hockeyinsights.ca/opendata/) 2026–27 board, rescores every skater and goalie with *my* ESPN weights, and optionally calls Jev's `/v1/decide` when it's my pick. This is just for fun. It will not win you a league by itself, and a wrong pick with a pretty confidence number is still a wrong pick.
+The tool pulls the free [Hockey Insights](https://hockeyinsights.ca/opendata/) 2026–27 board, rescores every skater and goalie with *my* ESPN weights, and optionally calls Jev's `/v1/decide` when it's my pick. This is just for fun. It will not win you a league by itself, and a wrong pick with a pretty confidence number is still a wrong pick.
 
 ## Split of labor
 

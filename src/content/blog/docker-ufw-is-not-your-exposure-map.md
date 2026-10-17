@@ -1,15 +1,15 @@
 ---
-title: "UFW said deny; Docker published anyway"
+title: "Docker and UFW are not your exposure map"
 date: 2026-09-22
 tags:
   - infrastructure
   - security
-summary: "Published container ports bypass UFW INPUT. A green firewall UI is not a complete map of what the internet can reach."
+summary: "When Docker publishes a container port, traffic is handled on FORWARD and Docker’s own chains, not on UFW’s INPUT rules. A green `ufw status` does not show every path the internet can use to reach your services."
 ---
 
-I treat `sudo ufw status` like a dashboard widget: useful, not sufficient. Any serious home-server hardening path spends real ink on **Docker and UFW** because the failure mode is quiet. Default deny on incoming, no allow rule for 8080, and nginx is still reachable because Docker DNAT put the packet on `FORWARD`, not `INPUT`.
+Rootful Docker Engine publishes container ports by installing iptables or nftables rules for NAT and forwarding, so a packet to a published port is handled in Docker’s chains and the `FORWARD` path, while UFW mostly manages `INPUT`. That mismatch is why you can run `sudo ufw deny 8080/tcp`, see default deny on incoming, and still reach nginx on 8080 from another machine: Docker DNAT accepted the packet before your INPUT policy mattered. Any serious home-server hardening path spends real ink on Docker and UFW because the failure mode is quiet.
 
-Same class of mistake as trusting similarity without an ACL: the control you looked at was never on the path the traffic took. I wrote about that for RAG in [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Here the retriever is your firewall status line and the leak is bridge networking.
+I treat `sudo ufw status` like a dashboard widget—useful, not sufficient. The same class of mistake shows up when you trust similarity without an ACL: the control you looked at was never on the path the traffic took. I wrote about that for RAG in [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Here the retriever is your firewall status line and the leak is bridge networking.
 
 ## What actually happens
 
@@ -57,7 +57,7 @@ Docker Engine releases **before 28.0.0** may still expose loopback-published por
 
 ## How this fits the rest of the stack
 
-Typical order is SSH-first, then basics, then network. Docker on a home server (Plex, a blog stack, an agent playground) is common. UFW-first thinking breaks the day someone `--publish`es without reading the Docker section.
+Typical order is SSH-first, then basics, then network. Docker on a home server (Plex, a blog stack, an agent playground) is common, and UFW-first thinking breaks the day someone `--publish`es without reading the Docker section.
 
 If you run containers on the same machine that holds backups or SSH keys, this is not optional. It is the difference between "I hardened the host" and "I hardened the host except the thing I actually run."
 

@@ -7,13 +7,13 @@ tags:
 summary: "Muse, Grok Bot, and OpenAI Dots are giving agents money-shaped tools: scoped cards, delegated payment tokens, and account context. Everyday spend is gated. Major decisions are still mostly draft-and-approve."
 ---
 
-Agents that can browse and call tools eventually need a way to pay. The failure mode is the same one I keep writing about for [`send_email`](/me/blog/the-model-does-not-get-send-email/): put the real credential in the model’s reach and hope a prompt holds. What is shipping is closer to an allowance. Cap the merchant, the amount, the lifetime. Make a human (or a review agent outside the chat model) say yes. Then let the agent finish the checkout.
+This note compares how always-on agents attach money: scoped spend and read-only financial context, not an open wallet in the model’s context. Agents that browse and call tools eventually need a way to pay, and the failure mode is the same one I keep writing about for [`send_email`](/me/blog/the-model-does-not-get-send-email/)—put the real credential in the model’s reach and hope a prompt holds. What is shipping is closer to an allowance: cap the merchant, the amount, and the lifetime; make a human (or a review agent outside the chat model) say yes; then let the agent finish the checkout.
 
-I already wrote about [Muse’s per-user VM](/me/blog/muse-and-the-personal-agent/) and the [stablecoin / X Money / Cloudflare wallet rails](/me/blog/stablecoins-treasuries-wallets/). This note is about the money path: how Muse, Grok Bot, and OpenAI’s Dots attach spend and financial sight to always-on agents.
+I already wrote about [Muse’s per-user VM](/me/blog/muse-and-the-personal-agent/) and the [stablecoin / X Money / Cloudflare wallet rails](/me/blog/stablecoins-treasuries-wallets/). Here I focus on Muse, Grok Bot, and OpenAI’s Dots—how each wires spend and financial sight into the agent loop.
 
 ## Scoped spend vs open wallet
 
-Everyday agent commerce is arriving as delegated, scoped spend. Major financial decisions are arriving first as agents that can *see* your money and draft a plan, not as unsupervised fund managers.
+Everyday agent commerce is arriving as delegated, scoped spend, while major financial decisions are arriving first as agents that can *see* your money and draft a plan—not as unsupervised fund managers.
 
 ## Muse: single-use card, every purchase asks
 

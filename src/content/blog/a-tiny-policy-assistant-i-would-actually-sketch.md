@@ -1,12 +1,12 @@
 ---
-title: "A tiny policy assistant"
+title: "A tiny policy assistant I would actually sketch"
 date: 2026-08-23
 tags:
   - ai
 summary: "A weekend CLI: fake logins, two made-up notes on disk, retrieval that respects audience, and a send_email button that never fires. Offline on purpose."
 ---
 
-I got tired of three separate notes ([Don't mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/), [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)), so I glued them into one weekend CLI. Fake logins, two made-up files, and a send_email button that never sends. Who is asking, which notes they may see, whether the answer is grounded, and whether "send this by email" is allowed to become a send.
+This post is a weekend CLI that glues three earlier notes into one runnable toy: who is asking, which notes they may see, whether the answer is grounded, and whether "send this by email" is allowed to become a send. The pieces come from [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), and [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/). Fake logins, two made-up files on disk, and a send_email button that never sends.
 
 There's no ChatGPT or Claude key in this sketch. The traces below are from an **offline** assistant: keyword overlap instead of embeddings, extractive sentences instead of a chat model, gates in Python. A live model can sit in the same slots later. It doesn't replace the slots, which is the whole reason a guest's rent question dies in Python and not in a paragraph.
 
@@ -118,5 +118,5 @@ I'd still ship this *shape*: identity in the app, retrieval in-scope, refuse whe
 
 ## Sources
 
-- Earlier notes: [Don't mix a visitor page with your notes](/me/blog/the-webpage-is-untrusted-input/), [Similarity is not authorization](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [A control matrix, including leftover risk](/me/blog/controls-i-would-require/)
+- Earlier notes: [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Controls I would require](/me/blog/controls-i-would-require/)
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
