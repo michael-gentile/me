@@ -109,7 +109,7 @@ Here’s a table I can argue with.
 | Routed inference to approved endpoints | Residencies and “which model saw this” are answerable | Shadow connectors if someone pastes into a public chat UI |
 | SIEM of proposals, approvals, tool calls | You can explain a bad Tuesday | Logs become a sensitive store; retention vs eDiscovery |
 
-Prompt injection through email and SharePoint is the enterprise version of [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/): once Eddy can click and send, every message it reads is untrusted input. Credential surrogates and approval gates reduce blast radius but do not make the model “safe”—architecture does.
+Prompt injection through email and SharePoint is the enterprise version of [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/): once Eddy can click and send, every message it reads is untrusted input. Credential surrogates and approval gates reduce blast radius but do not make the model “safe”—architecture does.
 
 Over-broad Graph consent is how pilots die quietly. If the connector asks for `Mail.ReadWrite` across the tenant when Jordan only needed drafts in one mailbox, you have built a lateral-move machine with a friendly name.
 
@@ -141,9 +141,9 @@ If I were to guess, Microsoft is likely cooking something up very similar to Mus
 
 ## Sources
 
-- [Muse and the personal agent](/me/blog/muse-and-the-personal-agent/) (prior note on this site)
+- [Muse: a personal agent with its own computer](/me/blog/muse-and-the-personal-agent/) (prior note on this site)
 - [How We Built Safety Into Muse](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse) (Meta AI Research)
 - [OpenClaw security](https://docs.openclaw.ai/gateway/security) and [multi-tenant hosting](https://docs.openclaw.ai/gateway/multi-tenant-hosting)
 - [Grok Bot overview](https://docs.x.ai/grok-bot/overview), [security](https://cursor.com/docs/grok-bot/security), [Teams and Enterprise](https://cursor.com/docs/grok-bot/teams)
 - [NVIDIA Secure Agent Workspace reference architecture](https://docs.nvidia.com/enterprise-reference-architectures/secure-agent-workspace-reference-design/latest/reference-architecture.html)
-- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Controls I would require](/me/blog/controls-i-would-require/), [A tiny policy assistant](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)
+- Earlier notes: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/), [Policy CLI: a tiny assistant I would actually sketch](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)

@@ -6,7 +6,7 @@ tags:
 summary: "VectifyAI PageIndex builds a hierarchical tree index and uses an LLM to walk it for retrieval, without embedding search on the query path. How that compares to vector RAG and the nearest-chunk problems I have written about elsewhere."
 ---
 
-[PageIndex](https://github.com/VectifyAI/PageIndex) from VectifyAI is an open-source vectorless RAG engine: it indexes documents as a tree of natural sections and uses an LLM to reason over that tree at query time instead of ranking fixed chunks by cosine similarity. I have been writing about vector RAG as the default stack—embed chunks, cosine the question, take the nearest paragraph, and hope the geometry meant relevance—and [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) still stands, but it leaves a hole. What if you stop ranking by similarity at all?
+[PageIndex](https://github.com/VectifyAI/PageIndex) from VectifyAI is an open-source vectorless RAG engine: it indexes documents as a tree of natural sections and uses an LLM to reason over that tree at query time instead of ranking fixed chunks by cosine similarity. I have been writing about vector RAG as the default stack—embed chunks, cosine the question, take the nearest paragraph, and hope the geometry meant relevance—and [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/) still stands, but it leaves a hole. What if you stop ranking by similarity at all?
 
 You can find more information in their docs at [docs.pageindex.ai](https://docs.pageindex.ai/).
 
@@ -55,7 +55,7 @@ They also publish local indexing cost (~$0.001/page with a cheap index model in 
 
 PageIndex swaps the retriever; it does not replace the application around it.
 
-- **ACL before content leaves the store.** Audience filter in the app, same as [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Tree search that can see every node is still a leak if the tree spans audiences.
+- **ACL before content leaves the store.** Audience filter in the app, same as [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Tree search that can see every node is still a leak if the tree spans audiences.
 - **Citations.** Their design wants page/section refs. Keep that as an eval, not a hope.
 - **Cost and latency.** Each tree walk is LLM calls. Fine for a long filing and a few questions; different economics than cosine over a million FAQ chunks.
 - **Corpus scale.** Per-document trees shine on long professional PDFs. Millions of tiny notes still need a way to pick *which* document first (they describe a “PageIndex File System” layer for that). Do not pretend one ToC solves a SharePoint tenancy.
@@ -93,5 +93,5 @@ PageIndex treats retrieval as navigation, which is the right diagnosis for the f
 - [PageIndex developer docs](https://docs.pageindex.ai/)
 - [PageIndex: Next-Generation Vectorless, Reasoning-based RAG](https://pageindex.ai/blog/pageindex-intro) (intro post)
 - [Mafin2.5 / FinanceBench results](https://vectify.ai/blog/Mafin2.5)
-- Earlier notes: [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
+- Earlier notes: [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
 

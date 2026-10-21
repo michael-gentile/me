@@ -1,13 +1,13 @@
 ---
-title: "CrowdSec or Fail2Ban on a home box"
+title: "CrowdSec vs Fail2Ban: shared bans on a home box"
 date: 2026-09-25
 tags:
   - infrastructure
   - security
-summary: "Both read logs and ban addresses. CrowdSec adds shared blocklists and explicit privacy questions. Pick based on telemetry appetite and false-positive tolerance, not hype."
+summary: "I compared Fail2Ban’s local jails with CrowdSec’s optional community blocklists on a small SSH-exposed host; the real tradeoff is outbound telemetry and false positives, not which logo is newer."
 ---
 
-This post compares **Fail2Ban** and **CrowdSec** for a home box or small VPS: both tail logs and ban addresses, but CrowdSec adds optional shared blocklists and explicit privacy questions. SSH on the public internet collects knock attempts like lint, and hardening guides usually list both under network intrusion prevention—same job description, different architecture.
+I wanted one decision page for **Fail2Ban** versus **CrowdSec** on a home box or small VPS: both tail logs and ban addresses, but only CrowdSec adds optional shared blocklists and explicit privacy questions about what leaves your network. This post explains how each behaves on the wire, where PSAD fits without stacking three daemons on a 1 GB instance, and the table I use when SSH on the public internet collects knock attempts like lint.
 
 Fail2Ban is local: your jails, your thresholds, your ban list. CrowdSec is local **plus** a community signal path—detect on your logs, share metadata, consume a **Community Blocklist** of IPs that crossed collective thresholds elsewhere. Neither replaces key-only SSH or a sane firewall; both are speed bumps for password spraying and dumb bots.
 
@@ -44,11 +44,11 @@ I would not stack every tool on a 1 GB VPS without measuring CPU and log volume.
 | Minimal VPS, you hate outbound deps | Fail2Ban |
 | SSH heavily scanned, you want preemptive blocks | CrowdSec with eyes open on sharing |
 | Corp policy forbids threat intel upload | Fail2Ban (or CrowdSec in local-only mode — verify docs for your version) |
-| You already run Docker and fixed [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) | Either — fix publishing first |
+| You already run Docker and fixed [Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) | Either — fix publishing first |
 
 ## Tie-in to principles
 
-[Principles before packages](/me/blog/principles-before-packages-linux-server/) asked how alerts leave the box. Fail2Ban can email via action scripts; CrowdSec has its own notification paths. If mail is broken, you discover bans when **you** cannot SSH from a coffee shop IP that got lumped in with a botnet.
+[Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/) asked how alerts leave the box. Fail2Ban can email via action scripts; CrowdSec has its own notification paths. If mail is broken, you discover bans when **you** cannot SSH from a coffee shop IP that got lumped in with a botnet.
 
 Keep a break-glass path: console access, provider out-of-band shell, or a second session from a known-good network before you tighten jails.
 
@@ -56,4 +56,4 @@ Keep a break-glass path: console access, provider out-of-band shell, or a second
 
 - [CrowdSec — signal metadata](https://docs.crowdsec.net/docs/next/central_api/intro#signal-meta-data)
 - [CrowdSec — our data](https://www.crowdsec.net/our-data)
-- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/)
+- Related: [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/)

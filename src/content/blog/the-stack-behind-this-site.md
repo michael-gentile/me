@@ -1,5 +1,5 @@
 ---
-title: "The stack behind this site"
+title: "Astro: the stack behind this site"
 date: 2026-05-15
 tags:
   - web

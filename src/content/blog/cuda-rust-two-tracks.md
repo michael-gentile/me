@@ -1,5 +1,5 @@
 ---
-title: "CUDA Rust, two tracks"
+title: "CUDA Rust: two tracks for GPU kernels"
 date: 2026-09-20
 tags:
   - infrastructure

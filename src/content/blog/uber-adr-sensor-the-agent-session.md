@@ -7,7 +7,7 @@ tags:
 summary: "Uber’s ADR closes the gap EDR leaves on coding agents: parse the session (prompt → tools), triage cheaply, then spend LLM judgment on the suspicious slice. Notes on the open Sensor, Bench, and Detector."
 ---
 
-On a laptop running Cursor or Claude Code, classic endpoint detection often logs a file write and a network call while the user prompt that started the turn, the agent’s plan, and which MCP tool ran with which arguments never appear in that telemetry. [Controls I would require](/me/blog/controls-i-would-require/) assumes you can see what happened, and that assumption breaks when the endpoint only records outcomes. [Uber’s ADR](https://github.com/uber/ADR) (Agentic AI Detection and Response) is aimed at that hole: rebuild the agent session from local caches, run cheap triage across the volume, and spend expensive LLM judgment only on sessions triage flags. The MLSys 2026 paper is [on arXiv](https://arxiv.org/abs/2605.17380); Sensor, Discovery, ADR-Bench, and the Detector are open, while Explorer and full Prevention are not.
+On a laptop running Cursor or Claude Code, classic endpoint detection often logs a file write and a network call while the user prompt that started the turn, the agent’s plan, and which MCP tool ran with which arguments never appear in that telemetry. [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/) assumes you can see what happened, and that assumption breaks when the endpoint only records outcomes. [Uber’s ADR](https://github.com/uber/ADR) (Agentic AI Detection and Response) is aimed at that hole: rebuild the agent session from local caches, run cheap triage across the volume, and spend expensive LLM judgment only on sessions triage flags. The MLSys 2026 paper is [on arXiv](https://arxiv.org/abs/2605.17380); Sensor, Discovery, ADR-Bench, and the Detector are open, while Explorer and full Prevention are not.
 
 ## What EDR misses
 
@@ -54,7 +54,7 @@ If you install one thing, put the Sensor on a machine that already runs Cursor o
 
 ADR detects, and in Uber’s production it also prevents some leaks, but you still need the harness around the model.
 
-Least-privilege tools and human gates stay in the app, same as [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/). Catching a bad session after the tool ran helps; keeping `send_email` off the model costs less.
+Least-privilege tools and human gates stay in the app, same as [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/). Catching a bad session after the tool ran helps; keeping `send_email` off the model costs less.
 
 Sensor output is another sensitive document store: prompts, reasoning, tool args. Who can read them, how long they live, and which region they sit in belong on the threat model next to the LLM vendor.
 
@@ -62,7 +62,7 @@ Zero false positives on a bench is a SOC choice. They miss some attacks rather t
 
 Uber prefers cache parsers over a network LLM/MCP gateway because a gateway loses environmental context and fights streaming. That matches coding agents with fat local state. For a customer-facing support agent you own end to end, I might still start with a gateway. Write down which topology you picked.
 
-Without prompt → tools → outcome, agent risk is mostly file and network noise. The open Sensor makes that chain concrete for coding tools a lot of us already run, and the two-tier Detector is how they keep the LLM bill from eating the SOC. I would read the paper, run the Sensor once on a laptop I own, and keep the habits in [Controls I would require](/me/blog/controls-i-would-require/). The Detection package’s “not for production” warning is doing real work.
+Without prompt → tools → outcome, agent risk is mostly file and network noise. The open Sensor makes that chain concrete for coding tools a lot of us already run, and the two-tier Detector is how they keep the LLM bill from eating the SOC. I would read the paper, run the Sensor once on a laptop I own, and keep the habits in [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/). The Detection package’s “not for production” warning is doing real work.
 
 ## Sources
 
@@ -70,4 +70,4 @@ Without prompt → tools → outcome, agent risk is mostly file and network nois
 - [ADR: An Agentic Detection System for Enterprise Agentic AI Security](https://arxiv.org/abs/2605.17380) (arXiv abs/2605.17380)
 - [Sensor README](https://github.com/uber/ADR/blob/main/Sensor/README.md)
 - [Detection README](https://github.com/uber/ADR/blob/main/Detection/README.md)
-- Earlier notes: [Controls I would require](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Earlier notes: [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/), [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

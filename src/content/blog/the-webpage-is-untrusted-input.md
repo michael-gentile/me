@@ -1,13 +1,13 @@
 ---
-title: "The webpage is untrusted input"
+title: "Prompt injection: the webpage is untrusted input"
 date: 2026-07-03
 tags:
   - ai
   - security
-summary: "When my notes and a scraped page share one chat prompt, the model sees a single token stream with no built-in trust levels, so I label channels, quarantine visitor text, and never assign completions to innerHTML."
+summary: "I mixed my notes with a scraped page in one chat prompt and watched visitor text ride in as facts; this post is the channel separation, quarantine pass, and textContent rule I landed on."
 ---
 
-When you ask a model to "summarize these documents," it receives one concatenated stream of tokens: your system prompt, text you wrote, and a visitor blog post all become the same kind of integer sequence as far as the network is concerned. Prefix labels like `OFFICIAL:` are hints to the model, not access control, and mixing trusted notes with untrusted web content in that single stream is the bug this post is about. I needed a small architecture for that boundary, which is why the design is two HTTP calls instead of a sterner system message; the same boundary shows up when retrieved notes contain a sentence that looks like an instruction, and again when the answer pane paints HTML.
+I tried summarizing my notes and a visitor blog in one prompt and found the model receives one concatenated token stream with no built-in trust levels—prefix labels like `OFFICIAL:` are hints, not access control. This post explains the two-call architecture I use at that boundary instead of a sterner system message, why noisy retrieved notes are the same class of bug, and why the answer pane must stay `textContent` rather than `innerHTML`.
 
 ## Two files, one mixed call
 
@@ -85,4 +85,4 @@ The mixed call is shorter to build, and it's also the version that will quote a 
 - [OWASP LLM01: Prompt Injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [OWASP LLM05: Improper Output Handling](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [MDN: Node.textContent](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent) vs [Element.innerHTML](https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML)
-- Related: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Related: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

@@ -1,5 +1,5 @@
 ---
-title: "PageSpeed 100 on mobile and desktop"
+title: "PageSpeed: 100 on mobile and desktop"
 date: 2026-08-20
 tags:
   - web
@@ -54,4 +54,4 @@ That's the clone path too. If you take this repo, keep the self-hosted fonts and
 
 - [PageSpeed Insights](https://pagespeed.web.dev/): live home, [blog](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-blog/trqcxnp27d?form_factor=mobile), and [contact](https://pagespeed.web.dev/analysis/https-michael-gentile-github-io-me-contact/i203w864xs?form_factor=mobile)
 - [Astro fonts](https://docs.astro.build/en/guides/fonts/): `fontProviders.google()`, `<Font>` preload
-- [The stack behind this site](/me/blog/the-stack-behind-this-site/)
+- [Astro: the stack behind this site](/me/blog/the-stack-behind-this-site/)

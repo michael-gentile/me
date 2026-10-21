@@ -1,5 +1,5 @@
 ---
-title: "Muse and the personal agent"
+title: "Muse: a personal agent with its own computer"
 date: 2026-09-24
 tags:
   - ai
@@ -88,7 +88,7 @@ Charm as a listening surface. Pocket hardware with mics and always-available wak
 
 Quotas versus real agent work. Background sub-agents and long browser jobs burn allowance. Free tiers teach habits; paid tiers teach whether the economics work.
 
-Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design; whether they hold when the agent reads hostile mail is empirical—the same class as [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [`send_email`](/me/blog/the-model-does-not-get-send-email/) without a gate.
+Prompt injection through Gmail and the web. Sentinel and credential surrogation are the right kind of design; whether they hold when the agent reads hostile mail is empirical—the same class as [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/) or letting a model’s JSON become [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/) without a gate.
 
 ## Sources
 

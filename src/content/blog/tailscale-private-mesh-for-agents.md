@@ -99,7 +99,7 @@ Default is deny. Membership in the tailnet does not mean everything may talk to 
 }
 ```
 
-Same instinct as [Controls I would require](/me/blog/controls-i-would-require/): decide who may reach what before the chat UI feels friendly. A stern system prompt does not replace a grant that never routes TCP to the MCP port.
+Same instinct as [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/): decide who may reach what before the chat UI feels friendly. A stern system prompt does not replace a grant that never routes TCP to the MCP port.
 
 ## Home vs enterprise
 
@@ -245,4 +245,4 @@ SSH to the box can be a second grant on port 22, or Tailscale SSH rules if you e
 - [Tailscale SSH](https://tailscale.com/docs/features/tailscale-ssh) · [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) · [Funnel](https://tailscale.com/docs/features/tailscale-funnel)
 - [Hermes Desktop (remote backend)](https://hermes-agent.nousresearch.com/docs/user-guide/desktop) · [Web dashboard](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) · [Multi-connection Desktop](https://hermes-agent.nousresearch.com/docs/user-guide/multi-connection-desktop)
 - [hermes-tailscale plugin](https://hermes-agent.nousresearch.com/docs/plugins/hermes-tailscale)
-- Earlier notes: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Controls I would require](/me/blog/controls-i-would-require/)
+- Earlier notes: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/)

@@ -1,5 +1,5 @@
 ---
-title: "Ship a tiny tool without shipping Node"
+title: "scriptc: ship a tiny tool without shipping Node"
 date: 2026-10-03
 tags:
   - programming

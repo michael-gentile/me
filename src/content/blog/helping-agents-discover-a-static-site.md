@@ -1,5 +1,5 @@
 ---
-title: "Helping agents discover a static site"
+title: "Static sites: helping agents discover yours"
 date: 2026-08-18
 tags:
   - web

@@ -1,12 +1,12 @@
 ---
-title: "rsync for a wedding dump"
+title: "rsync: backing up a wedding dump"
 date: 2026-09-19
 tags:
   - infrastructure
 summary: "A year later we got the RAW photos and video on a 1TB SSD. Finder would have been hours with no gui copy feature I trusted to resume, so I used caffeinate and rsync."
 ---
 
-This post is how I copied a 1TB wedding photo and video dump between two SSDs on a Mac with `caffeinate` and `rsync` when Finder had no resume story I trusted.
+This post is how I backed up a 1TB wedding photo and video dump between two SSDs on a Mac with `caffeinate` and `rsync` when Finder had no resume story I trusted.
 
 After more than a year we got the RAW files on a master SSD; my MacBook was already tight on space, so I bought a second 1TB drive for backup. I could have plugged both in and copy-pasted for hours, but on my macOS version I did not have a GUI copy feature that would continue where it left off if the transfer died, so I used the terminal instead.
 

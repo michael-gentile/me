@@ -7,7 +7,7 @@ tags:
 summary: "Anthropic’s engineering post on Scion: they outgrew git’s offline assumptions when merges jumped past 30k a day, and rebuilt VCS around always-online agents. What I’d steal, and what stays Anthropic-only."
 ---
 
-Scion is Anthropic's in-house version control system for a monorepo where coding agents merge tens of thousands of times a day and almost every client is online by definition. Their [Redesigning source control](https://www.anthropic.com/engineering/redesigning-source-control) post is the design memo: git's offline-every-clone-is-a-peer model stopped matching traffic once shallow clones, mirrors, and promisor remotes could not keep up. I still spend most of my skepticism on the harness around the model ([Prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)). This piece is about the older wall underneath that harness.
+Scion is Anthropic's in-house version control system for a monorepo where coding agents merge tens of thousands of times a day and almost every client is online by definition. Their [Redesigning source control](https://www.anthropic.com/engineering/redesigning-source-control) post is the design memo: git's offline-every-clone-is-a-peer model stopped matching traffic once shallow clones, mirrors, and promisor remotes could not keep up. I still spend most of my skepticism on the harness around the model ([Agent stack: prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/)). This piece is about the older wall underneath that harness.
 
 In May 2026 they averaged about 2,500 merges a day into their monorepo. By September it was over 30,000. They call the latent demand for merging "practically infinite." Git assumes every clone is a full offline peer; agent-scale monorepos need a server that answers history, blame, diffs, and checkouts for clients that are online by definition. Their answer was Scion, an in-house VCS, plus Antique for review, code search, and a richer IAM story, shipped in about five months by a small team that also used Claude heavily to build it. Read it as a design memo. You cannot `brew install` Scion.
 
@@ -49,7 +49,7 @@ A seven-person team built Scion and Antique while merge volume climbed 10x. Engi
 
 The merge-queue prior broke. Hundreds of changes can land while tests still run. They invested in post-merge and pre-deploy automation instead of a global lock, and treat concurrent conflicts as something Claude can often repair faster than a human can triage.
 
-Security got directory-level permissions inside the monorepo and review rules that distinguish comment-only edits from sensitive logic, so humans spend attention where it matters. That rhymes with [Uber ADR](/me/blog/uber-adr-sensor-the-agent-session/) and [Controls I would require](/me/blog/controls-i-would-require/): you still need observability and policy when volume goes up.
+Security got directory-level permissions inside the monorepo and review rules that distinguish comment-only edits from sensitive logic, so humans spend attention where it matters. That rhymes with [Uber ADR](/me/blog/uber-adr-sensor-the-agent-session/) and [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/): you still need observability and policy when volume goes up.
 
 ## What I’d steal on a normal repo
 
@@ -64,4 +64,4 @@ When agents merge all day, source control becomes the tax. I would read Anthropi
 ## Sources
 
 - [Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control) (Anthropic Engineering, Oct 13, 2026)
-- Earlier notes: [Prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [Uber ADR: sensing the agent session](/me/blog/uber-adr-sensor-the-agent-session/), [Controls I would require](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Earlier notes: [Agent stack: prompt, context, harness, loop, graph](/me/blog/prompt-context-harness-loop-graph/), [Uber ADR: sensing the agent session](/me/blog/uber-adr-sensor-the-agent-session/), [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/), [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/)

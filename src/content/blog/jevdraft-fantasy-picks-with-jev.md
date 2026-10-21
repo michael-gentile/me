@@ -79,6 +79,6 @@ JevDraft is tinkering with the same shape as the TypeSafe notes: code does the a
 ## Sources
 
 - [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) (TypeSafe)
-- [A typed decision instead of a paragraph](/me/blog/a-typed-decision-instead-of-a-paragraph/) (prior note on this site)
+- [Jev: a typed decision instead of a paragraph](/me/blog/a-typed-decision-instead-of-a-paragraph/) (prior note on this site)
 - [Hockey Insights](https://hockey-insights.com/) (pool data used by the fetch step)
 - [ESPN Fantasy](https://fantasy.espn.com/) (draft board I still click myself)

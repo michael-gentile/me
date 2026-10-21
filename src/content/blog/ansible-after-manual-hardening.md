@@ -1,15 +1,15 @@
 ---
-title: "Ansible after manual hardening"
+title: "Ansible: encode the hardening you already ran"
 date: 2026-09-27
 tags:
   - infrastructure
   - security
-summary: "Encode the same order you ran by hand: users and SSH, UFW, Fail2Ban, mail, audits. Automation fights drift once you understand the steps — with links to each topic in this series."
+summary: "After I walked users, SSH, UFW, Fail2Ban, mail, and audits by hand, Ansible was how the box stopped drifting on the next apt upgrade. Same order, encoded—with links to each topic in this series."
 ---
 
-This post is about encoding a home-server hardening sequence in Ansible after you have walked the steps by hand—users and SSH, UFW, Fail2Ban, mail, audits—so the box does not drift back to defaults after the first `apt upgrade`. Public playbooks that mirror that path are a common next step, typically tested on recent Debian with variables in `group_vars/` and inventory in `hosts.yml`.
+The second home-server install went faster than the first, and by the third I was fixing the same drift: someone had "just tweaked" `sshd_config`, a package had opened ports, and Lynis was not mailing reports anymore. I had already walked users and SSH, UFW, Fail2Ban, outbound mail, and audits once on a throwaway VM, and Ansible became the way to encode that same order so the box did not slide back to defaults after the first `apt upgrade`. This post maps that manual path to typical playbooks—inventory in `hosts.yml`, knobs in `group_vars/`—and where automation still stops short.
 
-Whoever maintains them will say the obvious: read tasks, do not treat playbooks as compliance, put secrets in Ansible Vault. Same spirit as [Learn first, CIS second](/me/blog/learn-first-cis-second/)—encode choices you already tested; benchmarks and threat models still trump a green playbook run.
+Whoever maintains them will say the obvious: read tasks, do not treat playbooks as compliance, put secrets in Ansible Vault. Same spirit as [CIS benchmarks: learn the box first](/me/blog/learn-first-cis-second/)—encode choices you already tested; benchmarks and threat models still trump a green playbook run.
 
 ## How typical playbooks map to the manual path
 
@@ -24,10 +24,10 @@ After the first successful run you should use the key and `-e ansible_ssh_port=.
 
 | Playbook area | Manual topic | Note in this series |
 | --- | --- | --- |
-| SSH, groups, pwquality | SSH server, basics | [Principles before packages](/me/blog/principles-before-packages-linux-server/) |
-| UFW default deny, SSH limit | Network | [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) — **Docker publish rules are rarely automatic**; add tasks or compose loopback binds yourself |
-| PSAD + Fail2Ban | Network IDS | [CrowdSec or Fail2Ban](/me/blog/crowdsec-or-fail2ban-for-a-home-box/) — many playbooks ship Fail2Ban, not CrowdSec |
-| msmtp / mail | Outbound alerts | Alerts as a control in [Principles before packages](/me/blog/principles-before-packages-linux-server/) |
+| SSH, groups, pwquality | SSH server, basics | [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/) |
+| UFW default deny, SSH limit | Network | [Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) — **Docker publish rules are rarely automatic**; add tasks or compose loopback binds yourself |
+| PSAD + Fail2Ban | Network IDS | [CrowdSec vs Fail2Ban: shared bans on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/) — many playbooks ship Fail2Ban, not CrowdSec |
+| msmtp / mail | Outbound alerts | Alerts as a control in [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/) |
 | unattended-upgrades, apticron | Automatic updates | Security patches without you remembering |
 | ClamAV, rkhunter, auditd | Auditing | Detection, not prevention — logs and scans |
 | Lynis + email report | Lynis audit | A numeric "score" is a snapshot; your mileage varies |
@@ -50,20 +50,20 @@ Ansible excels at:
 
 Ansible does not replace:
 
-- Threat modeling ([principles post](/me/blog/principles-before-packages-linux-server/)).
-- Verifying container exposure from another host ([Docker/UFW post](/me/blog/docker-ufw-is-not-your-exposure-map/)).
-- Choosing CrowdSec telemetry ([CrowdSec post](/me/blog/crowdsec-or-fail2ban-for-a-home-box/)).
-- Testing sysctl one key at a time ([Sysctl and hidepid in the Danger Zone](/me/blog/danger-zone-sysctl-and-hidepid/)).
+- Threat modeling ([Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/)).
+- Verifying container exposure from another host ([Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/)).
+- Choosing CrowdSec telemetry ([CrowdSec vs Fail2Ban: shared bans on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/)).
+- Testing sysctl one key at a time ([Sysctl: the Danger Zone knobs (and hidepid)](/me/blog/danger-zone-sysctl-and-hidepid/)).
 
 My workflow: walk the steps once on a throwaway VM, note what broke, then point playbooks at the second VM with fixes in variables or local roles.
 
 ## Series index (six angles)
 
-1. [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/)
-2. [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/)
-3. [Learn first, CIS second](/me/blog/learn-first-cis-second/)
-4. [CrowdSec or Fail2Ban on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/)
-5. [Sysctl and hidepid in the Danger Zone](/me/blog/danger-zone-sysctl-and-hidepid/)
+1. [Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/)
+2. [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/)
+3. [CIS benchmarks: learn the box first](/me/blog/learn-first-cis-second/)
+4. [CrowdSec vs Fail2Ban: shared bans on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/)
+5. [Sysctl: the Danger Zone knobs (and hidepid)](/me/blog/danger-zone-sysctl-and-hidepid/)
 6. This post — automation layer
 
 Cross-domain rhymes if you came from the LLM posts: allowlists beat deny lists, dashboards lie when the real path bypasses the control, humans (or mail) must close the loop when automation bans your coffee-shop IP.
@@ -84,4 +84,4 @@ Generate ed25519 keys before you disable password authentication.
 ## Sources
 
 - [Ansible documentation](https://docs.ansible.com/)
-- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/), [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/), [CrowdSec or Fail2Ban on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/), [Sysctl and hidepid in the Danger Zone](/me/blog/danger-zone-sysctl-and-hidepid/)
+- Related: [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/), [Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/), [CrowdSec vs Fail2Ban: shared bans on a home box](/me/blog/crowdsec-or-fail2ban-for-a-home-box/), [Sysctl: the Danger Zone knobs (and hidepid)](/me/blog/danger-zone-sysctl-and-hidepid/)

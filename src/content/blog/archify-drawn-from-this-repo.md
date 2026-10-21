@@ -1,5 +1,5 @@
 ---
-title: "Archify, drawn from this repo"
+title: "Archify: drawn from this repo"
 date: 2026-10-05
 tags:
   - web
@@ -56,5 +56,5 @@ I am not replacing the stack post with this drawing. The drawing is for the shap
 ## Sources
 
 - [Archify](https://github.com/tt-a1i/archify) (agent skill that builds the HTML diagram)
-- [The stack behind this site](/me/blog/the-stack-behind-this-site/) (prose companion to the drawing)
+- [Astro: the stack behind this site](/me/blog/the-stack-behind-this-site/) (prose companion to the drawing)
 - [Interactive diagram](/me/archify/me-site.html) (shipped HTML for this repo)

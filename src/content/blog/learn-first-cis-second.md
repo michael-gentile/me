@@ -1,13 +1,13 @@
 ---
-title: "Learn first, CIS second"
+title: "CIS benchmarks: learn the box first"
 date: 2026-09-24
 tags:
   - infrastructure
   - security
-summary: "One ordered practitioner path for learning and copy-paste, then CIS benchmarks to trump your choices. That sequence is deliberate, not a compromise."
+summary: "I wanted one ordered home-server story before CIS PDFs trumped my choices. That learn-first, CIS-second sequence is deliberate, not a compromise."
 ---
 
-This post argues for learning Linux server hardening from one practitioner narrative first, then letting CIS benchmarks override anything that conflicts.
+When I started hardening a home Debian box, CIS distribution benchmarks and a dozen blog posts all looked authoritative and they disagreed on order. What helped was one practitioner narrative I could follow on a Saturday, then CIS as the override wherever it conflicted with what I had already shipped and understood. This post explains why that sequence stuck and how it differs from an audit-only path.
 
 Security guidance splinters across blog posts, distro wikis, and vendor PDFs; the home-server path I follow in this series exists because someone kept notes while building a Debian box and wanted **one** ordered story—SSH before firewall, shell snippets for config edits, backups before every file change, and a **Danger Zone** for sysctl you might break. It is also explicit about what it is not (not a Linux course, not physical security, not every LSM nuance—AppArmor and SELinux often sit in the "later" pile), because honest scope beats fake completeness.
 
@@ -46,15 +46,15 @@ I would not tell a compliance team "we read a long markdown doc." I would tell t
 | Risk tone | Calls out lockout and Danger Zone | Assumes change control |
 | Updates | Community edits over time | Versioned releases |
 
-When they disagree, CIS wins for policy. When CIS is silent on Docker publishing versus UFW, [Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) in this series still applies—benchmarks lag real stacks.
+When they disagree, CIS wins for policy. When CIS is silent on Docker publishing versus UFW, [Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) in this series still applies—benchmarks lag real stacks.
 
 ## Manual steps versus automation
 
-After you understand the moves, Ansible (or any config management) fights drift — covered in [Ansible after manual hardening](/me/blog/ansible-after-manual-hardening/).
+After you understand the moves, Ansible (or any config management) fights drift — covered in [Ansible: encode the hardening you already ran](/me/blog/ansible-after-manual-hardening/).
 
 Manual first is not Luddite. It is how you notice that `hidepid=2` broke something on your systemd version, or that your ISP blocks outbound SMTP. Automation encodes decisions you already tested.
 
 ## Sources
 
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-- Related: [Principles before packages on a Linux box](/me/blog/principles-before-packages-linux-server/), [Ansible after manual hardening](/me/blog/ansible-after-manual-hardening/)
+- Related: [Home Linux: principles before packages](/me/blog/principles-before-packages-linux-server/), [Ansible: encode the hardening you already ran](/me/blog/ansible-after-manual-hardening/)

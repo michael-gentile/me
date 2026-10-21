@@ -1,13 +1,13 @@
 ---
-title: "The nearest chunk is not the allowed chunk"
+title: "Vector RAG: the nearest chunk is not the allowed chunk"
 date: 2026-07-13
 tags:
   - ai
   - security
-summary: "Vector retrieval ranks by embedding geometry, so the closest chunk can be wrong or out of scope; ACL filters, citation requirements, and a similarity threshold belong in the application before you call the chat model."
+summary: "I kept seeing retrieve-then-generate pipelines return the closest embedding neighbor that was wrong, out of date, or private; this post is the ACL-before-similarity and citation checks I would ship first."
 ---
 
-Retrieve-then-generate is a search problem glued to a completion problem: you embed the question, embed the notes, take the nearest chunk, and ask the model to answer from it. Two different bugs hide in that one sentence—the first is geometric, because nearest in embedding space is not the same as true or on-topic, and the second is authorization, because nearest among all files on disk is not the same as nearest among chunks this caller may read. I wanted both failure modes on one page, with two files I might actually keep on a laptop.
+I built retrieve-then-generate notebooks until two failures kept showing up in the same pipeline: nearest in embedding space is not the same as true or on-topic, and nearest among all files on disk is not the same as nearest among chunks this caller may read. This post walks both bugs with small corpora I would actually keep on a laptop—paraphrase clusters, false friends like “bank”, and metadata ACLs applied before cosine, not after.
 
 ## Nearest is not true
 
@@ -115,4 +115,4 @@ You can still retrieve the wrong kitchen paragraph. You can still refuse a quest
 - [OpenAI embeddings](https://platform.openai.com/docs/guides/embeddings)
 - [LangChain: Q&A with RAG](https://python.langchain.com/docs/tutorials/rag/)
 - [OWASP LLM Top 10 — Sensitive Information Disclosure](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
-- Related: [A tiny policy assistant](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)
+- Related: [Policy CLI: a tiny assistant I would actually sketch](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)

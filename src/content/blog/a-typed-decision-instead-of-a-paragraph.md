@@ -1,5 +1,5 @@
 ---
-title: "A typed decision instead of a paragraph"
+title: "Jev: a typed decision instead of a paragraph"
 date: 2026-09-16
 tags:
   - ai

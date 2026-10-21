@@ -1,15 +1,15 @@
 ---
-title: "Docker and UFW are not your exposure map"
+title: "Docker: UFW is not your exposure map"
 date: 2026-09-22
 tags:
   - infrastructure
   - security
-summary: "When Docker publishes a container port, traffic is handled on FORWARD and Docker’s own chains, not on UFW’s INPUT rules. A green `ufw status` does not show every path the internet can use to reach your services."
+summary: "I denied 8080 in UFW and still reached nginx from another machine because Docker had published the port on FORWARD, not INPUT. A green `ufw status` is not a complete exposure map."
 ---
 
-Rootful Docker Engine publishes container ports by installing iptables or nftables rules for NAT and forwarding, so a packet to a published port is handled in Docker’s chains and the `FORWARD` path, while UFW mostly manages `INPUT`. That mismatch is why you can run `sudo ufw deny 8080/tcp`, see default deny on incoming, and still reach nginx on 8080 from another machine: Docker DNAT accepted the packet before your INPUT policy mattered. Any serious home-server hardening path spends real ink on Docker and UFW because the failure mode is quiet.
+I ran `sudo ufw deny 8080/tcp`, checked `ufw status`, saw default deny on incoming, and still reached nginx on 8080 from a laptop on another network after a routine `docker run --publish 8080:80`. Rootful Docker had installed NAT and forwarding rules so the packet hit Docker's chains and `FORWARD`, while UFW mostly manages `INPUT`, which meant my deny never sat on the path the traffic took. This post is the quiet failure mode every serious home-server hardening guide eventually spends ink on, and how I verify exposure without trusting the status line alone.
 
-I treat `sudo ufw status` like a dashboard widget—useful, not sufficient. The same class of mistake shows up when you trust similarity without an ACL: the control you looked at was never on the path the traffic took. I wrote about that for RAG in [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Here the retriever is your firewall status line and the leak is bridge networking.
+I treat `sudo ufw status` like a dashboard widget—useful, not sufficient. The same class of mistake shows up when you trust similarity without an ACL: the control you looked at was never on the path the traffic took. I wrote about that for RAG in [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/). Here the retriever is your firewall status line and the leak is bridge networking.
 
 ## What actually happens
 
@@ -64,4 +64,4 @@ If you run containers on the same machine that holds backups or SSH keys, this i
 ## Sources
 
 - Docker documentation on [packet filtering and Docker](https://docs.docker.com/engine/network/packet-filtering-firewalls/) (iptables/nftables interaction)
-- Related: [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
+- Related: [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)

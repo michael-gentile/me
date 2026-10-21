@@ -58,7 +58,7 @@ summary: "One or two sentences for the list."
 Body of the post.
 ```
 
-The filename becomes the URL slug. The frontmatter `title` should read as the same topic as that slug (no clever CTA that hides the subject). The first paragraph should state what the post is about in plain language before analogies or cross-post rhymes. Prefer longer, well-formed technical sentences over staccato fragments. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.webp` so they also work in the markdown alternate. Interactive Archify diagrams ship from `public/archify/` (source JSON under `.archify/`).
+The filename becomes the URL slug. Prefer a `Product: catchphrase` title that still matches that slug’s topic (e.g. `Tailscale: a private mesh for agent hosts`), not a clever CTA that hides the subject. Lead with discovery (“I found something interesting”) rather than a security sermon. The first paragraph should state what the post is about in plain language before analogies or cross-post rhymes. Prefer longer, well-formed technical sentences over staccato fragments. Screenshots live in `public/images/blog/` and are referenced as `/me/images/blog/filename.webp` so they also work in the markdown alternate. Interactive Archify diagrams ship from `public/archify/` (source JSON under `.archify/`).
 
 ## GitHub Pages
 

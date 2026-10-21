@@ -1,13 +1,13 @@
 ---
-title: "Controls I would require"
+title: "Notes assistant: a control matrix before the prompt"
 date: 2026-08-03
 tags:
   - ai
   - security
-summary: "For a retrieve-then-generate chatbot, draw trust boundaries and a control matrix before you invest in prompts. Three controls I would keep, plus honest residual risk in the table."
+summary: "A weekend notes-assistant sketch with a future send-email button on the whiteboard led me to a control matrix worth filling before prompt work. Three controls I would keep, plus honest residual risk in the table."
 ---
 
-Before you write more prompts for a retrieve-then-generate chatbot, draw the system’s trust boundaries and a control matrix the same way you would map data flow on a home box: who talks to what, where identity is enforced, and what must never be bound to the model. The prompt can wait until the picture has a place for the future send-email button.
+On a whiteboard I sketched a weekend notes assistant: signed-in user, question in, paragraphs pulled from a folder on disk, a hosted LLM API, formatted answer in the browser, and a dashed-line "send this summary by email" for later. That button is what made me stop before writing more prompts and lay out trust boundaries and a control matrix the way I map data flow on a home box: who talks to what, where identity is enforced, and what must never be bound to the model. The rest of this post walks through that picture and the table I would argue with before the prompt work continues.
 
 ## The toy, with boundaries
 
@@ -71,4 +71,4 @@ Gaps I wouldn't go live with: no retrieval ACL, `innerHTML` on the answer, and a
 
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [STRIDE threat modeling](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)
-- Related: [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [The webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)
+- Related: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)

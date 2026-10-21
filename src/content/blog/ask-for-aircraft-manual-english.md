@@ -1,5 +1,5 @@
 ---
-title: "Ask for aircraft-manual English"
+title: "ASD-STE100: ask for aircraft-manual English"
 date: 2026-10-02
 tags:
   - ai
@@ -94,4 +94,4 @@ For chat, the cheap experiment is still one sentence in the prompt. For agent pl
 - [Andrej Karpathy on X](https://x.com/karpathy/status/2105819303471976479) (ASD-STE100 tip and related output formats)
 - [ASD-STE100 / STEMG](https://asd-ste100.org/)
 - [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill)
-- Related: [Controls I would require](/me/blog/controls-i-would-require/)
+- Related: [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/)

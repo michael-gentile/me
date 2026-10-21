@@ -1,5 +1,5 @@
 ---
-title: "Prompt, context, harness, loop, graph"
+title: "Agent stack: prompt, context, harness, loop, graph"
 date: 2026-09-21
 tags:
   - ai
@@ -192,6 +192,6 @@ I still write prompts; I just stopped pretending the other four layers were adje
 
 ## Sources
 
-- Earlier notes on this site: [From matrices to a sampled token](/me/blog/from-matrices-to-a-sampled-token/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [The nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [A typed decision instead of a paragraph](/me/blog/a-typed-decision-instead-of-a-paragraph/)
+- Earlier notes on this site: [Transformers: from matrices to a sampled token](/me/blog/from-matrices-to-a-sampled-token/), [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), [Jev: a typed decision instead of a paragraph](/me/blog/a-typed-decision-instead-of-a-paragraph/)
 - Diogo Almeida, [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev), TypeSafe, 15 September 2026, for the workflow graph
 - Liu et al., [*Lost in the Middle*](https://arxiv.org/abs/2307.03172)

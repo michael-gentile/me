@@ -1,12 +1,12 @@
 ---
-title: "The model does not get send_email"
+title: "Tool calling: the model does not get send_email"
 date: 2026-07-28
 tags:
   - ai
-summary: "Tool-calling is the model emitting JSON. Your process decides whether to run it. Weather can pass a gate. Email and delete cannot, even if the model asked."
+summary: "I traced tool-calling until the only thing that actually runs HTTP is my process after JSON parse; this post is the allowlist gate that lets weather through and blocks email and delete even when the model asks."
 ---
 
-Tool-calling looks like the model emitting JSON, but your process decides whether anything runs—least privilege and approval live in *your* code because a sterner system prompt does not stop HTTP (OWASP's excessive-agency pattern). The tools in this write-up are mocked; nothing is sent or deleted.
+I treated tool-calling like magic until I traced what actually runs: the model only emits JSON, and my process either executes, blocks, or waits for a human—least privilege cannot live in a sterner system prompt alone (OWASP’s excessive-agency pattern). This post walks a minimal gate in Python with mocked tools so weather may pass while email and delete stop even when the model requests them, and why allowlists beat denylists for tool names your code will ever call. Nothing in this write-up is sent or deleted.
 
 ## The model proposes, the process disposes
 

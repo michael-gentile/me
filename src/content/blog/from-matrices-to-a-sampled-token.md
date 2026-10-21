@@ -1,5 +1,5 @@
 ---
-title: "From matrices to a sampled token"
+title: "Transformers: from matrices to a sampled token"
 date: 2026-08-13
 tags:
   - ai

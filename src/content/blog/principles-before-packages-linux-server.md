@@ -1,15 +1,15 @@
 ---
-title: "Principles before packages on a Linux box"
+title: "Home Linux: principles before packages"
 date: 2026-09-23
 tags:
   - infrastructure
   - security
-summary: "Before Fail2Ban or UFW on a home Linux box, name your threat model, recovery path, and how alerts leave the machine—the same opening move practitioner guides insist on."
+summary: "I kept reaching for Fail2Ban and UFW before I had named threat model, recovery, and how alerts leave a home Linux box. This post is the opening move practitioner guides insist on."
 ---
 
-Before you install Fail2Ban, UFW, or CrowdSec on a home Linux box, name your threat model, recovery path, and how alerts leave the machine—the same opening move the long practitioner guides insist on.
+I had already bookmarked Fail2Ban snippets and a UFW cheat sheet when I noticed I could not say why the box mattered, how I would get back in after a bad SSH edit, or whether security mail would ever leave the host. The long practitioner guides I trust all open on those sentences, not on package names, and this post collects the questions I wish I had answered before the first `apt install`.
 
-Copy-paste hardening is seductive: the guides are full of snippets for lazy editors, but tools without a model become performance art (you installed CrowdSec, you feel safer, and you might still never know the box was used as a relay). That line rhymes with enterprise breach stories—intrusion without vandalism, data copied, disk left unchanged—and the parallel to LLM work is not perfect, but the habit is the same as [Controls I would require](/me/blog/controls-i-would-require/): draw the picture before you buy the next control.
+Copy-paste hardening is seductive: the guides are full of snippets for lazy editors, but tools without a model become performance art (you installed CrowdSec, you feel safer, and you might still never know the box was used as a relay). That line rhymes with enterprise breach stories—intrusion without vandalism, data copied, disk left unchanged—and the parallel to LLM work is not perfect, but the habit is the same as [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/): draw the picture before you buy the next control.
 
 ## Questions to answer before you install anything
 
@@ -26,7 +26,7 @@ The classic home-lab use-case is deliberately narrow: desktop-class hardware, on
 
 Serious checklists insist the server must **send mail** (or another channel) for security alerts. Unattended upgrades, Fail2Ban, Lynis reports — they only help if someone reads them. Common paths are Exim4 with provider SMTP, or msmtp for relay-only setups.
 
-Same separation as [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/): the **process** must deliver signal. Here the process is cron, apticron, or Lynis attaching a report, not a chatbot calling an API. If outbound 587 is blocked on your VPS plan, fix that before you tune SSH ciphers. A silent host is a host that can rot.
+Same separation as [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/): the **process** must deliver signal. Here the process is cron, apticron, or Lynis attaching a report, not a chatbot calling an API. If outbound 587 is blocked on your VPS plan, fix that before you tune SSH ciphers. A silent host is a host that can rot.
 
 I would treat "test message arrives in my inbox" as a launch criterion, next to "I can SSH with keys."
 
@@ -47,10 +47,10 @@ Document the script. Test on a VM. If your real password and panic password diff
 1. Principles and recovery (including how you get back in if SSH changes go wrong).
 2. Outbound mail or another alert channel that works.
 3. SSH — keys, groups, hardening — with a second session open while you reload `sshd`.
-4. Updates and only then the network stack ([Docker and UFW are not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) if you publish ports).
+4. Updates and only then the network stack ([Docker: UFW is not your exposure map](/me/blog/docker-ufw-is-not-your-exposure-map/) if you publish ports).
 
 Packages come after the sentences you would put in a one-page threat model. The long guides stay long because Linux installs are rare; the principles section is short because it has to stick.
 
 ## Sources
 
-- Related: [Controls I would require](/me/blog/controls-i-would-require/), [The model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
+- Related: [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/), [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/)
