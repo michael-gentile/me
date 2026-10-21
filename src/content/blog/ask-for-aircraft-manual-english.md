@@ -6,11 +6,11 @@ tags:
 summary: "Karpathy's tip: explain it in ASD-STE100. Controlled English from aerospace manuals. Short sentences, one meaning per word, and why models often sound clearer under that constraint."
 ---
 
-This post is about asking models for **ASD-STE100**—aircraft-manual English—when you want explanations that are short, active, and hard to pad. [Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) posted a short list of ways to spend less time fighting model prose; the first tip is the one I kept: explain something in STE.
+Model explanations fail in the same way maintenance manuals used to: stacked clauses, synonyms for one object, and verbs buried where the reader has to guess whether "close" means shut or near. **ASD-STE100**—Simplified Technical English from aerospace documentation—is a public standard built to kill that ambiguity. [Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) listed ways to spend less time fighting model prose; the tip we kept is the first one: ask for STE.
 
-That is [Simplified Technical English](https://asd-ste100.org/), a controlled language built for aerospace maintenance documentation. Airlines needed manuals that readers with limited English could follow without guessing which meaning of "close" or "replace" the writer meant; the writing rules and dictionary are public from ASD. The hangar-floor goal was fewer misunderstandings, and the side effect for chat is prose with less room for hedging.
+Picture a hydraulic procedure or a tool schema another machine must parse. Airlines needed manuals readers with limited English could follow without guessing which meaning of "replace" the writer meant; the writing rules and dictionary are public from ASD. The hangar-floor goal was fewer misunderstandings. The side effect for chat is prose with less room for hedging. Below: what the spec actually contains, why LLMs often sound clearer under it, the "80%" dial, and a packaged skill for agent-facing English.
 
-## What the specification actually is
+## STE is rules plus a dictionary, not “write simply”
 
 STE is not "write simply." It has two parts:
 
@@ -34,7 +34,7 @@ A common before/after from STE teaching material looks like this:
   loading="lazy"
 />
 
-## Why this works well with LLMs
+## Controlled vocabulary removes homonym mush
 
 Models are good at sounding smart. They are also good at stacking clauses, swapping synonyms for the same object, and burying the action in the middle of a sentence. STE fights that style by construction.
 
@@ -44,9 +44,9 @@ Models are good at sounding smart. They are also good at stacking clauses, swapp
 
 **Active, named actors.** "Make sure… before you start…" puts the doer and the action up front. That is easier to scan than "it is imperative that…"
 
-Karpathy's claim is practical: models have seen enough of this style in training that they can imitate it, and he finds the result more readable. I buy the readability part. I would not claim the output is certified STE. Without the real dictionary open as a lookup, you get **STE-flavored** English — short, imperative, consistent-ish — not a compliance pass.
+Karpathy's claim is practical: models have seen enough of this style in training that they can imitate it, and he finds the result more readable. We buy the readability part. We would not claim the output is certified STE. Without the real dictionary open as a lookup, you get **STE-flavored** English — short, imperative, consistent-ish — not a compliance pass.
 
-## The "80%" dial
+## “80% STE” is a style knob, not an ASD score
 
 The full specification is harsh for everyday chat. Karpathy sometimes asks for **"80% of the way to ASD-STE100"** so the tone softens without inviting the usual essay voice back in. That percentage is a style knob, not a score from ASD.
 
@@ -62,7 +62,7 @@ Prefer common words. Avoid filler and stacked clauses.
 
 If the topic is not a procedure, ask for descriptive STE limits instead of fake command lists.
 
-## A skill for agent-facing English
+## Agent plumbing needs the same discipline as the hangar
 
 Karpathy's tip is a prompt. [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill) turns the same idea into a Claude Code skill aimed at text another machine has to parse: tool descriptions, error messages, system prompts, instructions between agents. Their analogy matches the hangar: no human on the line to ask "did you mean X or Y?"
 
@@ -83,9 +83,9 @@ Or clone into `~/.claude/skills/` if you want a live checkout. Ask it to disambi
 
 One line from their boundaries is worth keeping next to any STE prompt: short and empty is still empty. The form got fixed. The substance did not.
 
-## Where it sits in his ladder
+## STE is the first rung on a longer output ladder
 
-Writing is only the first rung in that post. He prefers diagrams when a figure would parse faster, HTML when interactivity helps, and custom explainer videos when the topic needs motion. The shared idea is the same as the STE tip: change the packaging of understanding, because more of the job is reviewing what the model produced.
+Writing is only the first rung in Karpathy's post. He prefers diagrams when a figure would parse faster, HTML when interactivity helps, and custom explainer videos when the topic needs motion. The shared idea is the same as the STE tip: change the packaging of understanding, because more of the job is reviewing what the model produced.
 
 For chat, the cheap experiment is still one sentence in the prompt. For agent plumbing — tool schemas, error strings, handoffs — the skill is the packaged version of that ask, with modes that admit when dictionary compliance is out of reach.
 

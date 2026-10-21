@@ -6,13 +6,13 @@ tags:
 summary: "Muse, OpenClaw, and Grok Bot all give an agent a computer. What if that computer lived in your cloud, under SSO, with connectors to your systems? A conceptual sketch of Eddy—and what security would have to look like."
 ---
 
-Eddy is a conceptual sketch of an enterprise personal agent: same product shape as Muse or Grok Bot—a dedicated computer per staffer—but the VM lives in your cloud, under SSO, with connectors scoped to your systems. There is no product; the name is a stand-in for “each staffer gets a named agent under our control.”
+Every enterprise that watches Muse or Grok Bot eventually asks the same question: if each staffer gets a dedicated agent computer, why does that computer have to live in a vendor’s cloud with connectors we cannot fully scope? Consumer agents proved the shape—chat, harness, browser, tools—but the hard part is Jordan in operations drafting a ServiceNow ticket without Riley in finance’s payroll note ever entering the retrieval set. **Eddy** is a conceptual sketch for that answer: one named agent per Entra identity, VM in *your* cloud, SSO on the way in, connectors that act as the user with a strict subset of permissions.
 
-I wrote about [Muse and the personal-agent pattern](/me/blog/muse-and-the-personal-agent/) after Meta shipped a consumer agent with a dedicated cloud VM; this note picks up the enterprise question (your identity, your systems). To keep ACL questions concrete I invent two roles—Jordan in operations and Riley in finance—so a draft ticket for Jordan must never pull Riley’s payroll note. The architecture is assembled from how Muse, OpenClaw, and Grok Bot actually work, plus the enterprise “secure agent workspace” pattern vendors publish for one VM per user. Staff already live in Teams, email, ServiceNow, and SharePoint; many shops have Azure or VMware capacity sitting warm. Consumer agents proved the shape; the hard part is wiring Jordan an Eddy that can draft a ticket without ever reading Riley’s payroll note.
+Picture Jordan in Teams asking Eddy to turn a thread into a draft ticket, while Riley’s Eddy never sees finance APIs beyond what Riley’s groups allow. We wrote about the consumer pattern in Muse’s per-user VM; this note is the enterprise wiring—your identity, your systems, your kill switch. Staff already live in Teams, email, ServiceNow, and SharePoint; many shops have Azure or VMware capacity sitting warm. Below: the loop every product shares, how Eddy would differ from Muse, OpenClaw, and Grok Bot, what spinning a VM per user looks like, controls that have to exist before a pilot, and jobs worth trying first.
 
-## How these systems work
+## One loop hides behind every brand
 
-Strip the brands and you get one loop:
+Strip the logos and the architecture repeats:
 
 ```text
   chat (Teams / Slack / app)
@@ -29,7 +29,7 @@ Strip the brands and you get one loop:
   approval / review agent (before risky egress)
 ```
 
-The model samples the next step. The harness decides whether a tool runs. The computer is where browsing and files happen. Connectors reach real systems. A separate review path—Sentinel on Muse, Auto-review on Grok Bot, your allowlists on OpenClaw—owns send/buy/delete-class actions. That split matches [the model does not get send_email](/me/blog/the-model-does-not-get-send-email/): the model proposes; the process disposes.
+The model samples the next step. The harness decides whether a tool runs. The computer is where browsing and files happen. Connectors reach real systems. A separate review path—Sentinel on Muse, Auto-review on Grok Bot, allowlists on OpenClaw—owns send, buy, and delete-class actions. The model proposes; the process disposes.
 
 | | Muse | OpenClaw | Grok Bot |
 | --- | --- | --- | --- |
@@ -38,13 +38,13 @@ The model samples the next step. The harness decides whether a tool runs. The co
 | Gate | Sentinel + credential surrogates | Allowlists, sandbox, operator policy | Auto-review + allow/block lists |
 | Enterprise today | Consumer product + connectors | Self-host; one trust boundary per Gateway | Teams/Enterprise: SSO, SCIM, network controls, recording; no customer-owned VM |
 
-Muse proved per-user isolation at consumer scale. OpenClaw is honest that one Gateway is one trust boundary—hostile multi-tenancy means separate cells, not a shared agent. Grok Bot brings team admin knobs (SSO, SCIM, Network Controls, action recording) while the computer still lives in someone else’s cloud. Eddy is the thought experiment where the computer is *yours*.
+Muse proved per-user isolation at consumer scale. OpenClaw is explicit that one Gateway is one trust boundary—hostile multi-tenancy means separate cells, not a shared agent. Grok Bot adds team admin knobs (SSO, SCIM, Network Controls, action recording) while the computer still lives in someone else’s cloud. Eddy is the thought experiment where the computer is yours.
 
-## Meet Eddy
+## Eddy is one agent per identity, not one bot for the company
 
 Eddy is Jordan’s agent, and Riley’s, and every other staffer’s—**one Eddy per Entra identity**, not one shared bot for the whole corporation. Jordan talks to Eddy in Teams the way people talk to Muse in WhatsApp. Eddy has a persistent workspace on a VM the org provisions. An org policy pack lands in that workspace (allowed tools, tone, citation rules, “never invent policy”). Jordan can add prefs. Optional specialist sub-agents under the same user computer—inbox triage, ServiceNow drafts—get tighter tool allowlists, same idea as Grok Bot’s specialist Bots sharing one box.
 
-Connectors I’d wire first, all scoped by group membership the app looks up after SSO:
+Connectors we would wire first, all scoped by group membership the app looks up after SSO:
 
 - Exchange / Graph mail and calendar (read by default; send behind approval)
 - SharePoint / OneDrive sites the user’s groups already grant
@@ -54,9 +54,9 @@ Connectors I’d wire first, all scoped by group membership the app looks up aft
 
 Eddy does not get a standing “IT admin” identity. Eddy acts as Jordan, with a **subset** of Jordan’s permissions, enforced at the connector proxy—not as a sentence in a system prompt.
 
-## Spinning a VM per user
+## The lifecycle is the product, not the idle VM
 
-Idle cloud capacity is the substrate. The lifecycle is the product.
+Idle cloud capacity is the substrate. What staff experience is provision, wake, and teardown:
 
 ```text
   first Teams message to Eddy
@@ -88,13 +88,11 @@ Idle cloud capacity is the substrate. The lifecycle is the product.
 
 **Secrets.** Vault or Key Vault holds Graph tokens and API keys. A credential proxy on the egress path swaps surrogates for real credentials after the review agent allows the call—same idea as Muse’s authd/Sentinel split. The runtime cell never sees the real token, so a prompt-injected “exfiltrate my OAuth secret” has nothing to steal.
 
-**Persistence.** I would default Eddy to a **persistent per-user** home disk so memory compounds (how Muse and Grok Bot feel useful), with hibernate for cost. Ephemeral-per-session VMs are the stricter residual-risk option when the threat model hates durable agent state. Say which one you picked when you write the threat model down.
+**Persistence.** We would default Eddy to a **persistent per-user** home disk so memory compounds (how Muse and Grok Bot feel useful), with hibernate for cost. Ephemeral-per-session VMs are the stricter residual-risk option when the threat model hates durable agent state. Say which one you picked when you write the threat model down.
 
 **Kill switch.** SSO revoke drops the broker session. Control plane can power off or wipe the VM in an incident. Drill it once before go-live.
 
-## Security and data protection
-
-Here’s a table I can argue with.
+## Controls have to survive a table argument
 
 | Control | What it actually does | Residual risk |
 | --- | --- | --- |
@@ -109,13 +107,13 @@ Here’s a table I can argue with.
 | Routed inference to approved endpoints | Residencies and “which model saw this” are answerable | Shadow connectors if someone pastes into a public chat UI |
 | SIEM of proposals, approvals, tool calls | You can explain a bad Tuesday | Logs become a sensitive store; retention vs eDiscovery |
 
-Prompt injection through email and SharePoint is the enterprise version of [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/): once Eddy can click and send, every message it reads is untrusted input. Credential surrogates and approval gates reduce blast radius but do not make the model “safe”—architecture does.
+Prompt injection through email and SharePoint is the enterprise version of treating every message Eddy reads as untrusted input: once Eddy can click and send, architecture—not a stern system prompt—owns the blast radius. Credential surrogates and approval gates reduce damage but do not make the model “safe.”
 
 Over-broad Graph consent is how pilots die quietly. If the connector asks for `Mail.ReadWrite` across the tenant when Jordan only needed drafts in one mailbox, you have built a lateral-move machine with a friendly name.
 
-## Where Eddy would actually help
+## A pilot should prove audience boundaries, not demos
 
-Concrete jobs I’d want in a pilot, all gated:
+Concrete jobs we would want in a pilot, all gated:
 
 - Draft a ServiceNow ticket from a Teams thread, with a link back to the messages, and wait for Jordan to hit publish.
 - Pull a brief from SharePoint sites Jordan’s group can already read; refuse sites outside that ACL; cite document IDs.
@@ -125,9 +123,9 @@ Concrete jobs I’d want in a pilot, all gated:
 
 The upside is cutting the latency of busywork, and every workspace carrying the same org policy pack. Judgment stays with the human. Eddy does not run the company. Eddy is a staffer-shaped computer that already knows which SharePoint sites Jordan may touch, if you wired the ACL correctly.
 
-A single shared corporate bot is the wrong default. Shared state plus tool authority across operations and finance collapses the audience boundary the shared/private walk-through keeps teaching. One Eddy per identity keeps the blast radius mapped to a person you can offboard.
+A single shared corporate bot is the wrong default. Shared state plus tool authority across operations and finance collapses the audience boundary the Jordan/Riley walk-through keeps teaching. One Eddy per identity keeps the blast radius mapped to a person you can offboard.
 
-## What I would require before a pilot
+## We would not turn the key without this checklist
 
 1. Per-user VM (or equivalent strong isolation), gold image, hibernate, SCIM destroy.
 2. Credential proxy; no long-lived secrets in the runtime cell.
@@ -137,7 +135,7 @@ A single shared corporate bot is the wrong default. Shared state plus tool autho
 6. Frozen eval set: Jordan cannot retrieve finance payroll; Riley can; injection in a fake email does not fire a send.
 7. SIEM fields for who approved what, and a kill switch drill once before go-live.
 
-If I were to guess, Microsoft is likely cooking something up very similar to Muse or Grok Bot, but for their enterprise Copilot product.
+If we were to guess, Microsoft is likely cooking something very similar to Muse or Grok Bot, but for their enterprise Copilot product.
 
 ## Sources
 
@@ -146,4 +144,4 @@ If I were to guess, Microsoft is likely cooking something up very similar to Mus
 - [OpenClaw security](https://docs.openclaw.ai/gateway/security) and [multi-tenant hosting](https://docs.openclaw.ai/gateway/multi-tenant-hosting)
 - [Grok Bot overview](https://docs.x.ai/grok-bot/overview), [security](https://cursor.com/docs/grok-bot/security), [Teams and Enterprise](https://cursor.com/docs/grok-bot/teams)
 - [NVIDIA Secure Agent Workspace reference architecture](https://docs.nvidia.com/enterprise-reference-architectures/secure-agent-workspace-reference-design/latest/reference-architecture.html)
-- Earlier notes: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/), [Policy CLI: a tiny assistant I would actually sketch](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)
+- Related: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Prompt injection: the webpage is untrusted input](/me/blog/the-webpage-is-untrusted-input/), [Notes assistant: a control matrix before the prompt](/me/blog/controls-i-would-require/)

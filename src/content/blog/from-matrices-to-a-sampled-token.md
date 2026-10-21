@@ -6,9 +6,9 @@ tags:
 summary: "Tokens and matrices, pretraining, SFT and preference, adapters versus prompts, then inference with a KV cache and speculative decoding. Same job the whole way: next-token prediction."
 ---
 
-This post walks the stack under product talk about “AI”: what a GPT-style model *is* (tokens and matrices), how weights get there (pretraining, SFT, preference), what “tuning” actually changes, and what happens at inference—including the KV cache and speculative decoding that make coding assistants feel instant. When I read a vendor write-up, I want to know which of those layers they are actually selling.
+Every vendor slide that says “the AI knows your notes” hides a stack: a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). When we read a write-up, we want to know which layer they are actually selling—and where policy has to live if guests must never see private chunks.
 
-Three different things get sold as "AI": a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). The slide that names the model is naming one layer; the threat model lives in the application and the UI. The whole stack is still one job—predict the next token—and everything else is how you get that prediction and what you wrap around it.
+The whole stack is still one job—predict the next token—and everything else is how you get that prediction and what you wrap around it. Below: tokens and matrices, pretraining, post-training (SFT and preference), what “tuning” actually moves, inference with KV cache, and speculative decoding—the tricks that make coding assistants feel instant.
 
 ```text
 text → tokens → vectors → transformer blocks
@@ -16,34 +16,36 @@ text → tokens → vectors → transformer blocks
          embeddings, QKV, MLP: matrices
 ```
 
-## Tokens, then matrices
+## Text becomes token IDs, then rows of matrices
 
-Text isn't what the network sees. A tokenizer chops a string into integer IDs from a fixed vocabulary, and those IDs index **rows of an embedding matrix**: vocab size by hidden size. Token `42` isn't the word "the." It's row 42, which is already enough to stop talking as if the model were reading English.
+Text is not what the network sees. A tokenizer chops a string into integer IDs from a fixed vocabulary, and those IDs index **rows of an embedding matrix**: vocab size by hidden size. Token `42` is not the word "the." It is row 42, which is enough to stop talking as if the model were reading English.
 
 Limits written in **words** or **characters** are the wrong unit. Context windows, cost, and rate limits are token-shaped. A "short" prompt full of URLs, code, or accented French can spend a paragraph of budget. Domain jargon that is rare on the open web often splits into extra pieces. Enforce length with the **same tokenizer the model uses**.
 
 From there, almost every learned piece is a matrix multiply plus a nonlinearity:
 
-- **Attention.** Each token's vector is projected into queries, keys, and values (`Q`, `K`, `V`). Scores are `Q Kᵀ` (scaled, masked so you can't look into the future during training), then softmax, then a weighted sum of `V`. Several heads do this in parallel and concatenate. "Attention" means tokens in the window mixing information with other tokens in the window. It doesn't mean the model's paying attention to you, or to the note you meant, or to the question you typed.
+- **Attention.** Each token's vector is projected into queries, keys, and values (`Q`, `K`, `V`). Scores are `Q Kᵀ` (scaled, masked so you can't look into the future during training), then softmax, then a weighted sum of `V`. Several heads do this in parallel and concatenate. "Attention" means tokens in the window mixing information with other tokens in the window. It does not mean the model is paying attention to you, or to the note you meant, or to the question you typed.
 - **MLP / feed-forward.** A bigger matrix (expand), a nonlinearity, a matrix back down to the residual width. This is most of the parameter count in a typical block.
 - **Residual stream.** Each sub-layer adds its output back onto the incoming vector. That highway is why you can stack 12 or 96 of the same block without the signal dying.
 - **Unembedding.** A last matrix maps the final vector to one score per vocabulary item. Softmax turns those scores into a probability distribution over the next token.
 
-GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It doesn't change the job, and it doesn't give you a roommate who knows this week's note.
+GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It does not change the job, and it does not give you a roommate who knows this week's note.
 
-I'd stop treating "the model" as a person and start treating it as stacked linear maps over a token window—you do not need the derivation for that, but you do need it so "tune the model" and "fetch the PDF" do not end up as the same sentence in your notes.
+We treat "the model" as stacked linear maps over a token window—not as a person—so "tune the model" and "fetch the PDF" do not end up as the same sentence in design notes.
 
-## Pretraining
+## Pretraining is next-token prediction on a crawl
 
 Pretraining is next-token prediction on a huge text crawl. Show the model tokens 1…t, ask it for token t+1, measure how wrong the distribution was (cross-entropy), push the matrices a little with backpropagation, and repeat.
 
-That's where most of the "knowledge" texture comes from: statistics of how tokens followed other tokens in the crawl. There's no live database in there. A note you wrote last Tuesday isn't in the weights unless it was in the data, or someone put it in later, which is why pasting last Tuesday's PDF is a retrieval job, not a training job.
+That is where most of the "knowledge" texture comes from: statistics of how tokens followed other tokens in the crawl. **Cross-entropy** is the usual loss name: for each position the model outputs a probability over the whole vocabulary, and the loss penalizes low probability on the token that actually came next (log loss averaged over positions). Lower cross-entropy means better next-token guesses on the training distribution—not truthfulness, safety, or knowing your private notes.
 
-Compute is the scarce resource. Data mix, sequence length, and batch size are the product decisions. The loss going down isn't the same as the model becoming a reliable note-taker.
+There is no live database in there. A note you wrote last Tuesday is not in the weights unless it was in the data, or someone put it in later—which is why pasting last Tuesday's PDF is a retrieval job, not a training job.
 
-## Post-training: SFT, then preference
+Compute is the scarce resource. Data mix, sequence length, and batch size are the product decisions. The loss going down is not the same as the model becoming a reliable note-taker.
 
-A base model completes internet-shaped text. A chat product needs to follow instructions, refuse some classes of request, and sound like an assistant. That's a second training stage, still next-token prediction, on a different distribution.
+## Chat behavior comes from SFT, then preference
+
+A base model completes internet-shaped text. A chat product needs to follow instructions, refuse some classes of request, and sound like an assistant. That is a second training stage, still next-token prediction, on a different distribution.
 
 **Supervised fine-tuning (SFT).** Human-written (or distilled) prompt-response pairs. The model is trained to emit the response tokens given the prompt tokens. This is ordinary supervised learning. It teaches format and the *habit* of answering, which is why a kitchen assistant sounds like an assistant even when it invents a citation.
 
@@ -53,24 +55,24 @@ A base model completes internet-shaped text. A chat product needs to follow inst
 - **DPO** and cousins skip the explicit RL loop. They train on preferred vs rejected pairs as a classification-shaped objective over the same policy. Same intent: move probability mass toward answers people (or a judge) liked.
 - **RLAIF** swaps human raters for a model judge. Cheaper. The judge's biases become the policy's biases.
 
-This stage changes style, refusal texture, and how often the model emits tool-call JSON. It doesn't install a boundary between instructions and data. The network is still sampling tokens, so a fluent refusal in the SFT data is a style, not a gate in front of `send_email`.
+This stage changes style, refusal texture, and how often the model emits tool-call JSON. It does not install a boundary between instructions and data. The network is still sampling tokens, so a fluent refusal in the SFT data is a style, not a gate in front of `send_email`.
 
-## "Tuning" is several different jobs
+## “Tuning” names four different interventions
 
 People say "we will tune the model" when they mean four different interventions. Only one of them writes new weights into the base network.
 
-| They said | What actually moves | When I would use it |
+| They said | What actually moves | When we would use it |
 | --- | --- | --- |
 | Full fine-tune | All (or most) weights | You own the training stack and have a large, clean domain corpus |
 | LoRA / adapters | Small low-rank matrices beside frozen weights | Domain style or format; you still want the base model intact |
 | System prompt / few-shot | No weights. Tokens prepended at inference | Instructions, tone, output schema. Weak if it is the only control |
 | Retrieval / tools | No weights. Extra tokens and an application loop | Facts that change, documents with ACLs, actions that need a gate |
 
-LoRA is the one worth naming. Freeze the pretrained matrices, learn a pair of thin matrices whose product is added into selected layers, and you ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights. I'd reach for that when the need is domain style or a format the base model keeps missing, and I'd still want the shared/private split in the application, because an adapter doesn't know who the caller is.
+LoRA is the one worth naming. Freeze the pretrained matrices, learn a pair of thin matrices whose product is added into selected layers, and you ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights. We reach for that when the need is domain style or a format the base model keeps missing, and we still want the shared/private split in the application, because an adapter does not know who the caller is.
 
-A prompt isn't tuning. Retrieval isn't tuning. Both are the application layer. Mixing them up is how a notebook says "fine-tune" when the need was "fetch the current PDF and don't let guests retrieve private household notes."
+A prompt is not tuning. Retrieval is not tuning. Both are the application layer. Mixing them up is how a notebook says "fine-tune" when the need was "fetch the current PDF and don't let guests retrieve private household notes."
 
-## Inference: prefill, decode, sample
+## Serving a turn is prefill, then sequential decode
 
 Training is batched and parallel over the sequence (with a causal mask). Serving a chat turn is mostly sequential.
 
@@ -79,11 +81,11 @@ Training is batched and parallel over the sequence (with a causal mask). Serving
 3. **Decode.** For each new token: one forward pass that only needs the new query against the cached keys/values, then sample, then append. Repeat until an end token, a stop string, or `max_tokens`.
 4. **Detokenize** into text (or into tool-call JSON your process may refuse to execute).
 
-Sampling is a draw from the softmax distribution. Temperature stretches it (`softmax(logits / T)`). Top-p cuts the tail. Temperature 0 is "take the argmax," and vendors still aren't always bit-identical. Pin model id, temperature, top-p, and whether `seed` is honoured next to every recorded answer. Don't call the knob creativity, especially not on a yes/no question from your notes. If you need one answer, set temperature to 0, constrain the schema, and still treat the string as untrusted.
+Sampling is a draw from the softmax distribution. Temperature stretches it (`softmax(logits / T)`). Top-p cuts the tail. Temperature 0 is "take the argmax," and vendors still are not always bit-identical. Pin model id, temperature, top-p, and whether `seed` is honoured next to every recorded answer. Do not call the knob creativity, especially not on a yes/no question from your notes. If you need one answer, set temperature to 0, constrain the schema, and still treat the string as untrusted.
 
-The KV cache is why "just paste the whole PDF" is a cost and latency problem, not only a quality problem. You pay prefill on every new prompt that isn't a prefix of the last one. Prefix caching helps when the system prompt is stable. It doesn't make an unbounded dump a retrieval strategy, and it doesn't make the middle of a 200-page handbook more likely to show up in the answer. [Lost in the Middle](https://arxiv.org/abs/2307.03172) is the documented failure mode: facts buried mid-window get retrieved less often than facts at the start or end. Chunk, retrieve, cite. If the fact has to be used, put it where the model actually looks.
+The KV cache is why "just paste the whole PDF" is a cost and latency problem, not only a quality problem. You pay prefill on every new prompt that is not a prefix of the last one. Prefix caching helps when the system prompt is stable. It does not make an unbounded dump a retrieval strategy, and it does not make the middle of a 200-page handbook more likely to show up in the answer. [Lost in the Middle](https://arxiv.org/abs/2307.03172) is the documented failure mode: facts buried mid-window get retrieved less often than facts at the start or end. Chunk, retrieve, cite. If the fact has to be used, put it where the model actually looks.
 
-## Speculative decoding
+## Speculative decoding buys latency, not truth
 
 Autoregressive decode is slow because each token waits on a full forward pass of the large model. **Speculative decoding** (the name in the papers; people say "speculative coding" when the product is a coding assistant) splits the work:
 
@@ -91,15 +93,15 @@ Autoregressive decode is slow because each token waits on a full forward pass of
 - The **large model** checks those tokens in one parallel pass over the draft.
 - Accept the prefix that matches what the large model would have sampled. Reject at the first mismatch, sample a real token there, and draft again.
 
-The user-visible stream is still from the large model's distribution if the accept/reject rule is right. You're buying latency, not a different personality. When the draft is good (boilerplate, obvious syntax, the next line of a function the model has already started), accept rates are high and the assistant feels instant. When the next token is genuinely uncertain, the draft is waste and you fall back to ordinary decode.
+The user-visible stream is still from the large model's distribution if the accept/reject rule is right. You are buying latency, not a different personality. When the draft is good (boilerplate, obvious syntax, the next line of a function the model has already started), accept rates are high and the assistant feels instant. When the next token is genuinely uncertain, the draft is waste and you fall back to ordinary decode.
 
-That's why Copilot can feel instant on the rest of a `for` loop: code is locally predictable, brackets and identifiers and the next line, so the cheap draft survives the check. Some stacks also speculate on the next *edit* or tool call and throw it away if the user types something else. Same shape. Cheap proposal, expensive check. It still doesn't make the answer more true, and it doesn't make a fake citation real.
+That is why Copilot can feel instant on the rest of a `for` loop: code is locally predictable, brackets and identifiers and the next line, so the cheap draft survives the check. Some stacks also speculate on the next *edit* or tool call and throw it away if the user types something else. Same shape. Cheap proposal, expensive check. It still does not make the answer more true, and it does not make a fake citation real.
 
-## Layers
+## Policy lives in the application layer
 
 If you can point at which layer a vendor is selling (matrices, a pretrained checkpoint, an SFT/preference recipe, an adapter, a prompt, a retriever, a decode-time trick), you can stop arguing with the word "AI" and start arguing about which layer you actually need.
 
-The model is the matrices and the loop that samples from them. The product is everything around that loop. The application is still where policy lives, which is the layer that decides whether guests ever see private chunks. When a slide says "the AI knows your notes," ask which layer they mean. If they mean the weights, last Tuesday's note isn't in there unless it was in the crawl. If they mean retrieval, that's the application: which files, which ACL, which citation.
+The model is the matrices and the loop that samples from them. The product is everything around that loop. The application is still where policy lives—the layer that decides whether guests ever see private chunks. When a slide says "the AI knows your notes," ask which layer they mean. If they mean the weights, last Tuesday's note is not in there unless it was in the crawl. If they mean retrieval, that is the application: which files, which ACL, which citation.
 
 ## Sources
 
@@ -113,4 +115,4 @@ The model is the matrices and the loop that samples from them. The product is ev
 - Leviathan, Kalman, and Matias, [*Fast Inference from Transformers via Speculative Decoding*](https://arxiv.org/abs/2211.17192)
 - Liu et al., [*Lost in the Middle*](https://arxiv.org/abs/2307.03172)
 - [OpenAI: temperature and top_p](https://platform.openai.com/docs/api-reference/chat/create)
-
+- Related: [Tool calling: the model does not get send_email](/me/blog/the-model-does-not-get-send-email/), [Vector RAG: the nearest chunk is not the allowed chunk](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/)

@@ -6,15 +6,15 @@ tags:
 summary: "Vercel Labs' scriptc turns a typed TypeScript file into a standalone binary. Coverage tells you when you're still dragging a JS engine along."
 ---
 
-[scriptc](https://github.com/vercel-labs/scriptc) is Vercel Labs' experimental compiler for turning a typed TypeScript file into a single native binary (or a WASI module) without a Node runtime in the deliverable. That is the packaging story I care about for small CLIs. The pain it targets is familiar: I keep useful TypeScript scripts that only become awkward when someone else has to run them. Install Node. Match the version. `npm install`. Hope `node_modules` survives the flight. For a ten-line helper, that tax is silly.
+Every useful TypeScript helper eventually becomes someone else's install chore: match Node, run `npm install`, hope `node_modules` survives the jump box. For a ten-line CLI that tax is silly—the script was fine on the laptop that wrote it. [scriptc](https://github.com/vercel-labs/scriptc) is Vercel Labs' experimental compiler that turns a typed TypeScript file into a single native binary (or a WASI module) with no Node runtime in the deliverable. On a fully static program there is no Node process and no embedded JavaScript engine at runtime.
 
-On a fully static program, there is no Node process and no embedded JavaScript engine at runtime.
+**Ahead-of-time (AOT) compilation**, here, means JavaScript semantics are lowered to native code before you ship, subject to scriptc's supported subset. **Dynamic remainder** is whatever the `coverage` report marks as needing the embedded **quickjs-ng** engine when you pass `--dynamic`. **Fully static** means 100% of analyzed statements compile without that engine—the binary you hand someone does not spawn V8 or Node.
 
-I am not rewriting a web app in this. I am asking whether the next small CLI can leave the house as `./tool`.
+Picture handing a colleague `./tool` instead of a README that starts with "install Node 24." That is the packaging story here—not rewriting a web app, just asking whether the next small CLI can leave the house as a binary.
 
-## A hello that becomes a binary
+## A hello that becomes an artifact
 
-Their docs start with the obvious program. I ran the same shape locally:
+The docs start with the obvious program. The same shape runs locally:
 
 ```ts
 const who: string = process.argv.length > 2 ? process.argv[2] : "world";
@@ -34,15 +34,47 @@ $ ./hello scriptc
 hello, scriptc
 ```
 
-On my Mac that `hello` landed around 380 KB. You need a platform linker and SDK for executable builds (Xcode Command Line Tools on macOS). Install still wants Node 24+ for the npm package; the *output* does not.
+On macOS that `hello` landed around 380 KB. Executable builds need a platform linker and SDK (Xcode Command Line Tools on macOS). The npm package still wants Node 24+ for install; the *output* does not.
 
-`scriptc run hello.ts` compiles and executes in one step if you do not care about keeping the binary.
+`scriptc run hello.ts` compiles and executes in one step when keeping the binary is optional.
 
-## Coverage before you get attached
+### Worked example: argv, stdout, exit code
 
-The part I care about more than the hello is `scriptc coverage`. It answers a product question: how much of *this* file goes native, and what still needs a JS engine?
+A slightly less trivial CLI might parse a flag and read a file:
 
-Import something from npm, like `picocolors`, and the report changes:
+```ts
+import { readFileSync } from "node:fs";
+
+const path = process.argv[2];
+if (!path) {
+  console.error("usage: checksum-file <path>");
+  process.exit(1);
+}
+const buf = readFileSync(path);
+console.log(buf.length);
+```
+
+Run `npx scriptc coverage checksum-file.ts` before you assume it is static. File I/O and `process.exit` are common in CLIs; scriptc's compatibility tables say whether each API is native or forces dynamic sites. If coverage reports dynamic imports or unsupported builtins, you decide: shrink the program, patch around the gap, or accept `--dynamic` and a larger binary.
+
+Verification on the artifact:
+
+```console
+$ npx scriptc build checksum-file.ts -o checksum-file
+$ ./checksum-file
+usage: checksum-file <path>
+$ echo $? 
+1
+$ ./checksum-file ./hello.ts
+<number of bytes>
+```
+
+Ship the binary to a machine without Node. Re-run the same commands. If behavior diverges, you are still relying on dynamic islands or platform-specific paths—coverage and a clean static build are the goal.
+
+## Coverage answers how much still needs a JS engine
+
+The product question is not "can it build?" but "how much of *this* file goes native, and what remains dynamic?"
+
+Import something from npm—`picocolors`—and the report shifts:
 
 ```console
 $ npx scriptc coverage cli.ts
@@ -54,25 +86,49 @@ $ npx scriptc coverage cli.ts
       ×1  importing 'picocolors' requires the embedded dynamic engine ...  SC2013
 ```
 
-`--dynamic` embeds [quickjs-ng](https://github.com/quickjs-ng/quickjs) and packages the dependency's JavaScript into the binary so you are not reading `node_modules` at runtime. With `--dynamic`, coverage on that same file said it could build; the sites become "islands" the engine runs.
+`--dynamic` embeds [quickjs-ng](https://github.com/quickjs-ng/quickjs) and packages the dependency's JavaScript into the binary so nothing reads `node_modules` at runtime. With `--dynamic`, coverage on that file still allows a build; the sites become islands the engine runs.
 
-That first build of the embedded engine wanted CMake on my PATH. Static `hello` did not. The docs are clear that enabling `--dynamic` also does not magically support every API the static compiler refuses. Unsupported stays unsupported; you get an `SC` diagnostic, not a shrug at runtime.
+The first build of the embedded engine wanted CMake on PATH; static `hello` did not. Enabling `--dynamic` does not magically support every API the static compiler refuses—unsupported stays unsupported with an `SC` diagnostic, not a shrug at runtime.
 
-So the workflow I would actually use is boring: write the tool, run coverage, decide whether `--dynamic` is acceptable, then build.
+The workflow that survives contact with reality: write the tool, run coverage, decide whether `--dynamic` is acceptable, then build.
 
-## When I would reach for it
+### Reading SC diagnostics
+
+**SC** codes are scriptc's static analysis errors: unsupported syntax, unknown globals, imports that cannot be bundled statically. Treat them like TypeScript errors—fix or redesign. Do not `--dynamic` your way past an API the project explicitly does not implement; the limitations doc is the boundary.
+
+A practical rule: if dynamic sites cluster around one npm package, try inlining the ten lines you actually use (colors, a tiny parser) before embedding quickjs for all of `lodash`.
+
+## When scriptc earns a slot in the toolbox
 
 - A one-file CLI you can email or drop on a jump box
-- A tiny local HTTP helper that only needs the Node APIs scriptc already implements natively
-- A WASI module when the docs' WebAssembly path matches the host you care about
+- A tiny local HTTP helper that only needs Node APIs scriptc already implements natively
+- A WASI module when the docs' WebAssembly path matches the host
 
-I would not start here for a Next.js app, a thick Electron shell, or anything that is really "half of npm plus some glue." The project says it is experimental and supports a subset of JS, TypeScript, and Node. Their [limitations](https://scriptc.dev/docs/limitations) and [compatibility](https://scriptc.dev/compatibility) pages are the real README for an existing codebase.
+Do not start here for a Next.js app, a thick Electron shell, or anything that is half of npm plus glue. The project is experimental and supports a subset of JS, TypeScript, and Node. [Limitations](https://scriptc.dev/docs/limitations) and [compatibility](https://scriptc.dev/compatibility) are the real README for an existing codebase.
 
-## Next to Bun and Deno
+### Limits worth naming up front
 
-Bun and Deno still run a JavaScript runtime when you ship them. scriptc is trying something else: typed, restricted TypeScript compiled ahead of time, with `coverage` as the scoreboard. When you fall off that surface, you opt into an embedded engine on purpose.
+- **Language surface.** Eval, dynamic `import()` with variable URLs, exotic proxies, and much of the long tail of npm assume a full Node runtime. scriptc is a compiler for restricted programs, not a drop-in Node replacement.
+- **Platform matrix.** You build per OS/CPU (or WASI). Cross-compilation story follows the tool's docs; do not assume one macOS binary runs on Linux without a targeted build.
+- **Build toolchain.** Native executables need a linker. CI images that only have Node for tests may need extra packages for release artifacts.
+- **Experimental status.** APIs and diagnostics change between releases. Pin scriptc version in CI when you ship binaries to others.
+- **Size versus static purity.** `--dynamic` increases binary size and attack surface (embedded interpreter). For security-sensitive jump boxes, prefer fully static tools even if you rewrite a dependency.
 
-For the next helper that types cleanly and stays fully static, I'd try handing someone `./tool` before I write another "install Node" README.
+## scriptc is not "ship Bun"
+
+Bun and Deno still run a JavaScript runtime when you ship them. scriptc tries something else: typed, restricted TypeScript compiled ahead of time, with `coverage` as the scoreboard. Falling off that surface means opting into an embedded engine on purpose.
+
+Comparison in one sentence: shipping Bun means shipping a runtime that can run arbitrary JS; shipping a static scriptc binary means shipping only what the compiler proved it could lower—plus optional quickjs enclaves you explicitly accept.
+
+## Verification checklist before you attach a binary to a release
+
+1. `npx scriptc coverage <entry.ts>` — aim for 100% static unless you documented why not.
+2. `npx scriptc build <entry.ts> -o <name>` on the same OS/arch as your users (or build matrix).
+3. Run integration tests against the **binary**, not `tsx` or `node`, on a clean VM or container without Node.
+4. Record scriptc version and whether `--dynamic` was used in release notes.
+5. Scan binary size; a sudden 10× jump usually means dynamic bundling kicked in.
+
+For the next helper that types cleanly and stays fully static, try `./tool` before writing another "install Node" README.
 
 ## Sources
 
@@ -82,3 +138,4 @@ For the next helper that types cleanly and stays fully static, I'd try handing s
 - [Coverage reports](https://scriptc.dev/docs/coverage)
 - [Limitations](https://scriptc.dev/docs/limitations)
 - [How it works](https://scriptc.dev/docs/how-it-works)
+- Related: [CUDA Rust: two tracks for GPU kernels](/me/blog/cuda-rust-two-tracks/), [Astro: the stack behind this site](/me/blog/the-stack-behind-this-site/)

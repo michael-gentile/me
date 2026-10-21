@@ -6,20 +6,17 @@ tags:
 summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilities instead of tokens."
 ---
 
-Jev is TypeSafe's bet that automation should return typed probabilistic decisions, not paragraphs you parse after the fact. Diogo Almeida's first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) hits the same itch these notes keep returning to: models have been superhuman at chat for years, so where is all the automation?
+Automation that has to branch in code cannot wait on a paragraph a human rewrites. Chat is a string; a workflow needs a value, a confidence, and a threshold. **Jev** is TypeSafe’s bet that the interface should be unstructured state in, typed probabilistic decisions out—not another JSON blob you pray `json.loads` will accept.
 
-Chat is a string a person can rewrite. A program needs a value it can branch on, and a confidence it can threshold.
-
-Before Jev, I ran four ordinary prompt patterns on an invented kitchen note (starter Sundays, fridge Saturdays, a few house rules). **Zero-shot** drafts something a human rewrites. **Few-shot** shapes the answer until the example leaks facts the excerpt never had (a fake 22:00 cutoff is the embarrassing run). **JSON** with a schema is the only pattern I'd hand to another process, and even then `json.loads` can throw. **Rubric then answer** is fine for review notes if you still fail invented rules. Skip "think step by step" as a default when you need parseable output: the chain leaks into the string and breaks the parser. Invented cutoffs fail the shipping test even when the prose is nicer.
+Diogo Almeida’s first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) hits the same itch these notes keep returning to: models have been superhuman at chat for years, so where is all the automation? Before Jev, we ran four ordinary prompt patterns on an invented kitchen note (starter Sundays, fridge Saturdays, a few house rules). **Zero-shot** drafts something a human rewrites. **Few-shot** shapes the answer until the example leaks facts the excerpt never had (a fake 22:00 cutoff is the embarrassing run). **JSON** with a schema is the only pattern we'd hand to another process, and even then `json.loads` can throw. **Rubric then answer** is fine for review notes if you still fail invented rules. Skip "think step by step" as a default when you need parseable output: the chain leaks into the string and breaks the parser. Invented cutoffs fail the shipping test even when the prose is nicer.
 
 Almeida's claim is that they stopped generating the string.
 
 Jev is TypeSafe's first public System One model. Early access started 15 September 2026. The interface they describe is unstructured state in, typed probabilistic decisions out. They gave up string generation, sampling is parallel (every answer in one query), and training is Reinforcement Learning for Calibrated Decisions (RLCD). The probabilities are supposed to track accuracy, not a rater's preferred writeup.
 
-The names are in the FAQ. System One from Kahneman's fast half of *Thinking, Fast and Slow*. Jev from William Stanley Jevons: cheaper intelligence, more demand.
+The names are in the FAQ. System One from Kahneman's fast half of *Thinking, Fast and Slow*. Jev from William Stanley Jevons: cheaper intelligence, more demand. Below: published price and latency, workflow evals, the zero type-error guarantee, and experiments people wired after launch.
 
-## Numbers they published
-
+## TypeSafe published price and latency next to chat baselines
 
 |            | Chat models (their column) | Jev                                        |
 | ---------- | -------------------------- | ------------------------------------------ |
@@ -34,7 +31,7 @@ They say the speed evals were mostly run from laptops on the West Coast, where t
 
 "Can't hallucinate" in that post means the output can't leave the schema. Type errors are, they say, mathematically impossible. The answer can still be wrong. The control they offer for that is calibration: higher confidence should mean higher accuracy, so your code can threshold instead of hoping the paragraph was honest.
 
-## Workflows
+## Workflows score models on a fixed compute graph
 
 They score models inside a fixed compute graph. Every model gets the same workflow. The reference answer is the average of GPT-6 Astra and Fable 5.1. Jev sits on the cheap end of a Pareto line they draw across four workflows.
 
@@ -64,9 +61,9 @@ The simplest workflow they published is an incident path: triage, disposition, c
 
 *The simplest of the four published workflows. Same source.*
 
-That's the shape I'd sketch for a policy assistant: decompose the question, score each piece, let code decide what fires. A chat model can be wrapped into that graph. Jev is built as if the graph were the product.
+That is the shape we'd sketch for a policy assistant: decompose the question, score each piece, let code decide what fires. A chat model can be wrapped into that graph. Jev is built as if the graph were the product.
 
-## Zero type errors, as a guarantee
+## Schema match is guaranteed; factual wrong is not
 
 They plot structured-output error rates and tool-call error rates from OpenRouter for the chat models. Jev is drawn at 0% on both. That zero isn't a measured hallucination rate. Schema matching is guaranteed, so they put a zero on the chart.
 
@@ -81,11 +78,11 @@ They plot structured-output error rates and tool-call error rates from OpenRoute
 
 *Structured-output and tool-call error rates. Same source. The LLM bars are OpenRouter traffic; TypeSafe says the Jev zeros are not empirical.*
 
-A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. Fluent citations can still be fake; the application owns the message array and the refuse rule. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part I'd actually try to measure.
+A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. Fluent citations can still be fake; the application owns the message array and the refuse rule. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part we'd actually try to measure.
 
-## Some interesting use cases
+## After launch, the pattern was label, threshold, let code decide
 
-Since Jev's release I've been bumping into little tools and experiments people wired up around a typed decision, and they're all the same itch: pick a label, threshold the confidence, let code do the rest.
+Since Jev's release we've been bumping into little tools and experiments people wired up around a typed decision, and they're all the same itch: pick a label, threshold the confidence, let code do the rest.
 
 - Super fast browser use
 - Classification of files that are safe to delete versus ones that aren't
@@ -97,3 +94,4 @@ Since Jev's release I've been bumping into little tools and experiments people w
 ## Sources
 
 - Diogo Almeida, [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev), TypeSafe, 15 September 2026. Figures reproduced from that post.
+- Related: [JevDraft: typed picks for a fantasy NHL draft](/me/blog/jevdraft-fantasy-picks-with-jev/), [Policy CLI: a tiny assistant I would actually sketch](/me/blog/a-tiny-policy-assistant-i-would-actually-sketch/)
