@@ -1,6 +1,6 @@
 ---
 title: "Astro: the stack behind this site"
-date: 2026-10-26
+date: 2026-05-15
 tags:
   - web
 summary: "Astro 7, markdown posts, Tailwind 4, GitHub Pages. Push to main and it ships—plus agent-readable surfaces and build-time OG cards."
