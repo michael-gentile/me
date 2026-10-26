@@ -6,7 +6,7 @@ Clone it if you want a small personal site of your own. Change the name in `src/
 
 ## Run it locally
 
-Node 22.12+.
+Node 22.23.4+ (Astro 7.4’s minimum Maintenance LTS).
 
 ```sh
 git clone git@github.com:michael-gentile/me.git
