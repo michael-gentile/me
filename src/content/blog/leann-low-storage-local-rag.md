@@ -57,7 +57,7 @@ Proximity-graph search (HNSW, DiskANN) does not score every vector. A query walk
 
 Backends: **HNSW** (default, maximum storage savings via full recompute) and **DiskANN** (PQ-assisted traversal with real-time rerank when you want more search speed). Compact index builds stay under a storage budget even while constructing large graphs.
 
-## What we measured on the public demo corpus
+## What I measured on the public demo corpus
 
 On an Apple Silicon Mac, `uv pip install leann`, then index the repo’s public `data/` set (LEANN paper PDFs, Pride and Prejudice, a Chinese technical report)—**1,126** chunks of size 256 with 20 overlap, embedding model `sentence-transformers/all-MiniLM-L6-v2` (384-d). Same chunks for both sides.
 
@@ -72,7 +72,7 @@ The ANN blob alone is about **eighteen times smaller** on this tiny corpus (~95%
 
 Cold start dominates this micro-bench. Production LEANN setups keep an embedding server warm and can cache hub-node embeddings when disk allows. Do not treat 5 s as the steady-state number for every machine.
 
-## What you can build
+## What I’d wire up
 
 Minimal API shape from their docs: build a compact recompute index, then search.
 

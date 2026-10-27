@@ -107,7 +107,7 @@ One laptop running a chat UI is fine on localhost. Three workers, an MCP filesys
 
 Community tools lean on that pattern. [cmesh](https://github.com/somoore/cmesh) is one example of delegation over the mesh with inbound policy; fleet TUIs probe agents over SSH after `tailscale status`. Tailscale’s own agent page adds MCP-as-node and tsnet as first-party language. The network layer does not replace tool gates inside the agent process. What it buys is a dashboard that is not sitting on the open internet while those gates get designed.
 
-## What you can build: Tailscale + Hermes
+## What I’d wire: Tailscale + Hermes
 
 [Hermes Agent](https://hermes-agent.nousresearch.com/) (Nous Research) is a self-hosted agent runtime with a Desktop app that can attach to a backend on another machine. Official Desktop docs call that backend a running `hermes serve` process and recommend Tailscale for trusted-network username/password auth ([Connecting to a remote backend](https://hermes-agent.nousresearch.com/docs/user-guide/desktop)).
 

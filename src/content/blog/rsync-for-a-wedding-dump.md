@@ -3,7 +3,7 @@ title: "rsync: backing up a wedding dump"
 date: 2026-09-19
 tags:
   - infrastructure
-summary: "A year later we got the RAW photos and video on a 1TB SSD. Finder would have been hours with no gui copy feature I trusted to resume, so I used caffeinate and rsync."
+summary: "A year later I got the RAW photos and video on a 1TB SSD. Finder would have been hours with no gui copy feature I trusted to resume, so I used caffeinate and rsync."
 ---
 
 A terabyte wedding dump between two SSDs on one Mac hits a ceiling GUI copy was not built for: hours on the clock, laptop sleep, cable wiggles, Spotlight indexing the destination while writes land, and no resume story worth trusting when the transfer dies mid-tree. Selecting a folder and copying does not put a terabyte on the clipboard—the clipboard gets paths and a file promise, then Finder walks file by file. That is the right tool for a folder of PDFs; a tree that almost fills a 1TB SSD of RAWs and video is a different job. Monterey added a resume control on a greyed-out copy; a grey folder still is not the only copy of the day.
@@ -16,7 +16,7 @@ Finder wants the copy to look finished. rsync is built to be rerun. After a disc
 
 The terminal stays one session. No copy window that loses its place if the lid closes wrong. `--progress` is noisy on purpose—silence is how you discover at midnight that sleep won.
 
-## The command we used
+## The command I used
 
 ```sh
 caffeinate -i rsync -aW --progress --partial \

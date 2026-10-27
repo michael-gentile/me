@@ -6,7 +6,7 @@ tags:
 summary: "I traced tool-calling until the only thing that actually runs HTTP is my process after JSON parse; this post is the allowlist gate that lets weather through and blocks email and delete even when the model asks."
 ---
 
-The trade-off every tool-calling demo invites is convenience versus custody: the API makes it look as if the model “called” the mail server, and the only thing that actually runs HTTP is your process after it parses JSON. We traced that path on a minimal Python gate with mocked tools—weather may pass, email and delete stop even when the model asks—because least privilege cannot live in a sterner system prompt alone ([OWASP excessive agency](https://owasp.org/www-project-top-10-for-large-language-model-applications/)). Nothing in this write-up is sent or deleted.
+The trade-off every tool-calling demo invites is convenience versus custody: the API makes it look as if the model “called” the mail server, and the only thing that actually runs HTTP is your process after it parses JSON. I traced that path on a minimal Python gate with mocked tools—weather may pass, email and delete stop even when the model asks—because least privilege cannot live in a sterner system prompt alone ([OWASP excessive agency](https://owasp.org/www-project-top-10-for-large-language-model-applications/)). Nothing in this write-up is sent or deleted.
 
 Below: what a tool call really is on the wire, allowlists versus denylists for names your code will ever execute, and why read-only tools still need session identity.
 
@@ -66,7 +66,7 @@ Dangerous tools should not appear in the model’s schema at all if the product 
 
 When email has to exist, put it behind a human. Preview the payload: recipients, subject, body—as text, not as a rendered HTML pane. Name the people. A rubber-stamp “Approve” on collapsed JSON is how “email my summary to everyone” becomes a blast send.
 
-We would fail a design that binds `send_email` to the model with no second step. The model never calls a tool directly. Your process does.
+I would fail a design that binds `send_email` to the model with no second step. The model never calls a tool directly. Your process does.
 
 ### Human-in-the-loop verification
 

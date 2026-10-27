@@ -6,9 +6,9 @@ tags:
 summary: "A weekend CLI: fake logins, two made-up notes on disk, retrieval that respects audience, and a send_email button that never fires. Offline on purpose."
 ---
 
-The trade-off a weekend security sketch accepts is toy fidelity versus teachable shape: real sign-in and embeddings cost time, and a runnable CLI with fake logins still shows where identity lives, where ACL runs before similarity, and where `send_email` dies in Python—not in a system prompt. We glued three earlier notes into one offline assistant: [untrusted webpages](/me/blog/the-webpage-is-untrusted-input/), [nearest versus allowed chunks](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), and [tool gates](/me/blog/the-model-does-not-get-send-email/). Two made-up files on disk, keyword overlap instead of vectors, extractive answers instead of a chat model. A live model can sit in the same slots later; it does not replace the slots.
+The trade-off a weekend security sketch accepts is toy fidelity versus teachable shape: real sign-in and embeddings cost time, and a runnable CLI with fake logins still shows where identity lives, where ACL runs before similarity, and where `send_email` dies in Python—not in a system prompt. I glued three earlier notes into one offline assistant: [untrusted webpages](/me/blog/the-webpage-is-untrusted-input/), [nearest versus allowed chunks](/me/blog/the-nearest-chunk-is-not-the-allowed-chunk/), and [tool gates](/me/blog/the-model-does-not-get-send-email/). Two made-up files on disk, keyword overlap instead of vectors, extractive answers instead of a chat model. A live model can sit in the same slots later; it does not replace the slots.
 
-Below: the toy boundaries, example runs, code we would keep, a control table mapped to OWASP ideas, and what we would not mistake for production.
+Below: the toy boundaries, example runs, code I would keep, a control table mapped to OWASP ideas, and what I would not mistake for production.
 
 ## The toy and its boundaries
 
@@ -25,7 +25,7 @@ user → app → notes (filtered by audience)
                     → email (never bound to the model)
 ```
 
-Whoever typed the question versus the app. The app versus the notes. The app versus a hosted model if you add one. The app versus send-email. Auth is fake—`guest` and `me` are strings in a dictionary. That shows *where* the mapping lives. It is not real sign-in, and we would be embarrassed if someone shipped the dictionary as authorization.
+Whoever typed the question versus the app. The app versus the notes. The app versus a hosted model if you add one. The app versus send-email. Auth is fake—`guest` and `me` are strings in a dictionary. That shows *where* the mapping lives. It is not real sign-in, and I would be embarrassed if someone shipped the dictionary as authorization.
 
 ## Runs that show the controls working
 
@@ -53,9 +53,9 @@ gate: send_email requires approval; not executed
 
 Guest's starter question retrieves only shared notes, cites `[kitchen]`, and the feed day is in the file. The same user's rent question never sees the household file—the score against kitchen is junk and the app **does not** call a model. It prints `Not in the notes.` Owner's rent question may retrieve household, cites `[household]`, and quotes the 1st. France is ungrounded on purpose. Email never leaves the process.
 
-Fluency is not what kept rent from the guest. The audience filter did—and that is the part we would keep even if a live model sat in the extractive slot later.
+Fluency is not what kept rent from the guest. The audience filter did—and that is the part I would keep even if a live model sat in the extractive slot later.
 
-## Code we would keep
+## Code I would keep
 
 **Audience is not a retrieval argument the browser sets.**
 
@@ -71,7 +71,7 @@ corpus = [doc for doc in docs if doc["acl"] == allowed_acl]
 
 If retrieve also accepted `allowed_acl=None`, or if the CLI took `--acl private`, you would have a toy that demonstrates the failure mode. Authorization belongs in the app that already decided who signed in.
 
-**Ungrounded means skip generation.** Offline, that is a keyword-overlap threshold we wrote down (`0.4`). It will be wrong on some phrasing. The rule is still: low score, no completion, no citation theatre. Live mode would use cosine the same way. The number changes; the skip does not.
+**Ungrounded means skip generation.** Offline, that is a keyword-overlap threshold I wrote down (`0.4`). It will be wrong on some phrasing. The rule is still: low score, no completion, no citation theatre. Live mode would use cosine the same way. The number changes; the skip does not.
 
 **Dangerous tools are a Python `if`.**
 
@@ -88,7 +88,7 @@ Answers are printed as text. No `innerHTML`. A chat pane that assigns model outp
 
 ## Controls, named in one table
 
-Same catalogue as the [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/), used as a table we can argue with—not a score.
+Same catalogue as the [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/), used as a table I can argue with—not a score.
 
 | Idea | Where it shows up | What the toy actually does |
 | --- | --- | --- |
@@ -102,7 +102,7 @@ Same catalogue as the [OWASP Top 10 for LLM Applications](https://owasp.org/www-
 
 The citation rule is an eval in miniature: if the extractive (or live) string does not contain the document id, treat it as ungrounded and refuse. A fluent paragraph with no id is an answer you cannot audit.
 
-## What we would not put in production
+## What I would not put in production
 
 **Auth is a dictionary.** A caller who can pick `user=me` is the owner. Real authorization happens in whatever already authenticated the session.
 
@@ -112,9 +112,9 @@ The citation rule is an eval in miniature: if the extractive (or live) string do
 
 **Logs.** Questions about rent and kitchen habits, with usernames, on disk. The control that made the demo auditable is also a record you now have to protect.
 
-**No human UI for the email gate.** A print statement is not an approval workflow. Preview the payload. Name the recipients. We would be embarrassed to ship print-as-approval.
+**No human UI for the email gate.** A print statement is not an approval workflow. Preview the payload. Name the recipients. I would be embarrassed to ship print-as-approval.
 
-We would still ship this *shape*: identity in the app, retrieval in-scope, refuse when empty, cite or stop, tools behind the process, text out, a log you can read on a bad day. We would not ship the dictionary, the overlap scorer, or print-as-approval as if they were the production versions of those ideas.
+I would still ship this *shape*: identity in the app, retrieval in-scope, refuse when empty, cite or stop, tools behind the process, text out, a log you can read on a bad day. I would not ship the dictionary, the overlap scorer, or print-as-approval as if they were the production versions of those ideas.
 
 ## Sources
 

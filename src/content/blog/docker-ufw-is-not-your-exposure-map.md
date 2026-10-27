@@ -115,7 +115,7 @@ Document the probe command in your runbook next to the compose file. Green on th
 
 Typical hardening order is SSH-first, then basics, then network. Docker on a home server (Plex, a blog stack, an agent playground) is common, and UFW-first thinking breaks the day someone `--publish`es without reading the Docker section.
 
-If containers run on the same machine that holds backups or SSH keys, publishing policy is not optional. It is the difference between "hardened the host" and "hardened the host except the thing we actually run." Ansible playbooks that reset UFW defaults but never touch compose publish lines recreate this gap on every run unless you add tasks or enforce loopback binds in inventory.
+If containers run on the same machine that holds backups or SSH keys, publishing policy is not optional. It is the difference between "hardened the host" and "hardened the host except the thing I actually run." Ansible playbooks that reset UFW defaults but never touch compose publish lines recreate this gap on every run unless you add tasks or enforce loopback binds in inventory.
 
 ## Limits
 

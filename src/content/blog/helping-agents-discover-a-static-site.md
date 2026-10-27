@@ -20,7 +20,7 @@ Dries's useful split: ARD (and friends) handle *finding* a service. OpenAPI and 
 
 He prefers OpenAPI for an anonymous, read-only API, and MCP when there is multi-step work, auth, or session state. This site is the first case.
 
-IETF API Catalog and well-known URIs at the origin root were skipped because this is a GitHub Pages *project* site under `/me/`. We cannot publish `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo; the [llms.txt v2 spec](https://llmstxt.org/) calls that out (a file at a path describes that path). `/me/llms.txt` is the discovery document this host can actually ship.
+IETF API Catalog and well-known URIs at the origin root were skipped because this is a GitHub Pages *project* site under `/me/`. I cannot publish `/.well-known/api-catalog` on `michael-gentile.github.io` from this repo; the [llms.txt v2 spec](https://llmstxt.org/) calls that out (a file at a path describes that path). `/me/llms.txt` is the discovery document this host can actually ship.
 
 ## What sits on the wire
 

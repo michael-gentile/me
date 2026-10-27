@@ -8,9 +8,9 @@ summary: I wrapped an open-source Java PDF extractor in a local drop-a-file page
 
 Copy-paste out of a PDF viewer gives you a reading order the file never promised. Dump raw text into a model and you lose headings, smash columns, and have no coordinates when someone asks where a sentence came from. **openChecker** is a local FastAPI GUI around [opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf): drop a file on your machine, get Markdown, JSON with bounding boxes, and an annotated overlay—no upload account, no hosted OCR.
 
-Picture a near-black page with a teal drop zone after dinner: one digital PDF, one JVM boot, four tabs from a single `convert` call. The upstream project (Apache 2.0, Java 11, Python bindings on PyPI) already does layout analysis and those export formats; hybrid OCR and PDF/UA exist upstream too, but we left them off because a wrapper that also boots a second AI server is not something we would run casually. Below: what the page does, why we wrapped instead of forked, and the Mac JDK path bug we hit first.
+Picture a near-black page with a teal drop zone after dinner: one digital PDF, one JVM boot, four tabs from a single `convert` call. The upstream project (Apache 2.0, Java 11, Python bindings on PyPI) already does layout analysis and those export formats; hybrid OCR and PDF/UA exist upstream too, but I left them off because a wrapper that also boots a second AI server is not something I would run casually. Below: what the page does, why I wrapped instead of forked, and the Mac JDK path bug I hit first.
 
-**Layout analysis** here means the extractor infers structure (blocks, lines, tables) from PDF operators, not from how a human would read aloud. **Bounding box** is a rectangle in page space—usually left, top, right, bottom in PDF units—tying a text span to a place on the page. **Born-digital** PDFs were exported from Word, LaTeX, or InDesign; scanned pages need OCR, which is a different upstream mode we did not enable in v1.
+**Layout analysis** here means the extractor infers structure (blocks, lines, tables) from PDF operators, not from how a human would read aloud. **Bounding box** is a rectangle in page space—usually left, top, right, bottom in PDF units—tying a text span to a place on the page. **Born-digital** PDFs were exported from Word, LaTeX, or InDesign; scanned pages need OCR, which is a different upstream mode I did not enable in v1.
 
 ## One convert call feeds Markdown, JSON, overlay, and optional tagged PDF
 
@@ -44,17 +44,17 @@ The file never leaves the machine: no account, and no hosted OCR. If `java -vers
 
 If Markdown order swaps two columns, the JSON boxes still tell you where each block lived on the page—useful when building RAG citations that must point to coordinates, not just chunk text.
 
-## The PyPI package already is the product—we added the click path
+## The PyPI package already is the product—I added the click path
 
 The GitHub repo is the product. Cloning it into a folder and slapping a form on the CLI would still be their code, plus a worse install. The Python package already bundles the CLI. The GUI is the missing piece: a browser, a drop target, tabs, download links.
 
 Hybrid mode is the tempting add-on. Scans, borderless tables, LaTeX, chart captions. It wants `opendataloader-pdf-hybrid` on another port and a pile of extra models. That's useful on a bench and wrong for v1. Deterministic local mode: digital PDFs in, structure out, JVM on the PATH.
 
-Homebrew on a Mac often has a JDK and still reports `Unable to locate a Java Runtime`. The app looks under `/opt/homebrew/opt/openjdk*` when `PATH` is shy. That's the bug we hit first.
+Homebrew on a Mac often has a JDK and still reports `Unable to locate a Java Runtime`. The app looks under `/opt/homebrew/opt/openjdk*` when `PATH` is shy. That's the bug I hit first.
 
-The benchmark numbers on the upstream README are theirs. What we needed was a page we'd click, on a laptop, without sending a PDF to a cloud parser we don't run.
+The benchmark numbers on the upstream README are theirs. What I needed was a page I'd click, on a laptop, without sending a PDF to a cloud parser I don't run.
 
-Run it locally. Drop a born-digital file. Read the Markdown. Scroll the JSON until you see a bounding box. We got tired of remembering the CLI flags.
+Run it locally. Drop a born-digital file. Read the Markdown. Scroll the JSON until you see a bounding box. I got tired of remembering the CLI flags.
 
 ## Verification steps before you trust output
 
@@ -85,7 +85,7 @@ Expect weak structure without hybrid OCR. Verification: a scan should not preten
 ## Limits: what openChecker v1 does not solve
 
 - **No cloud, also no team sharing.** Everyone runs their own instance; there is no multi-user audit log.
-- **Digital-first.** Scanned contracts, phone photos saved as PDF, and fax dumps need OCR/hybrid—explicitly out of scope for the wrapper we ship.
+- **Digital-first.** Scanned contracts, phone photos saved as PDF, and fax dumps need OCR/hybrid—explicitly out of scope for the wrapper I ship.
 - **PDF/UA compliance.** Optional tagged PDF is not a compliance certificate; accessibility workflows need upstream PDF/UA tooling and human review.
 - **JVM cost.** Cold start per convert is seconds on a laptop; not ideal for high-QPS APIs without pooling (not implemented here).
 - **Security boundary.** Local GUI reduces exfiltration risk but does not sandbox malicious PDFs; Java PDF parsers have had bugs—do not drop untrusted nation-state samples on your daily driver without isolation.

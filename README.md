@@ -65,9 +65,9 @@ The filename becomes the URL slug. Prefer a `Product: catchphrase` title that st
 Write like a standalone engineering post, not a personal adventure diary or a security sermon:
 
 - Open with a stake: a metric, ceiling, or sharp trade-off in the first paragraph.
-- Prefer *we* / the setup / a named role over *I*; use *I* only for hands-on verification you actually ran.
+- Prefer *I* for your own choices, builds, and measurements; use *we* only for a real household, team, or quoted voice—not a fake editorial team.
 - Prefer claim- or question-shaped section titles over noun stacks.
-- Spine: stake → vignette → mechanism → what you can build → limits → what’s next.
+- Spine: stake → vignette → mechanism → what you can build (or what I’d wire) → limits → what’s next.
 - No mid-body cross-post rhymes (“same pattern as…”); keep Related links in Sources (2–3 max).
 - Prefer longer, well-formed technical sentences over staccato fragments.
 

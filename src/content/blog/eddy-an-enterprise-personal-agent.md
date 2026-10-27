@@ -6,9 +6,9 @@ tags:
 summary: "Muse, OpenClaw, and Grok Bot all give an agent a computer. What if that computer lived in your cloud, under SSO, with connectors to your systems? A conceptual sketch of Eddy—and what security would have to look like."
 ---
 
-Every enterprise that watches Muse or Grok Bot eventually asks the same question: if each staffer gets a dedicated agent computer, why does that computer have to live in a vendor’s cloud with connectors we cannot fully scope? Consumer agents proved the shape—chat, harness, browser, tools—but the hard part is Jordan in operations drafting a ServiceNow ticket without Riley in finance’s payroll note ever entering the retrieval set. **Eddy** is a conceptual sketch for that answer: one named agent per Entra identity, VM in *your* cloud, SSO on the way in, connectors that act as the user with a strict subset of permissions.
+Every enterprise that watches Muse or Grok Bot eventually asks the same question: if each staffer gets a dedicated agent computer, why does that computer have to live in a vendor’s cloud with connectors you cannot fully scope? Consumer agents proved the shape—chat, harness, browser, tools—but the hard part is Jordan in operations drafting a ServiceNow ticket without Riley in finance’s payroll note ever entering the retrieval set. **Eddy** is a conceptual sketch for that answer: one named agent per Entra identity, VM in *your* cloud, SSO on the way in, connectors that act as the user with a strict subset of permissions.
 
-Picture Jordan in Teams asking Eddy to turn a thread into a draft ticket, while Riley’s Eddy never sees finance APIs beyond what Riley’s groups allow. We wrote about the consumer pattern in Muse’s per-user VM; this note is the enterprise wiring—your identity, your systems, your kill switch. Staff already live in Teams, email, ServiceNow, and SharePoint; many shops have Azure or VMware capacity sitting warm. Below: the loop every product shares, how Eddy would differ from Muse, OpenClaw, and Grok Bot, what spinning a VM per user looks like, controls that have to exist before a pilot, and jobs worth trying first.
+Picture Jordan in Teams asking Eddy to turn a thread into a draft ticket, while Riley’s Eddy never sees finance APIs beyond what Riley’s groups allow. I wrote about the consumer pattern in Muse’s per-user VM; this note is the enterprise wiring—your identity, your systems, your kill switch. Staff already live in Teams, email, ServiceNow, and SharePoint; many shops have Azure or VMware capacity sitting warm. Below: the loop every product shares, how Eddy would differ from Muse, OpenClaw, and Grok Bot, what spinning a VM per user looks like, controls that have to exist before a pilot, and jobs worth trying first.
 
 ## One loop hides behind every brand
 
@@ -44,7 +44,7 @@ Muse proved per-user isolation at consumer scale. OpenClaw is explicit that one 
 
 Eddy is Jordan’s agent, and Riley’s, and every other staffer’s—**one Eddy per Entra identity**, not one shared bot for the whole corporation. Jordan talks to Eddy in Teams the way people talk to Muse in WhatsApp. Eddy has a persistent workspace on a VM the org provisions. An org policy pack lands in that workspace (allowed tools, tone, citation rules, “never invent policy”). Jordan can add prefs. Optional specialist sub-agents under the same user computer—inbox triage, ServiceNow drafts—get tighter tool allowlists, same idea as Grok Bot’s specialist Bots sharing one box.
 
-Connectors we would wire first, all scoped by group membership the app looks up after SSO:
+Connectors I would wire first, all scoped by group membership the app looks up after SSO:
 
 - Exchange / Graph mail and calendar (read by default; send behind approval)
 - SharePoint / OneDrive sites the user’s groups already grant
@@ -88,7 +88,7 @@ Idle cloud capacity is the substrate. What staff experience is provision, wake, 
 
 **Secrets.** Vault or Key Vault holds Graph tokens and API keys. A credential proxy on the egress path swaps surrogates for real credentials after the review agent allows the call—same idea as Muse’s authd/Sentinel split. The runtime cell never sees the real token, so a prompt-injected “exfiltrate my OAuth secret” has nothing to steal.
 
-**Persistence.** We would default Eddy to a **persistent per-user** home disk so memory compounds (how Muse and Grok Bot feel useful), with hibernate for cost. Ephemeral-per-session VMs are the stricter residual-risk option when the threat model hates durable agent state. Say which one you picked when you write the threat model down.
+**Persistence.** I would default Eddy to a **persistent per-user** home disk so memory compounds (how Muse and Grok Bot feel useful), with hibernate for cost. Ephemeral-per-session VMs are the stricter residual-risk option when the threat model hates durable agent state. Say which one you picked when you write the threat model down.
 
 **Kill switch.** SSO revoke drops the broker session. Control plane can power off or wipe the VM in an incident. Drill it once before go-live.
 
@@ -113,7 +113,7 @@ Over-broad Graph consent is how pilots die quietly. If the connector asks for `M
 
 ## A pilot should prove audience boundaries, not demos
 
-Concrete jobs we would want in a pilot, all gated:
+Concrete jobs I would want in a pilot, all gated:
 
 - Draft a ServiceNow ticket from a Teams thread, with a link back to the messages, and wait for Jordan to hit publish.
 - Pull a brief from SharePoint sites Jordan’s group can already read; refuse sites outside that ACL; cite document IDs.
@@ -125,7 +125,7 @@ The upside is cutting the latency of busywork, and every workspace carrying the 
 
 A single shared corporate bot is the wrong default. Shared state plus tool authority across operations and finance collapses the audience boundary the Jordan/Riley walk-through keeps teaching. One Eddy per identity keeps the blast radius mapped to a person you can offboard.
 
-## We would not turn the key without this checklist
+## I would not turn the key without this checklist
 
 1. Per-user VM (or equivalent strong isolation), gold image, hibernate, SCIM destroy.
 2. Credential proxy; no long-lived secrets in the runtime cell.
@@ -135,7 +135,7 @@ A single shared corporate bot is the wrong default. Shared state plus tool autho
 6. Frozen eval set: Jordan cannot retrieve finance payroll; Riley can; injection in a fake email does not fire a send.
 7. SIEM fields for who approved what, and a kill switch drill once before go-live.
 
-If we were to guess, Microsoft is likely cooking something very similar to Muse or Grok Bot, but for their enterprise Copilot product.
+If I were to guess, Microsoft is likely cooking something very similar to Muse or Grok Bot, but for their enterprise Copilot product.
 
 ## Sources
 

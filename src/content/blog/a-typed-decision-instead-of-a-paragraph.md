@@ -8,7 +8,7 @@ summary: "Notes on Diogo Almeida's TypeSafe launch: Jev returns typed probabilit
 
 Automation that has to branch in code cannot wait on a paragraph a human rewrites. Chat is a string; a workflow needs a value, a confidence, and a threshold. **Jev** is TypeSafe’s bet that the interface should be unstructured state in, typed probabilistic decisions out—not another JSON blob you pray `json.loads` will accept.
 
-Diogo Almeida’s first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) hits the same itch these notes keep returning to: models have been superhuman at chat for years, so where is all the automation? Before Jev, we ran four ordinary prompt patterns on an invented kitchen note (starter Sundays, fridge Saturdays, a few house rules). **Zero-shot** drafts something a human rewrites. **Few-shot** shapes the answer until the example leaks facts the excerpt never had (a fake 22:00 cutoff is the embarrassing run). **JSON** with a schema is the only pattern we'd hand to another process, and even then `json.loads` can throw. **Rubric then answer** is fine for review notes if you still fail invented rules. Skip "think step by step" as a default when you need parseable output: the chain leaks into the string and breaks the parser. Invented cutoffs fail the shipping test even when the prose is nicer.
+Diogo Almeida’s first line in [Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) hits the same itch these notes keep returning to: models have been superhuman at chat for years, so where is all the automation? Before Jev, I ran four ordinary prompt patterns on an invented kitchen note (starter Sundays, fridge Saturdays, a few house rules). **Zero-shot** drafts something a human rewrites. **Few-shot** shapes the answer until the example leaks facts the excerpt never had (a fake 22:00 cutoff is the embarrassing run). **JSON** with a schema is the only pattern I'd hand to another process, and even then `json.loads` can throw. **Rubric then answer** is fine for review notes if you still fail invented rules. Skip "think step by step" as a default when you need parseable output: the chain leaks into the string and breaks the parser. Invented cutoffs fail the shipping test even when the prose is nicer.
 
 Almeida's claim is that they stopped generating the string.
 
@@ -61,7 +61,7 @@ The simplest workflow they published is an incident path: triage, disposition, c
 
 *The simplest of the four published workflows. Same source.*
 
-That is the shape we'd sketch for a policy assistant: decompose the question, score each piece, let code decide what fires. A chat model can be wrapped into that graph. Jev is built as if the graph were the product.
+That is the shape I'd sketch for a policy assistant: decompose the question, score each piece, let code decide what fires. A chat model can be wrapped into that graph. Jev is built as if the graph were the product.
 
 ## Schema match is guaranteed; factual wrong is not
 
@@ -78,11 +78,11 @@ They plot structured-output error rates and tool-call error rates from OpenRoute
 
 *Structured-output and tool-call error rates. Same source. The LLM bars are OpenRouter traffic; TypeSafe says the Jev zeros are not empirical.*
 
-A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. Fluent citations can still be fake; the application owns the message array and the refuse rule. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part we'd actually try to measure.
+A hallucinated tool call is annoying in an agent. Several layers down a pipeline with a latency budget, it's a crash. Fluent citations can still be fake; the application owns the message array and the refuse rule. A sampler that can't emit a key you didn't declare still leaves you with a decision that can be false, which is the part I'd actually try to measure.
 
 ## After launch, the pattern was label, threshold, let code decide
 
-Since Jev's release we've been bumping into little tools and experiments people wired up around a typed decision, and they're all the same itch: pick a label, threshold the confidence, let code do the rest.
+Since Jev's release I've been bumping into little tools and experiments people wired up around a typed decision, and they're all the same itch: pick a label, threshold the confidence, let code do the rest.
 
 - Super fast browser use
 - Classification of files that are safe to delete versus ones that aren't

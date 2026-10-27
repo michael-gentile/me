@@ -7,7 +7,7 @@ tags:
 summary: "I kept seeing retrieve-then-generate pipelines return the closest embedding neighbor that was wrong, out of date, or private; this post is the ACL-before-similarity and citation checks I would ship first."
 ---
 
-The trade-off every embedding retriever hides is geometry versus permission: cosine similarity answers “which direction is closest?” not “which paragraph is true?” and not “which file may this caller read?” We kept seeing both failures in the same laptop-sized notebook—paraphrase clusters and “bank” false friends on one side, guest sessions pulling household rent on the other. Below: nearest is not true, nearest is not allowed, and the order of operations we would actually ship.
+The trade-off every embedding retriever hides is geometry versus permission: cosine similarity answers “which direction is closest?” not “which paragraph is true?” and not “which file may this caller read?” I kept seeing both failures in the same laptop-sized notebook—paraphrase clusters and “bank” false friends on one side, guest sessions pulling household rent on the other. Below: nearest is not true, nearest is not allowed, and the order of operations I would actually ship.
 
 ## Nearest is not true
 
@@ -84,7 +84,7 @@ Two filters, both required:
 - **Nearest:** which chunk is about this question?
 - **Allowed:** which chunks is this caller allowed to see?
 
-## Order of operations we would ship
+## Order of operations I would ship
 
 1. Authenticate. You already know who this is.
 2. Map user → audience in the app. Guest is `shared`. Owner is `private`.
@@ -108,7 +108,7 @@ Two filters, both required:
 
 If ACL is only checked in retrieve and the caller can pass `acl="private"`, you have not solved authorization. A unit test that calls `retrieve(question, acl="private")` will look green and still be the production bug.
 
-You can still retrieve the wrong kitchen paragraph. You can still refuse a question a human would answer. You can still log sensitive questions. What we would write down is narrower: guests cannot retrieve private chunks, answers cite an id, and low scores do not call the model. Log which id was retrieved, the score, and the ACL that was applied. If you cannot point at those three for a bad answer, you cannot tell retrieval failure from generation failure.
+You can still retrieve the wrong kitchen paragraph. You can still refuse a question a human would answer. You can still log sensitive questions. What I would write down is narrower: guests cannot retrieve private chunks, answers cite an id, and low scores do not call the model. Log which id was retrieved, the score, and the ACL that was applied. If you cannot point at those three for a bad answer, you cannot tell retrieval failure from generation failure.
 
 ## Sources
 

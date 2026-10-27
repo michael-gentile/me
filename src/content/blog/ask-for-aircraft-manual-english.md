@@ -6,7 +6,7 @@ tags:
 summary: "Karpathy's tip: explain it in ASD-STE100. Controlled English from aerospace manuals. Short sentences, one meaning per word, and why models often sound clearer under that constraint."
 ---
 
-Model explanations fail in the same way maintenance manuals used to: stacked clauses, synonyms for one object, and verbs buried where the reader has to guess whether "close" means shut or near. **ASD-STE100**—Simplified Technical English from aerospace documentation—is a public standard built to kill that ambiguity. [Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) listed ways to spend less time fighting model prose; the tip we kept is the first one: ask for STE.
+Model explanations fail in the same way maintenance manuals used to: stacked clauses, synonyms for one object, and verbs buried where the reader has to guess whether "close" means shut or near. **ASD-STE100**—Simplified Technical English from aerospace documentation—is a public standard built to kill that ambiguity. [Andrej Karpathy](https://x.com/karpathy/status/2105819303471976479) listed ways to spend less time fighting model prose; the tip I kept is the first one: ask for STE.
 
 Picture a hydraulic procedure or a tool schema another machine must parse. Airlines needed manuals readers with limited English could follow without guessing which meaning of "replace" the writer meant; the writing rules and dictionary are public from ASD. The hangar-floor goal was fewer misunderstandings. The side effect for chat is prose with less room for hedging. Below: what the spec actually contains, why LLMs often sound clearer under it, the "80%" dial, and a packaged skill for agent-facing English.
 
@@ -44,7 +44,7 @@ Models are good at sounding smart. They are also good at stacking clauses, swapp
 
 **Active, named actors.** "Make sure… before you start…" puts the doer and the action up front. That is easier to scan than "it is imperative that…"
 
-Karpathy's claim is practical: models have seen enough of this style in training that they can imitate it, and he finds the result more readable. We buy the readability part. We would not claim the output is certified STE. Without the real dictionary open as a lookup, you get **STE-flavored** English — short, imperative, consistent-ish — not a compliance pass.
+Karpathy's claim is practical: models have seen enough of this style in training that they can imitate it, and he finds the result more readable. I buy the readability part. I would not claim the output is certified STE. Without the real dictionary open as a lookup, you get **STE-flavored** English — short, imperative, consistent-ish — not a compliance pass.
 
 ## “80% STE” is a style knob, not an ASD score
 

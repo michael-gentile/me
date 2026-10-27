@@ -15,7 +15,7 @@ Below: what already ships kernels, how the two Rust tracks map to SIMT and Tile,
 
 ## C++ and Python are still the staffed default
 
-If a function must run on an NVIDIA GPU, we write a kernel. Host code on the CPU sets up buffers and launches it. The device code is thousands of threads; the working set lives in HBM for the length of the job. When the kernel finishes, that copy is gone unless something durable captured it.
+If a function must run on an NVIDIA GPU, you write a kernel. Host code on the CPU sets up buffers and launches it. The device code is thousands of threads; the working set lives in HBM for the length of the job. When the kernel finishes, that copy is gone unless something durable captured it.
 
 CUDA started as C++. One thread's logic, a grid launch, shared memory and indexes managed by hand—that SIMT shape is still how a lot of production kernels look. Python joined as a first-class frontend because research and serving already live there: `numba-cuda`, CUDA Python, notebooks until the kernel has to be fast. NVIDIA calls both frontends enterprise-grade—the bar for staffing, debugging, and shipping in 2026.
 

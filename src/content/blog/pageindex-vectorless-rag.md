@@ -66,7 +66,7 @@ Long, structured PDFs fit best: annual reports, manuals, handbooks with appendic
 
 Large, flat, heterogeneous corpora still want approximate nearest neighbour as a first cut—often with ACLs and a similarity threshold on the vector pass. A hybrid that uses metadata or a light vector pass to pick *documents*, then PageIndex-style tree search *inside* the winners, matches their multi-document notes.
 
-## What you can build: local SDK shape
+## What I’d wire: local SDK shape
 
 Local mode in their SDK: your LLM key, index on disk, chat model for tree search.
 

@@ -7,7 +7,7 @@ tags:
 summary: "LoRA on Qwen2.5-0.5B-Instruct (4-bit) via MLX, BM25 recipe RAG from TheMealDB, and a router that returns markdown cards instead of letting a small model invent quantities."
 ---
 
-A 0.5B instruct model on a **16 GB Apple Silicon** Mac will happily invent “two cups of soy sauce” for a casserole if you let it free-generate recipe cards. That is a bad dinner and a useless portfolio story. **Cuoco Piccolo** (“tiny cook” in Italian) is the stack we built to refuse that failure mode: LoRA for tone and grounded follow-ups, BM25 for concrete recipes, and a deterministic router that returns markdown cards assembled by code—not sampled token by token.
+A 0.5B instruct model on a **16 GB Apple Silicon** Mac will happily invent “two cups of soy sauce” for a casserole if you let it free-generate recipe cards. That is a bad dinner and a useless portfolio story. **Cuoco Piccolo** (“tiny cook” in Italian) is the stack I built to refuse that failure mode: LoRA for tone and grounded follow-ups, BM25 for concrete recipes, and a deterministic router that returns markdown cards assembled by code—not sampled token by token.
 
 Picture a local FastAPI chat page and a CLI sharing one `reply_to_message` path: “chicken recipe” hits a main-ingredient filter, BM25 ranks inside the bucket, numbered choices appear as buttons, and the card body comes from TheMealDB rows. The design rule that mattered most is that **the language model does not memorize cookbooks**. Below: constraints, the hybrid reply path, session behavior, data lineage, retrieval gates, LoRA scope, serving choices, and how to reproduce.
 
@@ -22,7 +22,7 @@ The stack is **MLX** / `mlx-lm`, a **LoRA** on `Qwen2.5-0.5B-Instruct` in **4-bi
   fetchpriority="high"
 />
 
-## We chose MLX and a router because the model is too small to trust
+## I chose MLX and a router because the model is too small to trust
 
 | Constraint | Choice |
 | --- | --- |
@@ -55,7 +55,7 @@ ConversationState  (history, pending choices, active recipe id)
 
 `respond.py` owns intent. `rag.py` owns BM25 and ~27 main-ingredient tags. `recipes.py` turns hits into markdown. `model.py` runs LoRA under a global MLX lock. Same function for the browser and the terminal.
 
-We tried Gradio and Chainlit earlier. Gradio made it too easy to bypass the router. Chainlit’s static assets broke on the Python we were on. Both are gone. The product surface is FastAPI + CLI.
+I tried Gradio and Chainlit earlier. Gradio made it too easy to bypass the router. Chainlit’s static assets broke on the Python I was on. Both are gone. The product surface is FastAPI + CLI.
 
 ## Sessions keep an active recipe without drowning a 0.5B context
 
@@ -124,7 +124,7 @@ That split is the project. Fine-tuning without the router would just make a more
 
 The UI is one HTML page: Markdown via `marked` + `DOMPurify` (never paint model output as raw HTML), choice buttons from structured `options`, starter chips, and a “Following up on: …” line. Defaults: `temp=0.4`, `max_tokens=384` for freeform turns. Recipe cards are not generation-capped because they are not generated.
 
-We did not expose token streaming. Most good answers never hit the LM. Generation sits behind a global MLX lock for thread safety; long-lived SSE adds cancel and backpressure for little gain on a blog-demo UI. Freeform answers get a “Cooking…” wait state instead.
+I did not expose token streaming. Most good answers never hit the LM. Generation sits behind a global MLX lock for thread safety; long-lived SSE adds cancel and backpressure for little gain on a blog-demo UI. Freeform answers get a “Cooking…” wait state instead.
 
 Prompts keep the model on cooking/baking, ask for humility on allergens / canning / medical topics, and prefer matching the question type. RAG and active-recipe blocks prepend to the user turn when used.
 
@@ -132,9 +132,9 @@ Prompts keep the model on cooking/baking, ask for humility on allergens / cannin
 
 `eval/cooking_eval.jsonl` has 63 hand prompts. `05_eval.py` scores base vs adapter on substitutes, staying on-topic, and safety humility. Runs land under `eval/runs/`.
 
-The harness still drives **raw generation** for those prompts. The **product** path is `reply_to_message` — choices, cards, follow-ups. When we ask whether the app feels right, we exercise the UI or CLI with RAG on, not only the eval script. Two different questions.
+The harness still drives **raw generation** for those prompts. The **product** path is `reply_to_message` — choices, cards, follow-ups. When I ask whether the app feels right, I exercise the UI or CLI with RAG on, not only the eval script. Two different questions.
 
-## What we would click
+## What I would click
 
 - Give me a potatoes / chicken / pasta recipe → pick a number
 - After a card: How long? / Can I swap butter for oil? / What’s step 3?

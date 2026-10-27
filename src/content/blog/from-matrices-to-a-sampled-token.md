@@ -6,7 +6,7 @@ tags:
 summary: "Tokens and matrices, pretraining, SFT and preference, adapters versus prompts, then inference with a KV cache and speculative decoding. Same job the whole way: next-token prediction."
 ---
 
-Every vendor slide that says “the AI knows your notes” hides a stack: a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). When we read a write-up, we want to know which layer they are actually selling—and where policy has to live if guests must never see private chunks.
+Every vendor slide that says “the AI knows your notes” hides a stack: a next-token **model** (matrices and a sample loop), a vendor **product** (UI, prompts, retrieval, tools, billing), and the **application** you build (auth, which notes are in scope, which tools may fire). When I read a write-up, I want to know which layer they are actually selling—and where policy has to live if guests must never see private chunks.
 
 The whole stack is still one job—predict the next token—and everything else is how you get that prediction and what you wrap around it. Below: tokens and matrices, pretraining, post-training (SFT and preference), what “tuning” actually moves, inference with KV cache, and speculative decoding—the tricks that make coding assistants feel instant.
 
@@ -31,7 +31,7 @@ From there, almost every learned piece is a matrix multiply plus a nonlinearity:
 
 GPT-2's published knobs are a useful sticker if you want numbers: 12 layers, 12 heads, 768-wide residual, 1024-token window, 50,257-token vocabulary. A modern chat model is the same kind of object, scaled. Mixture-of-experts changes *which* matrices fire. It does not change the job, and it does not give you a roommate who knows this week's note.
 
-We treat "the model" as stacked linear maps over a token window—not as a person—so "tune the model" and "fetch the PDF" do not end up as the same sentence in design notes.
+I treat "the model" as stacked linear maps over a token window—not as a person—so "tune the model" and "fetch the PDF" do not end up as the same sentence in design notes.
 
 ## Pretraining is next-token prediction on a crawl
 
@@ -61,14 +61,14 @@ This stage changes style, refusal texture, and how often the model emits tool-ca
 
 People say "we will tune the model" when they mean four different interventions. Only one of them writes new weights into the base network.
 
-| They said | What actually moves | When we would use it |
+| They said | What actually moves | When I would use it |
 | --- | --- | --- |
 | Full fine-tune | All (or most) weights | You own the training stack and have a large, clean domain corpus |
 | LoRA / adapters | Small low-rank matrices beside frozen weights | Domain style or format; you still want the base model intact |
 | System prompt / few-shot | No weights. Tokens prepended at inference | Instructions, tone, output schema. Weak if it is the only control |
 | Retrieval / tools | No weights. Extra tokens and an application loop | Facts that change, documents with ACLs, actions that need a gate |
 
-LoRA is the one worth naming. Freeze the pretrained matrices, learn a pair of thin matrices whose product is added into selected layers, and you ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights. We reach for that when the need is domain style or a format the base model keeps missing, and we still want the shared/private split in the application, because an adapter does not know who the caller is.
+LoRA is the one worth naming. Freeze the pretrained matrices, learn a pair of thin matrices whose product is added into selected layers, and you ship a small adapter file, not a second 70B checkpoint. Merge at serve time if you want one set of weights. I reach for that when the need is domain style or a format the base model keeps missing, and I still want the shared/private split in the application, because an adapter does not know who the caller is.
 
 A prompt is not tuning. Retrieval is not tuning. Both are the application layer. Mixing them up is how a notebook says "fine-tune" when the need was "fetch the current PDF and don't let guests retrieve private household notes."
 

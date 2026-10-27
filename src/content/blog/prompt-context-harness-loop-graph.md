@@ -6,7 +6,7 @@ tags:
 summary: "A next-token model sits inside five application layers: the prompt as the message array you intend, the context window as the tokens you choose to fill it, the harness as parse–gate–log around each sample, the agent loop as sample–tool–append until a stop condition, and the graph as the fixed map of which of those steps may run and in what order."
 ---
 
-The trade-off every “agent” pitch compresses is one word versus five jobs: people still say “prompt engineering” for everything around a model, and weekend notes-assistant experiments piled up five different bugs that all looked like “the prompt”—Monday feed days, guest rent leaks, `json.loads` retries into `send_email`, visitor blogs in a brief. Same model family; different layer. Below we name the five layers with one question threaded through: a guest on a laptop types “Do I feed the starter on Sundays?” We have not shipped a LangGraph product; these are the shapes we would sketch before writing more instructions.
+The trade-off every “agent” pitch compresses is one word versus five jobs: people still say “prompt engineering” for everything around a model, and weekend notes-assistant experiments piled up five different bugs that all looked like “the prompt”—Monday feed days, guest rent leaks, `json.loads` retries into `send_email`, visitor blogs in a brief. Same model family; different layer. Below I name the five layers with one question threaded through: a guest on a laptop types “Do I feed the starter on Sundays?” I have not shipped a LangGraph product; these are the shapes I would sketch before writing more instructions.
 
 ```text
   "Do I feed the starter on Sundays?"  (guest, shared)
@@ -46,7 +46,7 @@ Read from the bottom. The model only ever sees token IDs; everything above is ho
 
 A prompt is a message array with roles, not a paragraph in a text box. Chat APIs concatenate `system` / `developer`, `user`, `assistant`, and later `tool` into one sequence, usually with special tokens around each role. The model was post-trained on that layout, so where you put a rule changes how often it is followed—and there is no guaranteed winner across vendors or weeks of post-training.
 
-For the starter question the array we would actually send:
+For the starter question the array I would actually send:
 
 ```text
 [
@@ -137,7 +137,7 @@ Stop conditions are the whole design: end token, `max_tokens`, max steps (an unb
 
 Each turn mutates context—the window grows. Prefix caching helps when the system prompt is stable; it does not make an unbounded dump a strategy, and it does not make the middle of a handbook more likely on step 7.
 
-For the starter question we would not loop at all: retrieve once, threshold, generate once, cite or refuse. A loop earns its keep when the question needs a read-only tool (weather, a live number) and you have already decided the model never binds mail.
+For the starter question I would not loop at all: retrieve once, threshold, generate once, cite or refuse. A loop earns its keep when the question needs a read-only tool (weather, a live number) and you have already decided the model never binds mail.
 
 ## Graph engineering is the DAG the model does not invent
 
@@ -186,7 +186,7 @@ prompt    system: answer from NOTES, JSON schema
 
 If the answer comes back `{"feed_day":"monday","confirmed":true}` with a citation, the prompt lost and the harness should fail the run. If rent is in the string, context lost—or the graph skipped the ACL node. If the product then mailed the summary because the model asked, the graph included a node it should not have, and the harness did not gate it.
 
-We still write prompts; we stopped pretending the other four layers were adjectives on the same paragraph.
+I still write prompts; I stopped pretending the other four layers were adjectives on the same paragraph.
 
 ## Sources
 

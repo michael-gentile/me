@@ -7,9 +7,9 @@ tags:
 summary: "A weekend notes-assistant sketch with a future send-email button on the whiteboard led me to a control matrix worth filling before prompt work. Three controls I would keep, plus honest residual risk in the table."
 ---
 
-The trade-off every retrieve-then-generate sketch faces is speed versus boundaries: it is faster to write a system prompt and ship, and slower to draw who may read which file, where dangerous actions live, and what the model must never bind. We hit that wall on a whiteboard weekend project—a signed-in user, a question, paragraphs from a folder on disk, a hosted LLM API, formatted text in the browser, and a dashed-line “send this summary by email” for later. That dashed button is what stopped the prompt work. Until the trust picture looked like a home-box data-flow map—browser to app, app to docs, app to vendor, app to mail—we were one small PR away from `send_email` on the model because the change looked innocent.
+The trade-off every retrieve-then-generate sketch faces is speed versus boundaries: it is faster to write a system prompt and ship, and slower to draw who may read which file, where dangerous actions live, and what the model must never bind. I hit that wall on a whiteboard weekend project—a signed-in user, a question, paragraphs from a folder on disk, a hosted LLM API, formatted text in the browser, and a dashed-line “send this summary by email” for later. That dashed button is what stopped the prompt work. Until the trust picture looked like a home-box data-flow map—browser to app, app to docs, app to vendor, app to mail—I was one small PR away from `send_email` on the model because the change looked innocent.
 
-Below: the toy with its boundaries, STRIDE-shaped questions at each edge, a matrix we can argue with, three controls we would not go live without, ACL as a sequence in the app, and what we would not treat as architecture.
+Below: the toy with its boundaries, STRIDE-shaped questions at each edge, a matrix I can argue with, three controls I would not go live without, ACL as a sequence in the app, and what I would not treat as architecture.
 
 ## The toy, with boundaries drawn first
 
@@ -30,15 +30,15 @@ user → app → document store
 
 Mark four boundaries: browser/app, app/docs, app/LLM vendor, app/email. Draw email dashed if it is not built. When email is missing from the diagram, it still shows up in production as “just a button”—and that is how tool schemas grow.
 
-At each boundary, plain-language questions in a [STRIDE](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats) shape: who is the user, can retrieved text change behaviour, do we log prompts and retrieval IDs, can answers leak another audience’s documents, can huge pastes spike cost, can model text trigger mail or fetches the user is not allowed?
+At each boundary, plain-language questions in a [STRIDE](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats) shape: who is the user, can retrieved text change behaviour, do I log prompts and retrieval IDs, can answers leak another audience’s documents, can huge pastes spike cost, can model text trigger mail or fetches the user is not allowed?
 
 Two more rows belong on the whiteboard. **Vendor retention:** does the hosted API store prompts, for how long, in which region? **Log store:** prompts and retrieval IDs are a second document corpus. Who can read them, and when do they expire?
 
-The [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) is a control catalogue, not a scorecard. Edition numbers move; the ideas do not. We care most about injection-as-architecture, output handling, excessive agency, and unbounded spend. If the answer to “who can bind send-email?” is a longer system prompt, that row is still open.
+The [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) is a control catalogue, not a scorecard. Edition numbers move; the ideas do not. I care most about injection-as-architecture, output handling, excessive agency, and unbounded spend. If the answer to “who can bind send-email?” is a longer system prompt, that row is still open.
 
 ## A matrix you can argue with
 
-When we sketch retrieve-then-generate toys, we want a table where “N/A” is allowed if the reason is written down.
+When I sketch retrieve-then-generate toys, I want a table where “N/A” is allowed if the reason is written down.
 
 | Control | What it actually does | Residual risk |
 | --- | --- | --- |
@@ -51,7 +51,7 @@ When we sketch retrieve-then-generate toys, we want a table where “N/A” is a
 | Least-privilege tools | The process, not the model, executes | If the app trusts a client-supplied ACL, you have not solved auth |
 | Logging of prompt, retrieval IDs, answer | You can explain a bad day | Logs become a sensitive store of their own |
 
-## Three controls we would require
+## Three controls I would require
 
 1. **ACL on retrieval, in the authenticated app**—not a prompt sentence, not a parameter the browser sets. Each note carries a label for who may see it before any ranking runs.
 2. **No dangerous tools on the model.** Weather-style reads maybe. `send_email` and `delete_account` sit behind approval in *your* code.
@@ -61,13 +61,13 @@ When we sketch retrieve-then-generate toys, we want a table where “N/A” is a
 
 The browser never sends `acl=private`. The session is the identity. The app maps guest → shared, owner → private. Retrieve runs with the audience the app just computed. Similarity runs only on matching chunks. The model never sees household rent text on a guest turn.
 
-If retrieve accepts `acl` from the query string and the HTTP handler copies it through, we have not done this—we have a filter the caller can skip.
+If retrieve accepts `acl` from the query string and the HTTP handler copies it through, I have not done this—I have a filter the caller can skip.
 
-## What we would not pay for first
+## What I would not pay for first
 
 A vendor “injection filter” as the only control, and a longer system prompt. Both can be additive. Neither replaces the three above. A classifier that scores “this looks like an injection” still leaves retrieval without an ACL, `innerHTML` on the pane, and `send_email` bound to the model. Put the filter after the architecture, not instead of it.
 
-Gaps we would not go live with: no retrieval ACL, `innerHTML` on the answer, and an email button that fires because the model said to. Vendor retention and log access sit beside those. Residual risk stays an honest column. Dual-step plus labelled channels plus a stern prompt still leaves a fluent model in the loop.
+Gaps I would not go live with: no retrieval ACL, `innerHTML` on the answer, and an email button that fires because the model said to. Vendor retention and log access sit beside those. Residual risk stays an honest column. Dual-step plus labelled channels plus a stern prompt still leaves a fluent model in the loop.
 
 ## Smoke tests before prompt tuning
 

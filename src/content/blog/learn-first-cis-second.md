@@ -60,7 +60,7 @@ When CIS is silent on Docker publishing versus UFW, practitioner notes on packet
 
 ## Drift: why manual first still wins once
 
-**Drift** is the slow divergence between “what we hardened in week one” and “what the box runs today”—`apt upgrade` reopens suggestions, someone edits `sshd_config`, a compose file adds `--publish`, a package installs a new systemd socket on `0.0.0.0`.
+**Drift** is the slow divergence between “what I hardened in week one” and “what the box runs today”—`apt upgrade` reopens suggestions, someone edits `sshd_config`, a compose file adds `--publish`, a package installs a new systemd socket on `0.0.0.0`.
 
 Manual first is not Luddite. It is how you notice that `hidepid=2` broke something on your systemd version, or that your ISP blocks outbound SMTP on port 25. Automation encodes decisions you already tested; it does not discover them for you.
 
